@@ -257,6 +257,25 @@ header{background:linear-gradient(180deg,#040E20,#071830);border-bottom:1px soli
 
 /* ═══════════ BRACKET / LLAVES ═══════════ */
 
+
+/* Bracket predictions panel */
+#bk-pred-panel{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(4px);z-index:600;align-items:center;justify-content:center;}
+#bk-pred-panel.open{display:flex;}
+.bkp-box{background:var(--card2);border:1px solid var(--border);border-radius:12px;width:600px;max-width:95vw;max-height:85vh;display:flex;flex-direction:column;overflow:hidden;}
+.bkp-header{background:linear-gradient(135deg,var(--card2),var(--navy));border-bottom:1px solid var(--border-s);padding:16px 20px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+.bkp-title{font-family:'Bebas Neue',cursive;font-size:18px;letter-spacing:2px;color:var(--gold);}
+.bkp-sub{font-size:11px;color:var(--muted);margin-top:2px;}
+.bkp-thead{display:grid;grid-template-columns:1fr 90px 90px 60px;padding:7px 16px;border-bottom:1px solid var(--border-s);font-size:9px;font-weight:700;letter-spacing:2px;color:var(--muted);text-transform:uppercase;background:var(--card);flex-shrink:0;}
+.bkp-scroll{overflow-y:auto;flex:1;}
+.bkp-row{display:grid;grid-template-columns:1fr 90px 90px 60px;padding:9px 16px;border-bottom:1px solid var(--border-s);align-items:center;}
+.bkp-row:hover{background:var(--faint);}
+.bkp-row.hit-exact{background:linear-gradient(90deg,rgba(0,196,106,.07),transparent 60%);}
+.bkp-row.hit-result{background:linear-gradient(90deg,rgba(201,162,39,.06),transparent 60%);}
+.bkp-row.miss{background:linear-gradient(90deg,rgba(230,57,70,.04),transparent 60%);}
+.bkp-name{font-size:12px;font-weight:600;}
+.bkp-score{text-align:center;font-family:'Bebas Neue',cursive;font-size:18px;letter-spacing:1px;}
+.bkp-pts{text-align:right;}
+
 /* Bracket slot system */
 .bk-col{display:flex;flex-direction:column;min-width:148px;padding:0 4px;}
 .bk-col-label{font-family:'Bebas Neue',cursive;font-size:11px;letter-spacing:2px;color:var(--muted);text-align:center;padding:6px 0 8px;text-transform:uppercase;}
@@ -395,6 +414,27 @@ header{background:linear-gradient(180deg,#040E20,#071830);border-bottom:1px soli
 
 <div class="footer">Quiniela Mundial 2026 &nbsp;·&nbsp; Actualización automática cada 30 s &nbsp;·&nbsp; Horarios en CDMx</div>
 
+
+
+<!-- Bracket predictions panel -->
+<div id="bk-pred-panel" onclick="if(event.target===this)closeBkPred()">
+  <div class="bkp-box">
+    <div class="bkp-header">
+      <div>
+        <div class="bkp-title" id="bkp-title"></div>
+        <div class="bkp-sub" id="bkp-sub"></div>
+      </div>
+      <button class="btn-cancel" onclick="closeBkPred()">✕ Cerrar</button>
+    </div>
+    <div class="bkp-thead">
+      <span>Participante</span>
+      <span style="text-align:center">Pronóstico</span>
+      <span style="text-align:center">Resultado</span>
+      <span style="text-align:right">Pts</span>
+    </div>
+    <div class="bkp-scroll" id="bkp-body"></div>
+  </div>
+</div>
 
 <!-- History panel -->
 <div id="hist-panel" onclick="if(event.target===this)closeHistory()">
@@ -728,6 +768,43 @@ function renderMatches(){
 
 
 
+
+// ═══════════════════════════════════════════════
+// PRONÓSTICOS FASE ELIMINATORIA
+// ═══════════════════════════════════════════════
+const QD_KO = {
+  'Toño':            {'L3':{g1:0,g2:2}},
+  'FernandaMocte':     {'L3':{g1:1,g2:2}},
+  'RodrigoIbarra':     {'L3':{g1:1,g2:3}},
+  'Betty':             {'L3':{g1:1,g2:2}},
+  'FranciscoI':        {'L3':{g1:1,g2:2}},
+  'RodolfoC':          {'L3':{g1:0,g2:2}},
+  'Mayito':            {'L3':{g1:0,g2:1}},
+  'Mich':              {'L3':{g1:2,g2:1}},
+  'PabloS':            {'L3':{g1:1,g2:2}},
+  'MauricioMtz':       {'L3':{g1:1,g2:2}},
+  'MaxZ':              {'L3':{g1:1,g2:2}},
+  'Emiliano':          {'L3':{g1:2,g2:1}},
+  'AxelC':             {'L3':{g1:0,g2:2}},
+  'RodrigoGonzalez':   {'L3':{g1:1,g2:2}},
+  'MauricioMoreno':    {'L3':{g1:1,g2:2}},
+  'JuanPablo':         {'L3':{g1:1,g2:3}},
+  'Sebastián':    {'L3':{g1:0,g2:2}},
+  'DiegoRamirezCastro':{'L3':{g1:1,g2:1,adv:'CAN'}},
+  'DiegoArmando':      {},
+  'DiegoMartinez':     {'L3':{g1:1,g2:2}},
+  'FernandaG':         {'L3':{g1:1,g2:0}},
+  'KarinaIbarra1':     {'L3':{g1:0,g2:2}},
+  'KarinaIbarra2':     {'L3':{g1:0,g2:1}},
+  'César':        {},
+  'AxelIbarra':        {},
+  'RocioIbarra':       {},
+  'Berenice':          {'L3':{g1:0,g2:2}},
+  'IanL':              {'L3':{g1:1,g2:3}},
+  'MarioM':            {},
+  'OscarC':            {'L3':{g1:0,g2:1}},
+};
+
 // ═══════════════════════════════════════════════
 // BRACKET / LLAVES
 // ═══════════════════════════════════════════════
@@ -811,6 +888,58 @@ function bDateLabel(m){
   return `<div class="bk-date">${br.date}</div>`;
 }
 
+
+function showBkPred(matchId, t1, t2, dateStr){
+  const real = BRACKET_RES[matchId] || null;
+  const hasReal = real && real.w;
+  const a = bTeam(t1), b = bTeam(t2);
+
+  document.getElementById('bkp-title').innerHTML =
+    flagImg(t1) + ' ' + a.name + ' vs ' + b.name + ' ' + flagImg(t2);
+  document.getElementById('bkp-sub').textContent = dateStr || '';
+
+  function calcPtsKO(pg1,pg2,rg1,rg2){
+    if(pg1===null||pg1===undefined) return null;
+    if(pg1===rg1&&pg2===rg2) return 8;
+    const pr=pg1>pg2?'w1':pg1<pg2?'w2':'e';
+    const rr=rg1>rg2?'w1':rg1<rg2?'w2':'e';
+    return pr===rr?3:0;
+  }
+
+  const rows = Object.entries(QD_KO).map(([name, preds])=>{
+    const pred = preds[matchId];
+    const isPend = !pred || pred.g1===undefined || pred.g1===null;
+    const pts = (isPend||!hasReal) ? null : calcPtsKO(pred.g1,pred.g2,real.g1,real.g2);
+    const advNote = pred && pred.adv ? ' <span style="font-size:9px;color:var(--muted)">('+pred.adv+')</span>' : '';
+
+    let rc='', chip='';
+    if(isPend){ chip='<span class="chip nd">—</span>'; }
+    else if(pts===8){ rc='hit-exact'; chip='<span class="chip exact">🎯 8</span>'; }
+    else if(pts===3){ rc='hit-result'; chip='<span class="chip result">✅ 3</span>'; }
+    else if(pts===0){ rc='miss'; chip='<span class="chip miss">❌ 0</span>'; }
+    else { chip='<span class="chip nd">—</span>'; }
+
+    const predScore = isPend
+      ? '<span style="color:var(--muted);font-size:11px">—</span>'
+      : pred.g1+' – '+pred.g2+advNote;
+    const realScore = hasReal ? real.g1+' – '+real.g2 : '<span style="color:var(--muted);font-size:11px">—</span>';
+
+    return `<div class="bkp-row ${rc}">
+      <div class="bkp-name">${name}</div>
+      <div class="bkp-score" style="font-size:14px">${predScore}</div>
+      <div class="bkp-score" style="font-size:14px">${realScore}</div>
+      <div class="bkp-pts">${chip}</div>
+    </div>`;
+  });
+
+  document.getElementById('bkp-body').innerHTML = rows.join('');
+  document.getElementById('bk-pred-panel').classList.add('open');
+}
+
+function closeBkPred(){
+  document.getElementById('bk-pred-panel').classList.remove('open');
+}
+
 function renderBracket(){
   const grid=document.getElementById('bracket-grid');
   const SLOT=88; // px por slot R32
@@ -828,7 +957,9 @@ function renderBracket(){
     const a=bTeam(m.t1), b=bTeam(m.t2);
     const w1=has&&res.w===a.code, w2=has&&res.w===b.code;
     const cls=(m.id==='FINAL'?'final-match ':m.id==='BRONZE'?'bronze-match ':'');
-    return `<div class="bk-match ${cls}">
+    const hasPreds = QD_KO && Object.values(QD_KO).some(p=>p[m.id]);
+    const clickable = hasPreds ? `onclick="showBkPred('${m.id}','${m.t1}','${m.t2}','${m.date||''}')" style="cursor:pointer" title="Ver pronósticos"` : '';
+    return `<div class="bk-match ${cls}" ${clickable}>
       <div class="bk-team${w1?' winner':has?' loser':''}">
         <span class="bk-flag">${a.flag}</span><span class="bk-name">${a.name}</span>
         <span class="bk-score${!has?' tbd-score':''}">${has?res.s1:'–'}</span>
@@ -837,7 +968,8 @@ function renderBracket(){
         <span class="bk-flag">${b.flag}</span><span class="bk-name">${b.name}</span>
         <span class="bk-score${!has?' tbd-score':''}">${has?res.s2:'–'}</span>
       </div>
-    </div>${m.date?`<div class="bk-date">${m.date}</div>`:''}`;
+      ${hasPreds?'<div class="bk-date" style="color:rgba(201,162,39,.6);font-size:9px">👆 Ver pronósticos</div>':''}
+    </div>${m.date&&!hasPreds?`<div class="bk-date">${m.date}</div>`:''}`;
   }
 
   // Build a column with slot-based alignment
