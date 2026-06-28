@@ -257,31 +257,18 @@ header{background:linear-gradient(180deg,#040E20,#071830);border-bottom:1px soli
 
 /* ═══════════ BRACKET / LLAVES ═══════════ */
 
-/* Líneas conectoras del bracket */
-.bk-pair{display:flex;flex-direction:column;position:relative;}
-.bk-pair + .bk-pair{margin-top:16px;}
-.bk-pair .bk-match:first-child{position:relative;}
-.bk-pair .bk-match:first-child::after{
-  content:'';position:absolute;right:-9px;top:50%;
-  width:9px;height:calc(50% + 50% + 8px + var(--pair-h, 0px));
-  border-right:1px solid rgba(201,162,39,.3);
-  border-top:1px solid rgba(201,162,39,.3);
-  transform:translateY(0);pointer-events:none;
-}
-.bk-pair .bk-match:last-child::after{
-  content:'';position:absolute;right:-9px;bottom:50%;
-  width:9px;height:calc(50% + 50% + 8px);
-  border-right:1px solid rgba(201,162,39,.3);
-  border-bottom:1px solid rgba(201,162,39,.3);
-  pointer-events:none;
-}
-.bk-match{position:relative;}
-/* Línea horizontal hacia la columna siguiente */
-.bk-pair::after{
-  content:'';position:absolute;right:-9px;top:50%;
-  width:9px;height:1px;
-  background:rgba(201,162,39,.3);
-}
+/* Bracket slot system */
+.bk-col{display:flex;flex-direction:column;min-width:148px;padding:0 4px;}
+.bk-col-label{font-family:'Bebas Neue',cursive;font-size:11px;letter-spacing:2px;color:var(--muted);text-align:center;padding:6px 0 8px;text-transform:uppercase;}
+.bk-slot{display:flex;flex-direction:column;justify-content:center;position:relative;box-sizing:border-box;}
+/* Connector lines — right side of left bracket */
+.conn-r::before{content:'';position:absolute;right:-5px;top:50%;width:5px;height:1px;background:rgba(201,162,39,.35);z-index:1;}
+.conn-r-top::after{content:'';position:absolute;right:-5px;top:50%;width:1px;height:calc(50% + 4px);background:rgba(201,162,39,.35);z-index:1;}
+.conn-r-bot::after{content:'';position:absolute;right:-5px;bottom:50%;width:1px;height:calc(50% + 4px);background:rgba(201,162,39,.35);z-index:1;}
+/* Connector lines — left side of right bracket */
+.conn-l::before{content:'';position:absolute;left:-5px;top:50%;width:5px;height:1px;background:rgba(201,162,39,.35);z-index:1;}
+.conn-l-top::after{content:'';position:absolute;left:-5px;top:50%;width:1px;height:calc(50% + 4px);background:rgba(201,162,39,.35);z-index:1;}
+.conn-l-bot::after{content:'';position:absolute;left:-5px;bottom:50%;width:1px;height:calc(50% + 4px);background:rgba(201,162,39,.35);z-index:1;}
 
 #bracket-section{display:none;padding:0 16px 32px;}
 .bracket-wrap{overflow-x:auto;padding:16px 0;}
@@ -825,69 +812,81 @@ function bDateLabel(m){
 }
 
 function renderBracket(){
-  const grid = document.getElementById('bracket-grid');
+  const grid=document.getElementById('bracket-grid');
+  const SLOT=88; // px por slot R32
 
-  function matchCard(m, extraClass=''){
-    if(!m) return `<div class="bk-match tbd ${extraClass}">
-      <div class="bk-team"><span class="bk-flag">${flagImg('❓')}</span><span class="bk-name">Por definir</span><span class="bk-score tbd-score">–</span></div>
-      <div class="bk-team"><span class="bk-flag">${flagImg('❓')}</span><span class="bk-name">Por definir</span><span class="bk-score tbd-score">–</span></div>
+  function tbdCard(){
+    return `<div class="bk-match tbd">
+      <div class="bk-team"><span class="bk-flag" style="font-size:13px;opacity:.4">❓</span><span class="bk-name">Por definir</span><span class="bk-score tbd-score">–</span></div>
+      <div class="bk-team"><span class="bk-flag" style="font-size:13px;opacity:.4">❓</span><span class="bk-name">Por definir</span><span class="bk-score tbd-score">–</span></div>
     </div>`;
-    const res=BRACKET_RES[m.id]||null, hasResult=res&&res.w;
+  }
+
+  function matchCard(m){
+    if(!m) return tbdCard();
+    const res=BRACKET_RES[m.id]||null, has=res&&res.w;
     const a=bTeam(m.t1), b=bTeam(m.t2);
-    const w1=hasResult&&res.w===a.code, w2=hasResult&&res.w===b.code;
-    const cls=extraClass+(/final/.test(extraClass)?'':m.id==='FINAL'?' final-match':m.id==='BRONZE'?' bronze-match':'');
+    const w1=has&&res.w===a.code, w2=has&&res.w===b.code;
+    const cls=(m.id==='FINAL'?'final-match ':m.id==='BRONZE'?'bronze-match ':'');
     return `<div class="bk-match ${cls}">
-      <div class="bk-team${w1?' winner':hasResult?' loser':''}">
+      <div class="bk-team${w1?' winner':has?' loser':''}">
         <span class="bk-flag">${a.flag}</span><span class="bk-name">${a.name}</span>
-        <span class="bk-score${!hasResult?' tbd-score':''}">${hasResult?res.s1:'–'}</span>
+        <span class="bk-score${!has?' tbd-score':''}">${has?res.s1:'–'}</span>
       </div>
-      <div class="bk-team${w2?' winner':hasResult?' loser':''}">
+      <div class="bk-team${w2?' winner':has?' loser':''}">
         <span class="bk-flag">${b.flag}</span><span class="bk-name">${b.name}</span>
-        <span class="bk-score${!hasResult?' tbd-score':''}">${hasResult?res.s2:'–'}</span>
+        <span class="bk-score${!has?' tbd-score':''}">${has?res.s2:'–'}</span>
       </div>
     </div>${m.date?`<div class="bk-date">${m.date}</div>`:''}`;
   }
 
-  function col(label, pairs, isRight=false){
+  // Build a column with slot-based alignment
+  // items: array of match objects (or null for TBD)
+  // slotsEach: how many R32-slots tall each item is
+  // connType: 'r'=right connectors, 'l'=left connectors, ''=none
+  function buildCol(label, items, slotsEach, connType='', isRight=false){
     const align=isRight?'style="text-align:right"':'';
-    const pairsHtml=pairs.map(([m1,m2])=>
-      `<div class="bk-pair">${matchCard(m1)}${matchCard(m2)}</div>`
-    ).join('');
-    return `<div class="bk-col"><div class="bk-col-label" ${align}>${label}</div>${pairsHtml}</div>`;
-  }
-
-  function colSingle(label, items, isRight=false){
-    const align=isRight?'style="text-align:right"':'';
-    const html=items.map(m=>`<div class="bk-pair" style="margin-bottom:8px">${matchCard(m)}</div>`).join('');
-    return `<div class="bk-col"><div class="bk-col-label" ${align}>${label}</div>${html}</div>`;
+    const slots = items.map((m, i)=>{
+      let cls='bk-slot';
+      // Add connector classes for pairs
+      if(connType){
+        cls += ' conn-'+connType;
+        cls += (i%2===0) ? ' conn-'+connType+'-top' : ' conn-'+connType+'-bot';
+      }
+      return `<div class="${cls}" style="height:${slotsEach*SLOT}px">${matchCard(m)}</div>`;
+    }).join('');
+    return `<div class="bk-col"><div class="bk-col-label" ${align}>${label}</div>${slots}</div>`;
   }
 
   const L=BRACKET_R32.slice(0,8), R=BRACKET_R32.slice(8,16);
-  const tbd=null;
+  const N=null;
 
+  // Left half: R32→R16→QF→SF (connectors point right →)
   const leftHalf=`<div class="bk-half">
-    ${col('Ronda de 32',[[L[0],L[1]],[L[2],L[3]],[L[4],L[5]],[L[6],L[7]]])}
-    ${col('R. de 16',[[tbd,tbd],[tbd,tbd]])}
-    ${col('Cuartos',[[tbd,tbd]])}
-    ${colSingle('Semis',[tbd])}
+    ${buildCol('Ronda de 32',[L[0],L[1],L[2],L[3],L[4],L[5],L[6],L[7]], 1, 'r')}
+    ${buildCol('R. de 16',   [N,N,N,N],                                   2, 'r')}
+    ${buildCol('Cuartos',    [N,N],                                        4, 'r')}
+    ${buildCol('Semis',      [N],                                          8, '')}
   </div>`;
 
-  const finalCol=`<div class="bk-final-col">
-    <div style="margin-bottom:20px">
+  // Final column (centered)
+  const finalCol=`<div class="bk-final-col" style="min-width:160px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:0 8px;">
+    <div style="width:100%">
       <div class="bk-final-badge">⚽ Final</div>
-      ${matchCard({id:'FINAL',t1:'❓ Por definir',t2:'❓ Por definir',date:'19 Jul · MetLife Stadium'},'final-match ')}
+      ${matchCard({id:'FINAL',t1:'❓ Por definir',t2:'❓ Por definir',date:'19 Jul · MetLife Stadium'})}
     </div>
-    <div>
+    <div style="width:100%">
       <div class="bk-final-badge" style="color:#B46A1E">🥉 3er Lugar</div>
-      ${matchCard({id:'BRONZE',t1:'❓ Por definir',t2:'❓ Por definir',date:'18 Jul · AT&T Stadium'},'bronze-match ')}
+      ${matchCard({id:'BRONZE',t1:'❓ Por definir',t2:'❓ Por definir',date:'18 Jul · AT&T Stadium'})}
     </div>
   </div>`;
 
+  // Right half: SF→QF→R16→R32 (connectors point left ←)
   const rightHalf=`<div class="bk-half bk-half-r">
-    ${col('Ronda de 32',[[R[0],R[1]],[R[2],R[3]],[R[4],R[5]],[R[6],R[7]]],true)}
-    ${col('R. de 16',[[tbd,tbd],[tbd,tbd]],true)}
-    ${col('Cuartos',[[tbd,tbd]],true)}
-    ${colSingle('Semis',[tbd],true)}
+    ${buildCol('Ronda de 32',[R[0],R[1],R[2],R[3],R[4],R[5],R[6],R[7]], 1, 'l', true)}
+    ${buildCol('R. de 16',   [N,N,N,N],                                   2, 'l', true)}
+    ${buildCol('Cuartos',    [N,N],                                        4, 'l', true)}
+    ${buildCol('Semis',      [N],                                          8, '',  true)}
   </div>`;
 
   grid.innerHTML=leftHalf+finalCol+rightHalf;
