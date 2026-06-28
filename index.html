@@ -254,7 +254,40 @@ header{background:linear-gradient(180deg,#040E20,#071830);border-bottom:1px soli
 .hist-score{text-align:center;font-family:'Bebas Neue',cursive;font-size:19px;letter-spacing:2px;}
 .hist-pts{text-align:right;}
 .lb-row{cursor:pointer;}
+
+/* ═══════════ BRACKET / LLAVES ═══════════ */
+#bracket-section{display:none;padding:0 16px 32px;}
+.bracket-wrap{overflow-x:auto;padding:16px 0;}
+.bracket-grid{display:flex;gap:0;min-width:1100px;align-items:stretch;}
+.bk-half{display:flex;flex:1;gap:0;}
+.bk-half-r{flex-direction:row-reverse;}
+.bk-col{display:flex;flex-direction:column;justify-content:space-around;flex:1;min-width:148px;padding:0 4px;position:relative;}
+.bk-col-label{font-family:'Bebas Neue',cursive;font-size:11px;letter-spacing:2px;color:var(--muted);text-align:center;padding:6px 0 10px;text-transform:uppercase;}
+.bk-final-col{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;min-width:160px;padding:0 8px;}
+.bk-match{background:var(--card);border:1px solid var(--border-s);border-radius:8px;overflow:hidden;position:relative;transition:border-color .2s;}
+.bk-match:hover{border-color:var(--gold);}
+.bk-match.tbd{opacity:.55;}
+.bk-team{display:flex;align-items:center;gap:7px;padding:7px 10px;font-size:11px;font-weight:600;border-bottom:1px solid var(--border-s);transition:background .15s;}
+.bk-team:last-child{border-bottom:none;}
+.bk-team.winner{background:var(--gold-dim);color:var(--gold-lt);}
+.bk-team.loser{color:var(--muted);}
+.bk-flag{flex-shrink:0;display:flex;align-items:center;} .bk-flag .fi{width:22px;height:16px;border-radius:2px;box-shadow:0 1px 3px rgba(0,0,0,.4);}
+.bk-name{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:72px;}
+.bk-score{font-family:'Bebas Neue',cursive;font-size:16px;letter-spacing:1px;min-width:18px;text-align:right;color:var(--gold);}
+.bk-score.tbd-score{color:var(--border);font-size:13px;}
+.bk-date{font-size:9px;color:var(--muted);padding:3px 10px;background:rgba(0,0,0,.2);border-top:1px solid var(--border-s);letter-spacing:.5px;}
+.bk-connector{position:relative;}
+/* Final cards */
+.bk-final-badge{font-family:'Bebas Neue',cursive;font-size:10px;letter-spacing:2px;color:var(--gold);text-align:center;padding:4px 0;}
+.bk-match.final-match{border-color:var(--gold);box-shadow:0 0 20px rgba(201,162,39,.2);}
+.bk-match.bronze-match{border-color:rgba(180,110,30,.5);}
+/* Nav tab */
+.view-tabs{display:flex;gap:8px;padding:10px 16px;border-bottom:1px solid var(--border-s);background:var(--surface);flex-wrap:wrap;}
+.vtab{background:transparent;border:1px solid var(--border-s);color:var(--muted);padding:5px 14px;border-radius:20px;cursor:pointer;font-size:11px;font-weight:600;font-family:'Inter',sans-serif;transition:all .18s;}
+.vtab:hover{border-color:var(--gold);color:var(--white);}
+.vtab.active{background:var(--gold);border-color:var(--gold);color:#060E1C;font-weight:700;}
 </style>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/6.6.6/css/flag-icons.min.css">
 </head>
 <body>
 <div id="loading">
@@ -281,6 +314,11 @@ header{background:linear-gradient(180deg,#040E20,#071830);border-bottom:1px soli
   </div>
 </header>
 
+
+<div class="view-tabs">
+  <button class="vtab active" id="tab-quiniela" onclick="switchView('quiniela')">📊 Quiniela</button>
+  <button class="vtab" id="tab-bracket" onclick="switchView('bracket')">🏆 Llaves</button>
+</div>
 <div id="status-bar">
   <div id="status-dot"></div>
   <span id="status-txt">Conectando con servidor de resultados...</span>
@@ -290,6 +328,13 @@ header{background:linear-gradient(180deg,#040E20,#071830);border-bottom:1px soli
 <div class="date-strip">
   <span class="strip-lbl">Jornada</span>
   <div id="date-nav"></div>
+</div>
+
+
+<div id="bracket-section">
+  <div class="bracket-wrap">
+    <div class="bracket-grid" id="bracket-grid"></div>
+  </div>
 </div>
 
 <div class="page">
@@ -667,6 +712,157 @@ function renderMatches(){
   }).join('');
 }
 
+
+
+// ═══════════════════════════════════════════════
+// BRACKET / LLAVES
+// ═══════════════════════════════════════════════
+const BRACKET_R32 = [
+  // LEFT SIDE (L1–L8)
+  {id:'L1',t1:'ALE – Alemania',  t2:'SUE – Suecia',      date:'1 Jul · Houston'},
+  {id:'L2',t1:'FRA – Francia',   t2:'GHA – Ghana',       date:'1 Jul · Dallas'},
+  {id:'L3',t1:'SUD – Sudáfrica', t2:'CAN – Canadá',      date:'2 Jul · Seattle'},
+  {id:'L4',t1:'NED – P. Bajos',  t2:'MAR – Marruecos',   date:'2 Jul · Boston'},
+  {id:'L5',t1:'POR – Portugal',  t2:'CRO – Croacia',     date:'2 Jul · Toronto'},
+  {id:'L6',t1:'ESP – España',    t2:'AUT – Austria',     date:'2 Jul · Los Ángeles'},
+  {id:'L7',t1:'USA – USA',       t2:'BOS – Bosnia',      date:'3 Jul · New Jersey'},
+  {id:'L8',t1:'BEL – Bélgica',   t2:'SEN – Senegal',     date:'3 Jul · Atlanta'},
+  // RIGHT SIDE (R1–R8)
+  {id:'R1',t1:'BRA – Brasil',       t2:'JAP – Japón',       date:'1 Jul · Miami'},
+  {id:'R2',t1:'CIV – C. de Marfil', t2:'NOR – Noruega',     date:'1 Jul · Vancouver'},
+  {id:'R3',t1:'MEX – México',       t2:'ECU – Ecuador',     date:'2 Jul · Guadalajara'},
+  {id:'R4',t1:'ING – Inglaterra',   t2:'RDC – R.D. Congo',  date:'2 Jul · Kansas City'},
+  {id:'R5',t1:'COL – Colombia',     t2:'PAR – Paraguay',    date:'3 Jul · Philadelphia'},
+  {id:'R6',t1:'ARG – Argentina',    t2:'CAB – Cabo Verde',  date:'3 Jul · Miami'},
+  {id:'R7',t1:'SUI – Suiza',        t2:'ALG – Argelia',     date:'3 Jul · San Francisco'},
+  {id:'R8',t1:'TUR – Turquía',      t2:'EGI – Egipto',      date:'3 Jul · Monterrey'},
+];
+
+// Storage for bracket results: {matchId: {w: 'team_key', s1: 0, s2: 0}}
+let BRACKET_RES = {};
+
+
+const ISO={
+  MEX:'mx',SUD:'za',COR:'kr',CHE:'cz',CAN:'ca',BOS:'ba',QAT:'qa',SUI:'ch',
+  BRA:'br',MAR:'ma',HAI:'ht',ESC:'gb-sct',USA:'us',PAR:'py',AUS:'au',TUR:'tr',
+  ALE:'de',CUR:'cw',CIV:'ci',ECU:'ec',NED:'nl',JAP:'jp',SUE:'se',TUN:'tn',
+  ESP:'es',CAB:'cv',ARA:'sa',URU:'uy',BEL:'be',EGI:'eg',IRN:'ir',NZL:'nz',
+  FRA:'fr',SEN:'sn',IRK:'iq',NOR:'no',ARG:'ar',ALG:'dz',AUT:'at',JOR:'jo',
+  POR:'pt',RDC:'cd',UZB:'uz',COL:'co',ING:'gb-eng',CRO:'hr',GHA:'gh',PAN:'pa'
+};
+function flagImg(teamStr){
+  const c=teamStr.split('–')[0].trim();
+  const iso=ISO[c];
+  if(!iso) return '<span style="width:22px;height:16px;display:inline-block">🏳️</span>';
+  return '<span class="fi fi-'+iso+'" style="width:22px;height:16px;border-radius:2px;box-shadow:0 1px 3px rgba(0,0,0,.4);flex-shrink:0"></span>';
+}
+
+
+function bTeam(t){
+  const f=flagImg(t), n=t.split('–')[1]?.trim()||t;
+  return {flag:f, name:n, code:t.split('–')[0].trim()};
+}
+
+function bMatchCard(t1, t2, res, isFinal=false, isBronze=false){
+  const a=bTeam(t1), b=bTeam(t2);
+  const hasResult = res && res.w;
+  const w1 = hasResult && res.w === a.code;
+  const w2 = hasResult && res.w === b.code;
+  const cls = isFinal?'final-match':isBronze?'bronze-match':'';
+  const tbd = (!t1.includes('–') || !t2.includes('–')) ? ' tbd' : '';
+  return `<div class="bk-match ${cls}${tbd}">
+    <div class="bk-team${w1?' winner':hasResult?' loser':''}">
+      <span class="bk-flag">${a.flag}</span>
+      <span class="bk-name">${a.name}</span>
+      <span class="bk-score${!hasResult?' tbd-score':''}">${hasResult?res.s1:'–'}</span>
+    </div>
+    <div class="bk-team${w2?' winner':hasResult?' loser':''}">
+      <span class="bk-flag">${b.flag}</span>
+      <span class="bk-name">${b.name}</span>
+      <span class="bk-score${!hasResult?' tbd-score':''}">${hasResult?res.s2:'–'}</span>
+    </div>
+  </div>`;
+}
+
+function bTBDCard(){
+  return `<div class="bk-match tbd">
+    <div class="bk-team"><span class="bk-flag">❓</span><span class="bk-name">Por definir</span><span class="bk-score tbd-score">–</span></div>
+    <div class="bk-team"><span class="bk-flag">❓</span><span class="bk-name">Por definir</span><span class="bk-score tbd-score">–</span></div>
+  </div>`;
+}
+
+function bDateLabel(m){
+  const br = BRACKET_R32.find(x=>x.id===m.id);
+  if(!br) return '';
+  return `<div class="bk-date">${br.date}</div>`;
+}
+
+function renderBracket(){
+  const grid = document.getElementById('bracket-grid');
+
+  const col=(label, matches, isRight=false)=>{
+    const align = isRight ? 'style="text-align:right"':'';
+    const cards = matches.map(m=>{
+      if(!m) return bTBDCard();
+      const res = BRACKET_RES[m.id]||null;
+      const card = bMatchCard(m.t1||'❓ Por definir', m.t2||'❓ Por definir', res);
+      const date = m.date ? `<div class="bk-date">${m.date}</div>` : '';
+      return card + date;
+    }).join('<div style="height:8px"></div>');
+    return `<div class="bk-col">
+      <div class="bk-col-label" ${align}>${label}</div>
+      ${cards}
+    </div>`;
+  };
+
+  const tbd4 = Array(4).fill(null);
+  const tbd2 = Array(2).fill(null);
+  const tbd1 = [null];
+
+  const leftR32  = BRACKET_R32.slice(0,8);
+  const rightR32 = BRACKET_R32.slice(8,16);
+
+  // Build left half
+  const leftHalf = `<div class="bk-half">
+    ${col('Ronda de 32', leftR32)}
+    ${col('R. de 16', tbd4)}
+    ${col('Cuartos', tbd2)}
+    ${col('Semis', tbd1)}
+  </div>`;
+
+  // Final column
+  const finalCol = `<div class="bk-final-col">
+    <div>
+      <div class="bk-final-badge">⚽ Final</div>
+      ${bMatchCard('❓ Por definir','❓ Por definir',null,true)}
+      <div class="bk-date">19 Jul · MetLife Stadium · NJ</div>
+    </div>
+    <div>
+      <div class="bk-final-badge" style="color:#B46A1E">🥉 3er Lugar</div>
+      ${bMatchCard('❓ Por definir','❓ Por definir',null,false,true)}
+      <div class="bk-date">18 Jul · AT&T Stadium · Dallas</div>
+    </div>
+  </div>`;
+
+  // Build right half (reversed columns)
+  const rightHalf = `<div class="bk-half bk-half-r">
+    ${col('Ronda de 32', rightR32, true)}
+    ${col('R. de 16', tbd4, true)}
+    ${col('Cuartos', tbd2, true)}
+    ${col('Semis', tbd1, true)}
+  </div>`;
+
+  grid.innerHTML = leftHalf + finalCol + rightHalf;
+}
+
+function switchView(view){
+  document.getElementById('tab-quiniela').classList.toggle('active', view==='quiniela');
+  document.getElementById('tab-bracket').classList.toggle('active', view==='bracket');
+  document.querySelector('.date-strip').style.display = view==='quiniela'?'':'none';
+  document.querySelector('.page').style.display = view==='quiniela'?'':'none';
+  document.getElementById('bracket-section').style.display = view==='bracket'?'block':'none';
+  if(view==='bracket') renderBracket();
+}
 
 // ═══════════════════════════════════════════════
 // HISTORIAL POR PARTICIPANTE
