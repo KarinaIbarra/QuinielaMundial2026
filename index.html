@@ -256,6 +256,33 @@ header{background:linear-gradient(180deg,#040E20,#071830);border-bottom:1px soli
 .lb-row{cursor:pointer;}
 
 /* ═══════════ BRACKET / LLAVES ═══════════ */
+
+/* Líneas conectoras del bracket */
+.bk-pair{display:flex;flex-direction:column;position:relative;}
+.bk-pair + .bk-pair{margin-top:16px;}
+.bk-pair .bk-match:first-child{position:relative;}
+.bk-pair .bk-match:first-child::after{
+  content:'';position:absolute;right:-9px;top:50%;
+  width:9px;height:calc(50% + 50% + 8px + var(--pair-h, 0px));
+  border-right:1px solid rgba(201,162,39,.3);
+  border-top:1px solid rgba(201,162,39,.3);
+  transform:translateY(0);pointer-events:none;
+}
+.bk-pair .bk-match:last-child::after{
+  content:'';position:absolute;right:-9px;bottom:50%;
+  width:9px;height:calc(50% + 50% + 8px);
+  border-right:1px solid rgba(201,162,39,.3);
+  border-bottom:1px solid rgba(201,162,39,.3);
+  pointer-events:none;
+}
+.bk-match{position:relative;}
+/* Línea horizontal hacia la columna siguiente */
+.bk-pair::after{
+  content:'';position:absolute;right:-9px;top:50%;
+  width:9px;height:1px;
+  background:rgba(201,162,39,.3);
+}
+
 #bracket-section{display:none;padding:0 16px 32px;}
 .bracket-wrap{overflow-x:auto;padding:16px 0;}
 .bracket-grid{display:flex;gap:0;min-width:1100px;align-items:stretch;}
@@ -718,24 +745,24 @@ function renderMatches(){
 // BRACKET / LLAVES
 // ═══════════════════════════════════════════════
 const BRACKET_R32 = [
-  // LEFT SIDE (L1–L8)
-  {id:'L1',t1:'ALE – Alemania',  t2:'SUE – Suecia',      date:'1 Jul · Houston'},
-  {id:'L2',t1:'FRA – Francia',   t2:'GHA – Ghana',       date:'1 Jul · Dallas'},
-  {id:'L3',t1:'SUD – Sudáfrica', t2:'CAN – Canadá',      date:'2 Jul · Seattle'},
-  {id:'L4',t1:'NED – P. Bajos',  t2:'MAR – Marruecos',   date:'2 Jul · Boston'},
-  {id:'L5',t1:'POR – Portugal',  t2:'CRO – Croacia',     date:'2 Jul · Toronto'},
-  {id:'L6',t1:'ESP – España',    t2:'AUT – Austria',     date:'2 Jul · Los Ángeles'},
-  {id:'L7',t1:'USA – USA',       t2:'BOS – Bosnia',      date:'3 Jul · New Jersey'},
-  {id:'L8',t1:'BEL – Bélgica',   t2:'SEN – Senegal',     date:'3 Jul · Atlanta'},
-  // RIGHT SIDE (R1–R8)
-  {id:'R1',t1:'BRA – Brasil',       t2:'JAP – Japón',       date:'1 Jul · Miami'},
-  {id:'R2',t1:'CIV – C. de Marfil', t2:'NOR – Noruega',     date:'1 Jul · Vancouver'},
-  {id:'R3',t1:'MEX – México',       t2:'ECU – Ecuador',     date:'2 Jul · Guadalajara'},
-  {id:'R4',t1:'ING – Inglaterra',   t2:'RDC – R.D. Congo',  date:'2 Jul · Kansas City'},
-  {id:'R5',t1:'COL – Colombia',     t2:'PAR – Paraguay',    date:'3 Jul · Philadelphia'},
-  {id:'R6',t1:'ARG – Argentina',    t2:'CAB – Cabo Verde',  date:'3 Jul · Miami'},
-  {id:'R7',t1:'SUI – Suiza',        t2:'ALG – Argelia',     date:'3 Jul · San Francisco'},
-  {id:'R8',t1:'TUR – Turquía',      t2:'EGI – Egipto',      date:'3 Jul · Monterrey'},
+  // LEFT SIDE (L1-L8) — pares que se enfrentan en R16
+  {id:'L1',t1:'ALE – Alemania',   t2:'PAR – Paraguay',   date:'29 Jun · Boston'},
+  {id:'L2',t1:'FRA – Francia',    t2:'SUE – Suecia',     date:'30 Jun · Nueva York'},
+  {id:'L3',t1:'SUD – Sudáfrica',  t2:'CAN – Canadá',      date:'28 Jun · Los Ángeles'},
+  {id:'L4',t1:'NED – P. Bajos',   t2:'MAR – Marruecos',  date:'29 Jun · Monterrey'},
+  {id:'L5',t1:'BRA – Brasil',     t2:'JAP – Japón',       date:'29 Jun · Houston'},
+  {id:'L6',t1:'CIV – C. de Marfil',t2:'NOR – Noruega',   date:'30 Jun · Dallas'},
+  {id:'L7',t1:'MEX – México',     t2:'ECU – Ecuador',    date:'30 Jun · Ciudad de México'},
+  {id:'L8',t1:'ING – Inglaterra', t2:'RDC – R.D. Congo', date:'1 Jul · Atlanta'},
+  // RIGHT SIDE (R1-R8)
+  {id:'R1',t1:'ESP – España',     t2:'AUT – Austria',    date:'2 Jul · Los Ángeles'},
+  {id:'R2',t1:'POR – Portugal',   t2:'CRO – Croacia',    date:'2 Jul · Toronto'},
+  {id:'R3',t1:'USA – USA',        t2:'BOS – Bosnia',     date:'1 Jul · San Francisco'},
+  {id:'R4',t1:'BEL – Bélgica',    t2:'SEN – Senegal',    date:'1 Jul · Seattle'},
+  {id:'R5',t1:'AUS – Australia',  t2:'EGI – Egipto',     date:'3 Jul · Dallas'},
+  {id:'R6',t1:'COL – Colombia',   t2:'GHA – Ghana',      date:'3 Jul · Kansas City'},
+  {id:'R7',t1:'SUI – Suiza',      t2:'ALG – Argelia',    date:'3 Jul · Vancouver'},
+  {id:'R8',t1:'ARG – Argentina',  t2:'CAB – Cabo Verde', date:'3 Jul · Miami'},
 ];
 
 // Storage for bracket results: {matchId: {w: 'team_key', s1: 0, s2: 0}}
@@ -800,59 +827,70 @@ function bDateLabel(m){
 function renderBracket(){
   const grid = document.getElementById('bracket-grid');
 
-  const col=(label, matches, isRight=false)=>{
-    const align = isRight ? 'style="text-align:right"':'';
-    const cards = matches.map(m=>{
-      if(!m) return bTBDCard();
-      const res = BRACKET_RES[m.id]||null;
-      const card = bMatchCard(m.t1||'❓ Por definir', m.t2||'❓ Por definir', res);
-      const date = m.date ? `<div class="bk-date">${m.date}</div>` : '';
-      return card + date;
-    }).join('<div style="height:8px"></div>');
-    return `<div class="bk-col">
-      <div class="bk-col-label" ${align}>${label}</div>
-      ${cards}
+  function matchCard(m, extraClass=''){
+    if(!m) return `<div class="bk-match tbd ${extraClass}">
+      <div class="bk-team"><span class="bk-flag">${flagImg('❓')}</span><span class="bk-name">Por definir</span><span class="bk-score tbd-score">–</span></div>
+      <div class="bk-team"><span class="bk-flag">${flagImg('❓')}</span><span class="bk-name">Por definir</span><span class="bk-score tbd-score">–</span></div>
     </div>`;
-  };
+    const res=BRACKET_RES[m.id]||null, hasResult=res&&res.w;
+    const a=bTeam(m.t1), b=bTeam(m.t2);
+    const w1=hasResult&&res.w===a.code, w2=hasResult&&res.w===b.code;
+    const cls=extraClass+(/final/.test(extraClass)?'':m.id==='FINAL'?' final-match':m.id==='BRONZE'?' bronze-match':'');
+    return `<div class="bk-match ${cls}">
+      <div class="bk-team${w1?' winner':hasResult?' loser':''}">
+        <span class="bk-flag">${a.flag}</span><span class="bk-name">${a.name}</span>
+        <span class="bk-score${!hasResult?' tbd-score':''}">${hasResult?res.s1:'–'}</span>
+      </div>
+      <div class="bk-team${w2?' winner':hasResult?' loser':''}">
+        <span class="bk-flag">${b.flag}</span><span class="bk-name">${b.name}</span>
+        <span class="bk-score${!hasResult?' tbd-score':''}">${hasResult?res.s2:'–'}</span>
+      </div>
+    </div>${m.date?`<div class="bk-date">${m.date}</div>`:''}`;
+  }
 
-  const tbd4 = Array(4).fill(null);
-  const tbd2 = Array(2).fill(null);
-  const tbd1 = [null];
+  function col(label, pairs, isRight=false){
+    const align=isRight?'style="text-align:right"':'';
+    const pairsHtml=pairs.map(([m1,m2])=>
+      `<div class="bk-pair">${matchCard(m1)}${matchCard(m2)}</div>`
+    ).join('');
+    return `<div class="bk-col"><div class="bk-col-label" ${align}>${label}</div>${pairsHtml}</div>`;
+  }
 
-  const leftR32  = BRACKET_R32.slice(0,8);
-  const rightR32 = BRACKET_R32.slice(8,16);
+  function colSingle(label, items, isRight=false){
+    const align=isRight?'style="text-align:right"':'';
+    const html=items.map(m=>`<div class="bk-pair" style="margin-bottom:8px">${matchCard(m)}</div>`).join('');
+    return `<div class="bk-col"><div class="bk-col-label" ${align}>${label}</div>${html}</div>`;
+  }
 
-  // Build left half
-  const leftHalf = `<div class="bk-half">
-    ${col('Ronda de 32', leftR32)}
-    ${col('R. de 16', tbd4)}
-    ${col('Cuartos', tbd2)}
-    ${col('Semis', tbd1)}
+  const L=BRACKET_R32.slice(0,8), R=BRACKET_R32.slice(8,16);
+  const tbd=null;
+
+  const leftHalf=`<div class="bk-half">
+    ${col('Ronda de 32',[[L[0],L[1]],[L[2],L[3]],[L[4],L[5]],[L[6],L[7]]])}
+    ${col('R. de 16',[[tbd,tbd],[tbd,tbd]])}
+    ${col('Cuartos',[[tbd,tbd]])}
+    ${colSingle('Semis',[tbd])}
   </div>`;
 
-  // Final column
-  const finalCol = `<div class="bk-final-col">
-    <div>
+  const finalCol=`<div class="bk-final-col">
+    <div style="margin-bottom:20px">
       <div class="bk-final-badge">⚽ Final</div>
-      ${bMatchCard('❓ Por definir','❓ Por definir',null,true)}
-      <div class="bk-date">19 Jul · MetLife Stadium · NJ</div>
+      ${matchCard({id:'FINAL',t1:'❓ Por definir',t2:'❓ Por definir',date:'19 Jul · MetLife Stadium'},'final-match ')}
     </div>
     <div>
       <div class="bk-final-badge" style="color:#B46A1E">🥉 3er Lugar</div>
-      ${bMatchCard('❓ Por definir','❓ Por definir',null,false,true)}
-      <div class="bk-date">18 Jul · AT&T Stadium · Dallas</div>
+      ${matchCard({id:'BRONZE',t1:'❓ Por definir',t2:'❓ Por definir',date:'18 Jul · AT&T Stadium'},'bronze-match ')}
     </div>
   </div>`;
 
-  // Build right half (reversed columns)
-  const rightHalf = `<div class="bk-half bk-half-r">
-    ${col('Ronda de 32', rightR32, true)}
-    ${col('R. de 16', tbd4, true)}
-    ${col('Cuartos', tbd2, true)}
-    ${col('Semis', tbd1, true)}
+  const rightHalf=`<div class="bk-half bk-half-r">
+    ${col('Ronda de 32',[[R[0],R[1]],[R[2],R[3]],[R[4],R[5]],[R[6],R[7]]],true)}
+    ${col('R. de 16',[[tbd,tbd],[tbd,tbd]],true)}
+    ${col('Cuartos',[[tbd,tbd]],true)}
+    ${colSingle('Semis',[tbd],true)}
   </div>`;
 
-  grid.innerHTML = leftHalf + finalCol + rightHalf;
+  grid.innerHTML=leftHalf+finalCol+rightHalf;
 }
 
 function switchView(view){
