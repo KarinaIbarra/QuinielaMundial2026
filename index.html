@@ -319,6 +319,60 @@ header{background:linear-gradient(180deg,#040E20,#071830);border-bottom:1px soli
 .vtab{background:transparent;border:1px solid var(--border-s);color:var(--muted);padding:5px 14px;border-radius:20px;cursor:pointer;font-size:11px;font-weight:600;font-family:'Inter',sans-serif;transition:all .18s;}
 .vtab:hover{border-color:var(--gold);color:var(--white);}
 .vtab.active{background:var(--gold);border-color:var(--gold);color:#060E1C;font-weight:700;}
+
+/* ═══ TABLA DE RESULTADOS ═══ */
+#resultados-section{display:none;padding:16px;}
+.res-table{width:100%;border-collapse:collapse;font-size:12px;}
+.res-table th{font-family:'Bebas Neue',cursive;font-size:10px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;padding:8px 10px;border-bottom:2px solid var(--border-s);text-align:center;white-space:nowrap;background:var(--card);}
+.res-table th:nth-child(2){text-align:left;}
+.res-table td{padding:9px 10px;border-bottom:1px solid var(--border-s);text-align:center;vertical-align:middle;}
+.res-table td:nth-child(2){text-align:left;font-weight:600;}
+.res-table tr:hover td{background:var(--faint);}
+.res-table tr.top-3 td{background:rgba(201,162,39,.04);}
+.res-pos{font-family:'Bebas Neue',cursive;font-size:16px;color:var(--muted);width:32px;}
+.res-pos.gold{color:#FFD700;}
+.res-pos.silver{color:#C0C0C0;}
+.res-pos.bronze{color:#CD7F32;}
+.res-name{display:flex;align-items:center;gap:8px;}
+.res-pts{font-family:'Bebas Neue',cursive;font-size:18px;color:var(--white);}
+.res-pts.main{font-size:20px;color:var(--gold);}
+.res-tag{display:inline-block;font-size:9px;font-weight:700;letter-spacing:1px;padding:2px 7px;border-radius:10px;white-space:nowrap;}
+.res-tag.grupos{background:rgba(0,150,255,.15);color:#7AB8FF;border:1px solid rgba(0,150,255,.25);}
+.res-tag.clas{background:rgba(0,196,106,.12);color:#00c46a;border:1px solid rgba(0,196,106,.2);}
+.res-tag.ko{background:rgba(201,162,39,.12);color:var(--gold);border:1px solid rgba(201,162,39,.2);}
+.res-tag.total{background:var(--gold);color:#060E1C;font-size:10px;}
+.col-header-wrap{display:flex;flex-direction:column;align-items:center;gap:2px;}
+.col-header-sub{font-size:8px;opacity:.6;font-weight:400;letter-spacing:.5px;text-transform:none;font-family:'Inter',sans-serif;}
+
+
+/* Modal detalle de puntos */
+#detail-panel{display:none;position:fixed;inset:0;background:rgba(0,0,0,.78);backdrop-filter:blur(4px);z-index:700;align-items:center;justify-content:center;}
+#detail-panel.open{display:flex;}
+.det-box{background:var(--card2);border:1px solid var(--border);border-radius:14px;width:740px;max-width:96vw;max-height:90vh;display:flex;flex-direction:column;overflow:hidden;}
+.det-header{background:linear-gradient(135deg,var(--card2),var(--navy));border-bottom:1px solid var(--border-s);padding:18px 22px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+.det-name{font-family:'Bebas Neue',cursive;font-size:24px;letter-spacing:2px;color:var(--gold);}
+.det-total{font-size:12px;color:var(--muted);margin-top:3px;}
+.det-scroll{overflow-y:auto;flex:1;padding:0 0 16px;}
+.det-section{margin-bottom:2px;}
+.det-sec-hdr{display:flex;align-items:center;justify-content:space-between;padding:10px 20px 6px;background:rgba(0,0,0,.25);border-bottom:1px solid var(--border-s);border-top:1px solid var(--border-s);cursor:pointer;user-select:none;}
+.det-sec-title{font-family:'Bebas Neue',cursive;font-size:13px;letter-spacing:2px;color:var(--gold);text-transform:uppercase;}
+.det-sec-pts{font-family:'Bebas Neue',cursive;font-size:16px;color:var(--white);}
+.det-thead{display:grid;padding:6px 20px;border-bottom:1px solid var(--border-s);font-size:9px;font-weight:700;letter-spacing:1.5px;color:var(--muted);text-transform:uppercase;background:var(--card);}
+.det-row{display:grid;padding:8px 20px;border-bottom:1px solid var(--border-s);align-items:center;transition:background .15s;}
+.det-row:hover{background:var(--faint);}
+.det-row.hit-exact{background:linear-gradient(90deg,rgba(0,196,106,.07),transparent 60%);}
+.det-row.hit-result{background:linear-gradient(90deg,rgba(201,162,39,.06),transparent 60%);}
+.det-row.miss{background:linear-gradient(90deg,rgba(230,57,70,.04),transparent 60%);}
+.det-match{font-size:11px;font-weight:600;}
+.det-sub{font-size:9px;color:var(--muted);margin-top:1px;}
+.det-sc{text-align:center;font-family:'Bebas Neue',cursive;font-size:17px;letter-spacing:1px;}
+.det-pts-cell{text-align:right;}
+/* grid templates */
+.det-thead.g3{grid-template-columns:1fr 80px 80px 56px;}
+.det-row.g3{grid-template-columns:1fr 80px 80px 56px;}
+.det-thead.g2{grid-template-columns:1fr 100px 56px;}
+.det-row.g2{grid-template-columns:1fr 100px 56px;}
+
 </style>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/6.6.6/css/flag-icons.min.css">
 </head>
@@ -349,8 +403,9 @@ header{background:linear-gradient(180deg,#040E20,#071830);border-bottom:1px soli
 
 
 <div class="view-tabs">
-  <button class="vtab active" id="tab-quiniela" onclick="switchView('quiniela')">📊 Quiniela</button>
-  <button class="vtab" id="tab-bracket" onclick="switchView('bracket')">🏆 Llaves</button>
+  <button class="vtab active" id="tab-resultados" onclick="switchView('resultados')">📋 Resultados</button>
+  <button class="vtab" id="tab-bracket" onclick="switchView('bracket')">🏆 Eliminación Directa</button>
+  <button class="vtab" id="tab-quiniela" onclick="switchView('quiniela')">⚽ Fase de Grupos</button>
 </div>
 <div id="status-bar">
   <div id="status-dot"></div>
@@ -363,6 +418,11 @@ header{background:linear-gradient(180deg,#040E20,#071830);border-bottom:1px soli
   <div id="date-nav"></div>
 </div>
 
+
+
+<div id="resultados-section">
+  <div id="res-table-wrap"></div>
+</div>
 
 <div id="bracket-section">
   <div class="bracket-wrap">
@@ -415,6 +475,21 @@ header{background:linear-gradient(180deg,#040E20,#071830);border-bottom:1px soli
 <div class="footer">Quiniela Mundial 2026 &nbsp;·&nbsp; Actualización automática cada 30 s &nbsp;·&nbsp; Horarios en CDMx</div>
 
 
+
+
+<!-- Detail panel -->
+<div id="detail-panel" onclick="if(event.target===this)closeDetail()">
+  <div class="det-box">
+    <div class="det-header">
+      <div>
+        <div class="det-name" id="det-name"></div>
+        <div class="det-total" id="det-total"></div>
+      </div>
+      <button class="btn-cancel" onclick="closeDetail()">✕ Cerrar</button>
+    </div>
+    <div class="det-scroll" id="det-body"></div>
+  </div>
+</div>
 
 <!-- Bracket predictions panel -->
 <div id="bk-pred-panel" onclick="if(event.target===this)closeBkPred()">
@@ -772,6 +847,76 @@ function renderMatches(){
 // ═══════════════════════════════════════════════
 // PRONÓSTICOS FASE ELIMINATORIA
 // ═══════════════════════════════════════════════
+
+// Puntos por equipos clasificados a 16vos (se actualiza con Excel)
+const PTS_CLASIFICADOS = {
+  'AxelC':250,
+  'AxelIbarra':260,
+  'Berenice':260,
+  'Betty':270,
+  'Cesar':250,
+  'DiegoArmando':270,
+  'DiegoMartinez':270,
+  'DiegoRamirezCastro':260,
+  'Emiliano':260,
+  'FernandaG':270,
+  'FernandaMocte':270,
+  'FranciscoI':270,
+  'IanL':260,
+  'JuanPablo':270,
+  'KarinaIbarra1':260,
+  'KarinaIbarra2':250,
+  'MarioM':270,
+  'MauricioMoreno':250,
+  'MauricioMtz':270,
+  'MaxZ':270,
+  'Mayito':250,
+  'Mich':260,
+  'OscarC':260,
+  'PabloS':270,
+  'RocioIbarra':230,
+  'RodolfoC':270,
+  'RodrigoGonzalez':250,
+  'RodrigoIbarra':270,
+  'Sebastian':260,
+  'Toño':260
+};
+
+const REAL_CLASSIFIED = new Set(["MEX – México", "SUD – Sudáfrica", "SUI – Suiza", "CAN – Canadá", "BOS – Bosnia", "BRA – Brasil", "MAR – Marruecos", "USA – USA", "AUS – Australia", "PAR – Paraguay", "ALE – Alemania", "CIV – C. de Marfil", "ECU – Ecuador", "NED – P. Bajos", "JAP – Japón", "SUE – Suecia", "BEL – Bélgica", "EGI – Egipto", "ESP – España", "CAB – Cabo Verde", "FRA – Francia", "NOR – Noruega", "SEN – Senegal", "ARG – Argentina", "AUT – Austria", "ALG – Argelia", "COL – Colombia", "POR – Portugal", "RDC – R.D. Congo", "ING – Inglaterra", "CRO – Croacia", "GHA – Ghana"]);
+
+const CLASIFICADOS_DETAIL = {
+  'AxelC':[{"g":"A","s":"CHE – R. Checa","pred":1,"p":0},{"g":"A","s":"COR – C. del Sur","pred":1,"p":0},{"g":"A","s":"MEX – México","pred":1,"p":10},{"g":"A","s":"SUD – Sudáfrica","pred":0,"p":0},{"g":"B","s":"BOS – Bosnia","pred":1,"p":10},{"g":"B","s":"CAN – Canadá","pred":0,"p":0},{"g":"B","s":"QAT – Qatar","pred":0,"p":0},{"g":"B","s":"SUI – Suiza","pred":1,"p":10},{"g":"C","s":"BRA – Brasil","pred":1,"p":10},{"g":"C","s":"ESC – Escocia","pred":1,"p":0},{"g":"C","s":"HAI – Haití","pred":0,"p":0},{"g":"C","s":"MAR – Marruecos","pred":1,"p":10},{"g":"D","s":"AUS – Australia","pred":0,"p":0},{"g":"D","s":"PAR – Paraguay","pred":0,"p":0},{"g":"D","s":"TUR – Turquía","pred":1,"p":0},{"g":"D","s":"USA – USA","pred":1,"p":10},{"g":"E","s":"ALE – Alemania","pred":1,"p":10},{"g":"E","s":"CIV – C. de Marfil","pred":0,"p":0},{"g":"E","s":"CUR – Curazao","pred":0,"p":0},{"g":"E","s":"ECU – Ecuador","pred":1,"p":10},{"g":"F","s":"JAP – Japón","pred":1,"p":10},{"g":"F","s":"NED – P. Bajos","pred":1,"p":10},{"g":"F","s":"SUE – Suecia","pred":1,"p":10},{"g":"F","s":"TUN – Túnez","pred":0,"p":0},{"g":"G","s":"BEL – Bélgica","pred":1,"p":10},{"g":"G","s":"EGI – Egipto","pred":1,"p":10},{"g":"G","s":"IRN – Irán","pred":1,"p":0},{"g":"G","s":"NZL – N. Zelanda","pred":0,"p":0},{"g":"H","s":"ARA – A. Saudita","pred":0,"p":0},{"g":"H","s":"CAB – Cabo Verde","pred":0,"p":0},{"g":"H","s":"ESP – España","pred":1,"p":10},{"g":"H","s":"URU – Uruguay","pred":1,"p":0},{"g":"I","s":"FRA – Francia","pred":1,"p":10},{"g":"I","s":"IRK – Irak","pred":0,"p":0},{"g":"I","s":"NOR – Noruega","pred":1,"p":10},{"g":"I","s":"SEN – Senegal","pred":1,"p":10},{"g":"J","s":"ALG – Argelia","pred":1,"p":10},{"g":"J","s":"ARG – Argentina","pred":1,"p":10},{"g":"J","s":"AUT – Austria","pred":1,"p":10},{"g":"J","s":"JOR – Jordania","pred":0,"p":0},{"g":"K","s":"COL – Colombia","pred":1,"p":10},{"g":"K","s":"POR – Portugal","pred":1,"p":10},{"g":"K","s":"RDC – R.D. Congo","pred":0,"p":0},{"g":"K","s":"UZB – Uzbekistán","pred":0,"p":0},{"g":"L","s":"CRO – Croacia","pred":1,"p":10},{"g":"L","s":"GHA – Ghana","pred":1,"p":10},{"g":"L","s":"ING – Inglaterra","pred":1,"p":10},{"g":"L","s":"PAN – Panamá","pred":0,"p":0}],
+  'AxelIbarra':[{"g":"A","s":"CHE – R. Checa","pred":0,"p":0},{"g":"A","s":"COR – C. del Sur","pred":1,"p":0},{"g":"A","s":"MEX – México","pred":1,"p":10},{"g":"A","s":"SUD – Sudáfrica","pred":1,"p":10},{"g":"B","s":"BOS – Bosnia","pred":0,"p":0},{"g":"B","s":"CAN – Canadá","pred":1,"p":10},{"g":"B","s":"QAT – Qatar","pred":0,"p":0},{"g":"B","s":"SUI – Suiza","pred":1,"p":10},{"g":"C","s":"BRA – Brasil","pred":1,"p":10},{"g":"C","s":"ESC – Escocia","pred":1,"p":0},{"g":"C","s":"HAI – Haití","pred":0,"p":0},{"g":"C","s":"MAR – Marruecos","pred":1,"p":10},{"g":"D","s":"AUS – Australia","pred":1,"p":10},{"g":"D","s":"PAR – Paraguay","pred":0,"p":0},{"g":"D","s":"TUR – Turquía","pred":1,"p":0},{"g":"D","s":"USA – USA","pred":1,"p":10},{"g":"E","s":"ALE – Alemania","pred":1,"p":10},{"g":"E","s":"CIV – C. de Marfil","pred":1,"p":10},{"g":"E","s":"CUR – Curazao","pred":0,"p":0},{"g":"E","s":"ECU – Ecuador","pred":1,"p":10},{"g":"F","s":"JAP – Japón","pred":1,"p":10},{"g":"F","s":"NED – P. Bajos","pred":1,"p":10},{"g":"F","s":"SUE – Suecia","pred":1,"p":10},{"g":"F","s":"TUN – Túnez","pred":0,"p":0},{"g":"G","s":"BEL – Bélgica","pred":1,"p":10},{"g":"G","s":"EGI – Egipto","pred":1,"p":10},{"g":"G","s":"IRN – Irán","pred":0,"p":0},{"g":"G","s":"NZL – N. Zelanda","pred":0,"p":0},{"g":"H","s":"ARA – A. Saudita","pred":1,"p":0},{"g":"H","s":"CAB – Cabo Verde","pred":0,"p":0},{"g":"H","s":"ESP – España","pred":1,"p":10},{"g":"H","s":"URU – Uruguay","pred":1,"p":0},{"g":"I","s":"FRA – Francia","pred":1,"p":10},{"g":"I","s":"IRK – Irak","pred":0,"p":0},{"g":"I","s":"NOR – Noruega","pred":1,"p":10},{"g":"I","s":"SEN – Senegal","pred":0,"p":0},{"g":"J","s":"ALG – Argelia","pred":1,"p":10},{"g":"J","s":"ARG – Argentina","pred":1,"p":10},{"g":"J","s":"AUT – Austria","pred":1,"p":10},{"g":"J","s":"JOR – Jordania","pred":0,"p":0},{"g":"K","s":"COL – Colombia","pred":1,"p":10},{"g":"K","s":"POR – Portugal","pred":1,"p":10},{"g":"K","s":"RDC – R.D. Congo","pred":0,"p":0},{"g":"K","s":"UZB – Uzbekistán","pred":0,"p":0},{"g":"L","s":"CRO – Croacia","pred":1,"p":10},{"g":"L","s":"GHA – Ghana","pred":0,"p":0},{"g":"L","s":"ING – Inglaterra","pred":1,"p":10},{"g":"L","s":"PAN – Panamá","pred":1,"p":0}],
+  'Berenice':[{"g":"A","s":"CHE – R. Checa","pred":1,"p":0},{"g":"A","s":"COR – C. del Sur","pred":1,"p":0},{"g":"A","s":"MEX – México","pred":1,"p":10},{"g":"A","s":"SUD – Sudáfrica","pred":0,"p":0},{"g":"B","s":"BOS – Bosnia","pred":1,"p":10},{"g":"B","s":"CAN – Canadá","pred":1,"p":10},{"g":"B","s":"QAT – Qatar","pred":0,"p":0},{"g":"B","s":"SUI – Suiza","pred":1,"p":10},{"g":"C","s":"BRA – Brasil","pred":1,"p":10},{"g":"C","s":"ESC – Escocia","pred":1,"p":0},{"g":"C","s":"HAI – Haití","pred":0,"p":0},{"g":"C","s":"MAR – Marruecos","pred":1,"p":10},{"g":"D","s":"AUS – Australia","pred":0,"p":0},{"g":"D","s":"PAR – Paraguay","pred":0,"p":0},{"g":"D","s":"TUR – Turquía","pred":1,"p":0},{"g":"D","s":"USA – USA","pred":1,"p":10},{"g":"E","s":"ALE – Alemania","pred":1,"p":10},{"g":"E","s":"CIV – C. de Marfil","pred":1,"p":10},{"g":"E","s":"CUR – Curazao","pred":0,"p":0},{"g":"E","s":"ECU – Ecuador","pred":1,"p":10},{"g":"F","s":"JAP – Japón","pred":1,"p":10},{"g":"F","s":"NED – P. Bajos","pred":1,"p":10},{"g":"F","s":"SUE – Suecia","pred":1,"p":10},{"g":"F","s":"TUN – Túnez","pred":0,"p":0},{"g":"G","s":"BEL – Bélgica","pred":1,"p":10},{"g":"G","s":"EGI – Egipto","pred":1,"p":10},{"g":"G","s":"IRN – Irán","pred":0,"p":0},{"g":"G","s":"NZL – N. Zelanda","pred":1,"p":0},{"g":"H","s":"ARA – A. Saudita","pred":0,"p":0},{"g":"H","s":"CAB – Cabo Verde","pred":0,"p":0},{"g":"H","s":"ESP – España","pred":1,"p":10},{"g":"H","s":"URU – Uruguay","pred":1,"p":0},{"g":"I","s":"FRA – Francia","pred":1,"p":10},{"g":"I","s":"IRK – Irak","pred":0,"p":0},{"g":"I","s":"NOR – Noruega","pred":1,"p":10},{"g":"I","s":"SEN – Senegal","pred":1,"p":10},{"g":"J","s":"ALG – Argelia","pred":1,"p":10},{"g":"J","s":"ARG – Argentina","pred":1,"p":10},{"g":"J","s":"AUT – Austria","pred":1,"p":10},{"g":"J","s":"JOR – Jordania","pred":0,"p":0},{"g":"K","s":"COL – Colombia","pred":1,"p":10},{"g":"K","s":"POR – Portugal","pred":1,"p":10},{"g":"K","s":"RDC – R.D. Congo","pred":0,"p":0},{"g":"K","s":"UZB – Uzbekistán","pred":0,"p":0},{"g":"L","s":"CRO – Croacia","pred":1,"p":10},{"g":"L","s":"GHA – Ghana","pred":0,"p":0},{"g":"L","s":"ING – Inglaterra","pred":1,"p":10},{"g":"L","s":"PAN – Panamá","pred":0,"p":0}],
+  'Betty':[{"g":"A","s":"CHE – R. Checa","pred":1,"p":0},{"g":"A","s":"COR – C. del Sur","pred":1,"p":0},{"g":"A","s":"MEX – México","pred":1,"p":10},{"g":"A","s":"SUD – Sudáfrica","pred":0,"p":0},{"g":"B","s":"BOS – Bosnia","pred":1,"p":10},{"g":"B","s":"CAN – Canadá","pred":1,"p":10},{"g":"B","s":"QAT – Qatar","pred":0,"p":0},{"g":"B","s":"SUI – Suiza","pred":1,"p":10},{"g":"C","s":"BRA – Brasil","pred":1,"p":10},{"g":"C","s":"ESC – Escocia","pred":1,"p":0},{"g":"C","s":"HAI – Haití","pred":0,"p":0},{"g":"C","s":"MAR – Marruecos","pred":1,"p":10},{"g":"D","s":"AUS – Australia","pred":0,"p":0},{"g":"D","s":"PAR – Paraguay","pred":1,"p":10},{"g":"D","s":"TUR – Turquía","pred":1,"p":0},{"g":"D","s":"USA – USA","pred":1,"p":10},{"g":"E","s":"ALE – Alemania","pred":1,"p":10},{"g":"E","s":"CIV – C. de Marfil","pred":1,"p":10},{"g":"E","s":"CUR – Curazao","pred":0,"p":0},{"g":"E","s":"ECU – Ecuador","pred":1,"p":10},{"g":"F","s":"JAP – Japón","pred":1,"p":10},{"g":"F","s":"NED – P. Bajos","pred":1,"p":10},{"g":"F","s":"SUE – Suecia","pred":1,"p":10},{"g":"F","s":"TUN – Túnez","pred":0,"p":0},{"g":"G","s":"BEL – Bélgica","pred":1,"p":10},{"g":"G","s":"EGI – Egipto","pred":1,"p":10},{"g":"G","s":"IRN – Irán","pred":0,"p":0},{"g":"G","s":"NZL – N. Zelanda","pred":0,"p":0},{"g":"H","s":"ARA – A. Saudita","pred":0,"p":0},{"g":"H","s":"CAB – Cabo Verde","pred":0,"p":0},{"g":"H","s":"ESP – España","pred":1,"p":10},{"g":"H","s":"URU – Uruguay","pred":1,"p":0},{"g":"I","s":"FRA – Francia","pred":1,"p":10},{"g":"I","s":"IRK – Irak","pred":0,"p":0},{"g":"I","s":"NOR – Noruega","pred":1,"p":10},{"g":"I","s":"SEN – Senegal","pred":1,"p":10},{"g":"J","s":"ALG – Argelia","pred":1,"p":10},{"g":"J","s":"ARG – Argentina","pred":1,"p":10},{"g":"J","s":"AUT – Austria","pred":1,"p":10},{"g":"J","s":"JOR – Jordania","pred":0,"p":0},{"g":"K","s":"COL – Colombia","pred":1,"p":10},{"g":"K","s":"POR – Portugal","pred":1,"p":10},{"g":"K","s":"RDC – R.D. Congo","pred":0,"p":0},{"g":"K","s":"UZB – Uzbekistán","pred":0,"p":0},{"g":"L","s":"CRO – Croacia","pred":1,"p":10},{"g":"L","s":"GHA – Ghana","pred":0,"p":0},{"g":"L","s":"ING – Inglaterra","pred":1,"p":10},{"g":"L","s":"PAN – Panamá","pred":0,"p":0}],
+  'Cesar':[{"g":"A","s":"CHE – R. Checa","pred":1,"p":0},{"g":"A","s":"COR – C. del Sur","pred":0,"p":0},{"g":"A","s":"MEX – México","pred":1,"p":10},{"g":"A","s":"SUD – Sudáfrica","pred":1,"p":10},{"g":"B","s":"BOS – Bosnia","pred":0,"p":0},{"g":"B","s":"CAN – Canadá","pred":1,"p":10},{"g":"B","s":"QAT – Qatar","pred":0,"p":0},{"g":"B","s":"SUI – Suiza","pred":1,"p":10},{"g":"C","s":"BRA – Brasil","pred":1,"p":10},{"g":"C","s":"ESC – Escocia","pred":1,"p":0},{"g":"C","s":"HAI – Haití","pred":0,"p":0},{"g":"C","s":"MAR – Marruecos","pred":1,"p":10},{"g":"D","s":"AUS – Australia","pred":0,"p":0},{"g":"D","s":"PAR – Paraguay","pred":1,"p":10},{"g":"D","s":"TUR – Turquía","pred":1,"p":0},{"g":"D","s":"USA – USA","pred":1,"p":10},{"g":"E","s":"ALE – Alemania","pred":1,"p":10},{"g":"E","s":"CIV – C. de Marfil","pred":1,"p":10},{"g":"E","s":"CUR – Curazao","pred":0,"p":0},{"g":"E","s":"ECU – Ecuador","pred":1,"p":10},{"g":"F","s":"JAP – Japón","pred":1,"p":10},{"g":"F","s":"NED – P. Bajos","pred":1,"p":10},{"g":"F","s":"SUE – Suecia","pred":0,"p":0},{"g":"F","s":"TUN – Túnez","pred":1,"p":0},{"g":"G","s":"BEL – Bélgica","pred":1,"p":10},{"g":"G","s":"EGI – Egipto","pred":1,"p":10},{"g":"G","s":"IRN – Irán","pred":1,"p":0},{"g":"G","s":"NZL – N. Zelanda","pred":0,"p":0},{"g":"H","s":"ARA – A. Saudita","pred":1,"p":0},{"g":"H","s":"CAB – Cabo Verde","pred":0,"p":0},{"g":"H","s":"ESP – España","pred":1,"p":10},{"g":"H","s":"URU – Uruguay","pred":1,"p":0},{"g":"I","s":"FRA – Francia","pred":1,"p":10},{"g":"I","s":"IRK – Irak","pred":0,"p":0},{"g":"I","s":"NOR – Noruega","pred":1,"p":10},{"g":"I","s":"SEN – Senegal","pred":0,"p":0},{"g":"J","s":"ALG – Argelia","pred":0,"p":0},{"g":"J","s":"ARG – Argentina","pred":1,"p":10},{"g":"J","s":"AUT – Austria","pred":1,"p":10},{"g":"J","s":"JOR – Jordania","pred":0,"p":0},{"g":"K","s":"COL – Colombia","pred":1,"p":10},{"g":"K","s":"POR – Portugal","pred":1,"p":10},{"g":"K","s":"RDC – R.D. Congo","pred":0,"p":0},{"g":"K","s":"UZB – Uzbekistán","pred":0,"p":0},{"g":"L","s":"CRO – Croacia","pred":1,"p":10},{"g":"L","s":"GHA – Ghana","pred":1,"p":10},{"g":"L","s":"ING – Inglaterra","pred":1,"p":10},{"g":"L","s":"PAN – Panamá","pred":0,"p":0}],
+  'DiegoArmando':[{"g":"A","s":"CHE – R. Checa","pred":1,"p":0},{"g":"A","s":"COR – C. del Sur","pred":0,"p":0},{"g":"A","s":"MEX – México","pred":1,"p":10},{"g":"A","s":"SUD – Sudáfrica","pred":1,"p":10},{"g":"B","s":"BOS – Bosnia","pred":1,"p":10},{"g":"B","s":"CAN – Canadá","pred":1,"p":10},{"g":"B","s":"QAT – Qatar","pred":0,"p":0},{"g":"B","s":"SUI – Suiza","pred":1,"p":10},{"g":"C","s":"BRA – Brasil","pred":1,"p":10},{"g":"C","s":"ESC – Escocia","pred":1,"p":0},{"g":"C","s":"HAI – Haití","pred":0,"p":0},{"g":"C","s":"MAR – Marruecos","pred":1,"p":10},{"g":"D","s":"AUS – Australia","pred":0,"p":0},{"g":"D","s":"PAR – Paraguay","pred":0,"p":0},{"g":"D","s":"TUR – Turquía","pred":1,"p":0},{"g":"D","s":"USA – USA","pred":1,"p":10},{"g":"E","s":"ALE – Alemania","pred":1,"p":10},{"g":"E","s":"CIV – C. de Marfil","pred":1,"p":10},{"g":"E","s":"CUR – Curazao","pred":0,"p":0},{"g":"E","s":"ECU – Ecuador","pred":1,"p":10},{"g":"F","s":"JAP – Japón","pred":1,"p":10},{"g":"F","s":"NED – P. Bajos","pred":1,"p":10},{"g":"F","s":"SUE – Suecia","pred":1,"p":10},{"g":"F","s":"TUN – Túnez","pred":0,"p":0},{"g":"G","s":"BEL – Bélgica","pred":1,"p":10},{"g":"G","s":"EGI – Egipto","pred":1,"p":10},{"g":"G","s":"IRN – Irán","pred":1,"p":0},{"g":"G","s":"NZL – N. Zelanda","pred":0,"p":0},{"g":"H","s":"ARA – A. Saudita","pred":0,"p":0},{"g":"H","s":"CAB – Cabo Verde","pred":0,"p":0},{"g":"H","s":"ESP – España","pred":1,"p":10},{"g":"H","s":"URU – Uruguay","pred":1,"p":0},{"g":"I","s":"FRA – Francia","pred":1,"p":10},{"g":"I","s":"IRK – Irak","pred":0,"p":0},{"g":"I","s":"NOR – Noruega","pred":1,"p":10},{"g":"I","s":"SEN – Senegal","pred":1,"p":10},{"g":"J","s":"ALG – Argelia","pred":1,"p":10},{"g":"J","s":"ARG – Argentina","pred":1,"p":10},{"g":"J","s":"AUT – Austria","pred":1,"p":10},{"g":"J","s":"JOR – Jordania","pred":0,"p":0},{"g":"K","s":"COL – Colombia","pred":1,"p":10},{"g":"K","s":"POR – Portugal","pred":1,"p":10},{"g":"K","s":"RDC – R.D. Congo","pred":0,"p":0},{"g":"K","s":"UZB – Uzbekistán","pred":0,"p":0},{"g":"L","s":"CRO – Croacia","pred":1,"p":10},{"g":"L","s":"GHA – Ghana","pred":0,"p":0},{"g":"L","s":"ING – Inglaterra","pred":1,"p":10},{"g":"L","s":"PAN – Panamá","pred":0,"p":0}],
+  'DiegoMartinez':[{"g":"A","s":"CHE – R. Checa","pred":1,"p":0},{"g":"A","s":"COR – C. del Sur","pred":1,"p":0},{"g":"A","s":"MEX – México","pred":1,"p":10},{"g":"A","s":"SUD – Sudáfrica","pred":0,"p":0},{"g":"B","s":"BOS – Bosnia","pred":1,"p":10},{"g":"B","s":"CAN – Canadá","pred":1,"p":10},{"g":"B","s":"QAT – Qatar","pred":0,"p":0},{"g":"B","s":"SUI – Suiza","pred":1,"p":10},{"g":"C","s":"BRA – Brasil","pred":1,"p":10},{"g":"C","s":"ESC – Escocia","pred":0,"p":0},{"g":"C","s":"HAI – Haití","pred":0,"p":0},{"g":"C","s":"MAR – Marruecos","pred":1,"p":10},{"g":"D","s":"AUS – Australia","pred":0,"p":0},{"g":"D","s":"PAR – Paraguay","pred":1,"p":10},{"g":"D","s":"TUR – Turquía","pred":1,"p":0},{"g":"D","s":"USA – USA","pred":1,"p":10},{"g":"E","s":"ALE – Alemania","pred":1,"p":10},{"g":"E","s":"CIV – C. de Marfil","pred":1,"p":10},{"g":"E","s":"CUR – Curazao","pred":0,"p":0},{"g":"E","s":"ECU – Ecuador","pred":1,"p":10},{"g":"F","s":"JAP – Japón","pred":1,"p":10},{"g":"F","s":"NED – P. Bajos","pred":1,"p":10},{"g":"F","s":"SUE – Suecia","pred":1,"p":10},{"g":"F","s":"TUN – Túnez","pred":0,"p":0},{"g":"G","s":"BEL – Bélgica","pred":1,"p":10},{"g":"G","s":"EGI – Egipto","pred":1,"p":10},{"g":"G","s":"IRN – Irán","pred":0,"p":0},{"g":"G","s":"NZL – N. Zelanda","pred":0,"p":0},{"g":"H","s":"ARA – A. Saudita","pred":1,"p":0},{"g":"H","s":"CAB – Cabo Verde","pred":0,"p":0},{"g":"H","s":"ESP – España","pred":1,"p":10},{"g":"H","s":"URU – Uruguay","pred":1,"p":0},{"g":"I","s":"FRA – Francia","pred":1,"p":10},{"g":"I","s":"IRK – Irak","pred":0,"p":0},{"g":"I","s":"NOR – Noruega","pred":1,"p":10},{"g":"I","s":"SEN – Senegal","pred":1,"p":10},{"g":"J","s":"ALG – Argelia","pred":1,"p":10},{"g":"J","s":"ARG – Argentina","pred":1,"p":10},{"g":"J","s":"AUT – Austria","pred":1,"p":10},{"g":"J","s":"JOR – Jordania","pred":0,"p":0},{"g":"K","s":"COL – Colombia","pred":1,"p":10},{"g":"K","s":"POR – Portugal","pred":1,"p":10},{"g":"K","s":"RDC – R.D. Congo","pred":0,"p":0},{"g":"K","s":"UZB – Uzbekistán","pred":0,"p":0},{"g":"L","s":"CRO – Croacia","pred":1,"p":10},{"g":"L","s":"GHA – Ghana","pred":0,"p":0},{"g":"L","s":"ING – Inglaterra","pred":1,"p":10},{"g":"L","s":"PAN – Panamá","pred":0,"p":0}],
+  'DiegoRamirezCastro':[{"g":"A","s":"CHE – R. Checa","pred":1,"p":0},{"g":"A","s":"COR – C. del Sur","pred":1,"p":0},{"g":"A","s":"MEX – México","pred":1,"p":10},{"g":"A","s":"SUD – Sudáfrica","pred":0,"p":0},{"g":"B","s":"BOS – Bosnia","pred":1,"p":10},{"g":"B","s":"CAN – Canadá","pred":1,"p":10},{"g":"B","s":"QAT – Qatar","pred":0,"p":0},{"g":"B","s":"SUI – Suiza","pred":1,"p":10},{"g":"C","s":"BRA – Brasil","pred":1,"p":10},{"g":"C","s":"ESC – Escocia","pred":1,"p":0},{"g":"C","s":"HAI – Haití","pred":0,"p":0},{"g":"C","s":"MAR – Marruecos","pred":1,"p":10},{"g":"D","s":"AUS – Australia","pred":0,"p":0},{"g":"D","s":"PAR – Paraguay","pred":1,"p":10},{"g":"D","s":"TUR – Turquía","pred":1,"p":0},{"g":"D","s":"USA – USA","pred":1,"p":10},{"g":"E","s":"ALE – Alemania","pred":1,"p":10},{"g":"E","s":"CIV – C. de Marfil","pred":1,"p":10},{"g":"E","s":"CUR – Curazao","pred":0,"p":0},{"g":"E","s":"ECU – Ecuador","pred":1,"p":10},{"g":"F","s":"JAP – Japón","pred":1,"p":10},{"g":"F","s":"NED – P. Bajos","pred":1,"p":10},{"g":"F","s":"SUE – Suecia","pred":1,"p":10},{"g":"F","s":"TUN – Túnez","pred":0,"p":0},{"g":"G","s":"BEL – Bélgica","pred":1,"p":10},{"g":"G","s":"EGI – Egipto","pred":1,"p":10},{"g":"G","s":"IRN – Irán","pred":1,"p":0},{"g":"G","s":"NZL – N. Zelanda","pred":0,"p":0},{"g":"H","s":"ARA – A. Saudita","pred":0,"p":0},{"g":"H","s":"CAB – Cabo Verde","pred":0,"p":0},{"g":"H","s":"ESP – España","pred":1,"p":10},{"g":"H","s":"URU – Uruguay","pred":1,"p":0},{"g":"I","s":"FRA – Francia","pred":1,"p":10},{"g":"I","s":"IRK – Irak","pred":0,"p":0},{"g":"I","s":"NOR – Noruega","pred":1,"p":10},{"g":"I","s":"SEN – Senegal","pred":1,"p":10},{"g":"J","s":"ALG – Argelia","pred":0,"p":0},{"g":"J","s":"ARG – Argentina","pred":1,"p":10},{"g":"J","s":"AUT – Austria","pred":1,"p":10},{"g":"J","s":"JOR – Jordania","pred":0,"p":0},{"g":"K","s":"COL – Colombia","pred":1,"p":10},{"g":"K","s":"POR – Portugal","pred":1,"p":10},{"g":"K","s":"RDC – R.D. Congo","pred":0,"p":0},{"g":"K","s":"UZB – Uzbekistán","pred":0,"p":0},{"g":"L","s":"CRO – Croacia","pred":1,"p":10},{"g":"L","s":"GHA – Ghana","pred":0,"p":0},{"g":"L","s":"ING – Inglaterra","pred":1,"p":10},{"g":"L","s":"PAN – Panamá","pred":0,"p":0}],
+  'Emiliano':[{"g":"A","s":"CHE – R. Checa","pred":1,"p":0},{"g":"A","s":"COR – C. del Sur","pred":1,"p":0},{"g":"A","s":"MEX – México","pred":1,"p":10},{"g":"A","s":"SUD – Sudáfrica","pred":0,"p":0},{"g":"B","s":"BOS – Bosnia","pred":1,"p":10},{"g":"B","s":"CAN – Canadá","pred":1,"p":10},{"g":"B","s":"QAT – Qatar","pred":0,"p":0},{"g":"B","s":"SUI – Suiza","pred":1,"p":10},{"g":"C","s":"BRA – Brasil","pred":1,"p":10},{"g":"C","s":"ESC – Escocia","pred":1,"p":0},{"g":"C","s":"HAI – Haití","pred":0,"p":0},{"g":"C","s":"MAR – Marruecos","pred":1,"p":10},{"g":"D","s":"AUS – Australia","pred":0,"p":0},{"g":"D","s":"PAR – Paraguay","pred":0,"p":0},{"g":"D","s":"TUR – Turquía","pred":1,"p":0},{"g":"D","s":"USA – USA","pred":1,"p":10},{"g":"E","s":"ALE – Alemania","pred":1,"p":10},{"g":"E","s":"CIV – C. de Marfil","pred":1,"p":10},{"g":"E","s":"CUR – Curazao","pred":0,"p":0},{"g":"E","s":"ECU – Ecuador","pred":1,"p":10},{"g":"F","s":"JAP – Japón","pred":1,"p":10},{"g":"F","s":"NED – P. Bajos","pred":1,"p":10},{"g":"F","s":"SUE – Suecia","pred":1,"p":10},{"g":"F","s":"TUN – Túnez","pred":0,"p":0},{"g":"G","s":"BEL – Bélgica","pred":1,"p":10},{"g":"G","s":"EGI – Egipto","pred":1,"p":10},{"g":"G","s":"IRN – Irán","pred":1,"p":0},{"g":"G","s":"NZL – N. Zelanda","pred":0,"p":0},{"g":"H","s":"ARA – A. Saudita","pred":0,"p":0},{"g":"H","s":"CAB – Cabo Verde","pred":0,"p":0},{"g":"H","s":"ESP – España","pred":1,"p":10},{"g":"H","s":"URU – Uruguay","pred":1,"p":0},{"g":"I","s":"FRA – Francia","pred":1,"p":10},{"g":"I","s":"IRK – Irak","pred":0,"p":0},{"g":"I","s":"NOR – Noruega","pred":1,"p":10},{"g":"I","s":"SEN – Senegal","pred":1,"p":10},{"g":"J","s":"ALG – Argelia","pred":1,"p":10},{"g":"J","s":"ARG – Argentina","pred":1,"p":10},{"g":"J","s":"AUT – Austria","pred":1,"p":10},{"g":"J","s":"JOR – Jordania","pred":0,"p":0},{"g":"K","s":"COL – Colombia","pred":1,"p":10},{"g":"K","s":"POR – Portugal","pred":1,"p":10},{"g":"K","s":"RDC – R.D. Congo","pred":0,"p":0},{"g":"K","s":"UZB – Uzbekistán","pred":0,"p":0},{"g":"L","s":"CRO – Croacia","pred":1,"p":10},{"g":"L","s":"GHA – Ghana","pred":0,"p":0},{"g":"L","s":"ING – Inglaterra","pred":1,"p":10},{"g":"L","s":"PAN – Panamá","pred":0,"p":0}],
+  'FernandaG':[{"g":"A","s":"CHE – R. Checa","pred":1,"p":0},{"g":"A","s":"COR – C. del Sur","pred":1,"p":0},{"g":"A","s":"MEX – México","pred":1,"p":10},{"g":"A","s":"SUD – Sudáfrica","pred":0,"p":0},{"g":"B","s":"BOS – Bosnia","pred":1,"p":10},{"g":"B","s":"CAN – Canadá","pred":1,"p":10},{"g":"B","s":"QAT – Qatar","pred":0,"p":0},{"g":"B","s":"SUI – Suiza","pred":1,"p":10},{"g":"C","s":"BRA – Brasil","pred":1,"p":10},{"g":"C","s":"ESC – Escocia","pred":1,"p":0},{"g":"C","s":"HAI – Haití","pred":0,"p":0},{"g":"C","s":"MAR – Marruecos","pred":1,"p":10},{"g":"D","s":"AUS – Australia","pred":0,"p":0},{"g":"D","s":"PAR – Paraguay","pred":1,"p":10},{"g":"D","s":"TUR – Turquía","pred":0,"p":0},{"g":"D","s":"USA – USA","pred":1,"p":10},{"g":"E","s":"ALE – Alemania","pred":1,"p":10},{"g":"E","s":"CIV – C. de Marfil","pred":1,"p":10},{"g":"E","s":"CUR – Curazao","pred":0,"p":0},{"g":"E","s":"ECU – Ecuador","pred":1,"p":10},{"g":"F","s":"JAP – Japón","pred":1,"p":10},{"g":"F","s":"NED – P. Bajos","pred":1,"p":10},{"g":"F","s":"SUE – Suecia","pred":0,"p":0},{"g":"F","s":"TUN – Túnez","pred":0,"p":0},{"g":"G","s":"BEL – Bélgica","pred":1,"p":10},{"g":"G","s":"EGI – Egipto","pred":1,"p":10},{"g":"G","s":"IRN – Irán","pred":1,"p":0},{"g":"G","s":"NZL – N. Zelanda","pred":0,"p":0},{"g":"H","s":"ARA – A. Saudita","pred":0,"p":0},{"g":"H","s":"CAB – Cabo Verde","pred":0,"p":0},{"g":"H","s":"ESP – España","pred":1,"p":10},{"g":"H","s":"URU – Uruguay","pred":1,"p":0},{"g":"I","s":"FRA – Francia","pred":1,"p":10},{"g":"I","s":"IRK – Irak","pred":0,"p":0},{"g":"I","s":"NOR – Noruega","pred":1,"p":10},{"g":"I","s":"SEN – Senegal","pred":1,"p":10},{"g":"J","s":"ALG – Argelia","pred":1,"p":10},{"g":"J","s":"ARG – Argentina","pred":1,"p":10},{"g":"J","s":"AUT – Austria","pred":1,"p":10},{"g":"J","s":"JOR – Jordania","pred":0,"p":0},{"g":"K","s":"COL – Colombia","pred":1,"p":10},{"g":"K","s":"POR – Portugal","pred":1,"p":10},{"g":"K","s":"RDC – R.D. Congo","pred":0,"p":0},{"g":"K","s":"UZB – Uzbekistán","pred":0,"p":0},{"g":"L","s":"CRO – Croacia","pred":1,"p":10},{"g":"L","s":"GHA – Ghana","pred":1,"p":10},{"g":"L","s":"ING – Inglaterra","pred":1,"p":10},{"g":"L","s":"PAN – Panamá","pred":0,"p":0}],
+  'FernandaMocte':[{"g":"A","s":"CHE – R. Checa","pred":0,"p":0},{"g":"A","s":"COR – C. del Sur","pred":1,"p":0},{"g":"A","s":"MEX – México","pred":1,"p":10},{"g":"A","s":"SUD – Sudáfrica","pred":0,"p":0},{"g":"B","s":"BOS – Bosnia","pred":1,"p":10},{"g":"B","s":"CAN – Canadá","pred":1,"p":10},{"g":"B","s":"QAT – Qatar","pred":0,"p":0},{"g":"B","s":"SUI – Suiza","pred":1,"p":10},{"g":"C","s":"BRA – Brasil","pred":1,"p":10},{"g":"C","s":"ESC – Escocia","pred":1,"p":0},{"g":"C","s":"HAI – Haití","pred":0,"p":0},{"g":"C","s":"MAR – Marruecos","pred":1,"p":10},{"g":"D","s":"AUS – Australia","pred":1,"p":10},{"g":"D","s":"PAR – Paraguay","pred":0,"p":0},{"g":"D","s":"TUR – Turquía","pred":1,"p":0},{"g":"D","s":"USA – USA","pred":1,"p":10},{"g":"E","s":"ALE – Alemania","pred":1,"p":10},{"g":"E","s":"CIV – C. de Marfil","pred":1,"p":10},{"g":"E","s":"CUR – Curazao","pred":0,"p":0},{"g":"E","s":"ECU – Ecuador","pred":1,"p":10},{"g":"F","s":"JAP – Japón","pred":1,"p":10},{"g":"F","s":"NED – P. Bajos","pred":1,"p":10},{"g":"F","s":"SUE – Suecia","pred":1,"p":10},{"g":"F","s":"TUN – Túnez","pred":0,"p":0},{"g":"G","s":"BEL – Bélgica","pred":1,"p":10},{"g":"G","s":"EGI – Egipto","pred":1,"p":10},{"g":"G","s":"IRN – Irán","pred":1,"p":0},{"g":"G","s":"NZL – N. Zelanda","pred":0,"p":0},{"g":"H","s":"ARA – A. Saudita","pred":0,"p":0},{"g":"H","s":"CAB – Cabo Verde","pred":0,"p":0},{"g":"H","s":"ESP – España","pred":1,"p":10},{"g":"H","s":"URU – Uruguay","pred":1,"p":0},{"g":"I","s":"FRA – Francia","pred":1,"p":10},{"g":"I","s":"IRK – Irak","pred":0,"p":0},{"g":"I","s":"NOR – Noruega","pred":1,"p":10},{"g":"I","s":"SEN – Senegal","pred":1,"p":10},{"g":"J","s":"ALG – Argelia","pred":0,"p":0},{"g":"J","s":"ARG – Argentina","pred":1,"p":10},{"g":"J","s":"AUT – Austria","pred":1,"p":10},{"g":"J","s":"JOR – Jordania","pred":0,"p":0},{"g":"K","s":"COL – Colombia","pred":1,"p":10},{"g":"K","s":"POR – Portugal","pred":1,"p":10},{"g":"K","s":"RDC – R.D. Congo","pred":0,"p":0},{"g":"K","s":"UZB – Uzbekistán","pred":0,"p":0},{"g":"L","s":"CRO – Croacia","pred":1,"p":10},{"g":"L","s":"GHA – Ghana","pred":1,"p":10},{"g":"L","s":"ING – Inglaterra","pred":1,"p":10},{"g":"L","s":"PAN – Panamá","pred":0,"p":0}],
+  'FranciscoI':[{"g":"A","s":"CHE – R. Checa","pred":1,"p":0},{"g":"A","s":"COR – C. del Sur","pred":1,"p":0},{"g":"A","s":"MEX – México","pred":1,"p":10},{"g":"A","s":"SUD – Sudáfrica","pred":0,"p":0},{"g":"B","s":"BOS – Bosnia","pred":1,"p":10},{"g":"B","s":"CAN – Canadá","pred":1,"p":10},{"g":"B","s":"QAT – Qatar","pred":0,"p":0},{"g":"B","s":"SUI – Suiza","pred":1,"p":10},{"g":"C","s":"BRA – Brasil","pred":1,"p":10},{"g":"C","s":"ESC – Escocia","pred":1,"p":0},{"g":"C","s":"HAI – Haití","pred":0,"p":0},{"g":"C","s":"MAR – Marruecos","pred":1,"p":10},{"g":"D","s":"AUS – Australia","pred":0,"p":0},{"g":"D","s":"PAR – Paraguay","pred":1,"p":10},{"g":"D","s":"TUR – Turquía","pred":1,"p":0},{"g":"D","s":"USA – USA","pred":1,"p":10},{"g":"E","s":"ALE – Alemania","pred":1,"p":10},{"g":"E","s":"CIV – C. de Marfil","pred":1,"p":10},{"g":"E","s":"CUR – Curazao","pred":0,"p":0},{"g":"E","s":"ECU – Ecuador","pred":1,"p":10},{"g":"F","s":"JAP – Japón","pred":1,"p":10},{"g":"F","s":"NED – P. Bajos","pred":1,"p":10},{"g":"F","s":"SUE – Suecia","pred":0,"p":0},{"g":"F","s":"TUN – Túnez","pred":0,"p":0},{"g":"G","s":"BEL – Bélgica","pred":1,"p":10},{"g":"G","s":"EGI – Egipto","pred":1,"p":10},{"g":"G","s":"IRN – Irán","pred":0,"p":0},{"g":"G","s":"NZL – N. Zelanda","pred":0,"p":0},{"g":"H","s":"ARA – A. Saudita","pred":0,"p":0},{"g":"H","s":"CAB – Cabo Verde","pred":0,"p":0},{"g":"H","s":"ESP – España","pred":1,"p":10},{"g":"H","s":"URU – Uruguay","pred":1,"p":0},{"g":"I","s":"FRA – Francia","pred":1,"p":10},{"g":"I","s":"IRK – Irak","pred":0,"p":0},{"g":"I","s":"NOR – Noruega","pred":1,"p":10},{"g":"I","s":"SEN – Senegal","pred":1,"p":10},{"g":"J","s":"ALG – Argelia","pred":1,"p":10},{"g":"J","s":"ARG – Argentina","pred":1,"p":10},{"g":"J","s":"AUT – Austria","pred":1,"p":10},{"g":"J","s":"JOR – Jordania","pred":0,"p":0},{"g":"K","s":"COL – Colombia","pred":1,"p":10},{"g":"K","s":"POR – Portugal","pred":1,"p":10},{"g":"K","s":"RDC – R.D. Congo","pred":0,"p":0},{"g":"K","s":"UZB – Uzbekistán","pred":0,"p":0},{"g":"L","s":"CRO – Croacia","pred":1,"p":10},{"g":"L","s":"GHA – Ghana","pred":1,"p":10},{"g":"L","s":"ING – Inglaterra","pred":1,"p":10},{"g":"L","s":"PAN – Panamá","pred":0,"p":0}],
+  'IanL':[{"g":"A","s":"CHE – R. Checa","pred":1,"p":0},{"g":"A","s":"COR – C. del Sur","pred":1,"p":0},{"g":"A","s":"MEX – México","pred":1,"p":10},{"g":"A","s":"SUD – Sudáfrica","pred":0,"p":0},{"g":"B","s":"BOS – Bosnia","pred":1,"p":10},{"g":"B","s":"CAN – Canadá","pred":1,"p":10},{"g":"B","s":"QAT – Qatar","pred":0,"p":0},{"g":"B","s":"SUI – Suiza","pred":1,"p":10},{"g":"C","s":"BRA – Brasil","pred":1,"p":10},{"g":"C","s":"ESC – Escocia","pred":0,"p":0},{"g":"C","s":"HAI – Haití","pred":0,"p":0},{"g":"C","s":"MAR – Marruecos","pred":1,"p":10},{"g":"D","s":"AUS – Australia","pred":0,"p":0},{"g":"D","s":"PAR – Paraguay","pred":0,"p":0},{"g":"D","s":"TUR – Turquía","pred":1,"p":0},{"g":"D","s":"USA – USA","pred":1,"p":10},{"g":"E","s":"ALE – Alemania","pred":1,"p":10},{"g":"E","s":"CIV – C. de Marfil","pred":1,"p":10},{"g":"E","s":"CUR – Curazao","pred":0,"p":0},{"g":"E","s":"ECU – Ecuador","pred":1,"p":10},{"g":"F","s":"JAP – Japón","pred":1,"p":10},{"g":"F","s":"NED – P. Bajos","pred":1,"p":10},{"g":"F","s":"SUE – Suecia","pred":1,"p":10},{"g":"F","s":"TUN – Túnez","pred":0,"p":0},{"g":"G","s":"BEL – Bélgica","pred":1,"p":10},{"g":"G","s":"EGI – Egipto","pred":1,"p":10},{"g":"G","s":"IRN – Irán","pred":1,"p":0},{"g":"G","s":"NZL – N. Zelanda","pred":0,"p":0},{"g":"H","s":"ARA – A. Saudita","pred":0,"p":0},{"g":"H","s":"CAB – Cabo Verde","pred":0,"p":0},{"g":"H","s":"ESP – España","pred":1,"p":10},{"g":"H","s":"URU – Uruguay","pred":1,"p":0},{"g":"I","s":"FRA – Francia","pred":1,"p":10},{"g":"I","s":"IRK – Irak","pred":0,"p":0},{"g":"I","s":"NOR – Noruega","pred":1,"p":10},{"g":"I","s":"SEN – Senegal","pred":1,"p":10},{"g":"J","s":"ALG – Argelia","pred":1,"p":10},{"g":"J","s":"ARG – Argentina","pred":1,"p":10},{"g":"J","s":"AUT – Austria","pred":1,"p":10},{"g":"J","s":"JOR – Jordania","pred":0,"p":0},{"g":"K","s":"COL – Colombia","pred":1,"p":10},{"g":"K","s":"POR – Portugal","pred":1,"p":10},{"g":"K","s":"RDC – R.D. Congo","pred":0,"p":0},{"g":"K","s":"UZB – Uzbekistán","pred":0,"p":0},{"g":"L","s":"CRO – Croacia","pred":1,"p":10},{"g":"L","s":"GHA – Ghana","pred":0,"p":0},{"g":"L","s":"ING – Inglaterra","pred":1,"p":10},{"g":"L","s":"PAN – Panamá","pred":0,"p":0}],
+  'KarinaIbarra1':[{"g":"A","s":"CHE – R. Checa","pred":1,"p":0},{"g":"A","s":"COR – C. del Sur","pred":1,"p":0},{"g":"A","s":"MEX – México","pred":1,"p":10},{"g":"A","s":"SUD – Sudáfrica","pred":0,"p":0},{"g":"B","s":"BOS – Bosnia","pred":0,"p":0},{"g":"B","s":"CAN – Canadá","pred":1,"p":10},{"g":"B","s":"QAT – Qatar","pred":0,"p":0},{"g":"B","s":"SUI – Suiza","pred":1,"p":10},{"g":"C","s":"BRA – Brasil","pred":1,"p":10},{"g":"C","s":"ESC – Escocia","pred":1,"p":0},{"g":"C","s":"HAI – Haití","pred":0,"p":0},{"g":"C","s":"MAR – Marruecos","pred":1,"p":10},{"g":"D","s":"AUS – Australia","pred":1,"p":10},{"g":"D","s":"PAR – Paraguay","pred":0,"p":0},{"g":"D","s":"TUR – Turquía","pred":1,"p":0},{"g":"D","s":"USA – USA","pred":1,"p":10},{"g":"E","s":"ALE – Alemania","pred":1,"p":10},{"g":"E","s":"CIV – C. de Marfil","pred":1,"p":10},{"g":"E","s":"CUR – Curazao","pred":0,"p":0},{"g":"E","s":"ECU – Ecuador","pred":0,"p":0},{"g":"F","s":"JAP – Japón","pred":1,"p":10},{"g":"F","s":"NED – P. Bajos","pred":1,"p":10},{"g":"F","s":"SUE – Suecia","pred":1,"p":10},{"g":"F","s":"TUN – Túnez","pred":0,"p":0},{"g":"G","s":"BEL – Bélgica","pred":1,"p":10},{"g":"G","s":"EGI – Egipto","pred":1,"p":10},{"g":"G","s":"IRN – Irán","pred":1,"p":0},{"g":"G","s":"NZL – N. Zelanda","pred":0,"p":0},{"g":"H","s":"ARA – A. Saudita","pred":0,"p":0},{"g":"H","s":"CAB – Cabo Verde","pred":0,"p":0},{"g":"H","s":"ESP – España","pred":1,"p":10},{"g":"H","s":"URU – Uruguay","pred":1,"p":0},{"g":"I","s":"FRA – Francia","pred":1,"p":10},{"g":"I","s":"IRK – Irak","pred":0,"p":0},{"g":"I","s":"NOR – Noruega","pred":1,"p":10},{"g":"I","s":"SEN – Senegal","pred":0,"p":0},{"g":"J","s":"ALG – Argelia","pred":1,"p":10},{"g":"J","s":"ARG – Argentina","pred":1,"p":10},{"g":"J","s":"AUT – Austria","pred":1,"p":10},{"g":"J","s":"JOR – Jordania","pred":0,"p":0},{"g":"K","s":"COL – Colombia","pred":1,"p":10},{"g":"K","s":"POR – Portugal","pred":1,"p":10},{"g":"K","s":"RDC – R.D. Congo","pred":1,"p":10},{"g":"K","s":"UZB – Uzbekistán","pred":0,"p":0},{"g":"L","s":"CRO – Croacia","pred":1,"p":10},{"g":"L","s":"GHA – Ghana","pred":1,"p":10},{"g":"L","s":"ING – Inglaterra","pred":1,"p":10},{"g":"L","s":"PAN – Panamá","pred":0,"p":0}],
+  'KarinaIbarra2':[{"g":"A","s":"CHE – R. Checa","pred":1,"p":0},{"g":"A","s":"COR – C. del Sur","pred":1,"p":0},{"g":"A","s":"MEX – México","pred":1,"p":10},{"g":"A","s":"SUD – Sudáfrica","pred":0,"p":0},{"g":"B","s":"BOS – Bosnia","pred":1,"p":10},{"g":"B","s":"CAN – Canadá","pred":1,"p":10},{"g":"B","s":"QAT – Qatar","pred":0,"p":0},{"g":"B","s":"SUI – Suiza","pred":1,"p":10},{"g":"C","s":"BRA – Brasil","pred":1,"p":10},{"g":"C","s":"ESC – Escocia","pred":1,"p":0},{"g":"C","s":"HAI – Haití","pred":0,"p":0},{"g":"C","s":"MAR – Marruecos","pred":1,"p":10},{"g":"D","s":"AUS – Australia","pred":1,"p":10},{"g":"D","s":"PAR – Paraguay","pred":0,"p":0},{"g":"D","s":"TUR – Turquía","pred":1,"p":0},{"g":"D","s":"USA – USA","pred":1,"p":10},{"g":"E","s":"ALE – Alemania","pred":1,"p":10},{"g":"E","s":"CIV – C. de Marfil","pred":0,"p":0},{"g":"E","s":"CUR – Curazao","pred":0,"p":0},{"g":"E","s":"ECU – Ecuador","pred":1,"p":10},{"g":"F","s":"JAP – Japón","pred":1,"p":10},{"g":"F","s":"NED – P. Bajos","pred":1,"p":10},{"g":"F","s":"SUE – Suecia","pred":1,"p":10},{"g":"F","s":"TUN – Túnez","pred":0,"p":0},{"g":"G","s":"BEL – Bélgica","pred":1,"p":10},{"g":"G","s":"EGI – Egipto","pred":1,"p":10},{"g":"G","s":"IRN – Irán","pred":1,"p":0},{"g":"G","s":"NZL – N. Zelanda","pred":0,"p":0},{"g":"H","s":"ARA – A. Saudita","pred":0,"p":0},{"g":"H","s":"CAB – Cabo Verde","pred":0,"p":0},{"g":"H","s":"ESP – España","pred":1,"p":10},{"g":"H","s":"URU – Uruguay","pred":1,"p":0},{"g":"I","s":"FRA – Francia","pred":1,"p":10},{"g":"I","s":"IRK – Irak","pred":0,"p":0},{"g":"I","s":"NOR – Noruega","pred":1,"p":10},{"g":"I","s":"SEN – Senegal","pred":0,"p":0},{"g":"J","s":"ALG – Argelia","pred":1,"p":10},{"g":"J","s":"ARG – Argentina","pred":1,"p":10},{"g":"J","s":"AUT – Austria","pred":1,"p":10},{"g":"J","s":"JOR – Jordania","pred":0,"p":0},{"g":"K","s":"COL – Colombia","pred":1,"p":10},{"g":"K","s":"POR – Portugal","pred":1,"p":10},{"g":"K","s":"RDC – R.D. Congo","pred":0,"p":0},{"g":"K","s":"UZB – Uzbekistán","pred":1,"p":0},{"g":"L","s":"CRO – Croacia","pred":1,"p":10},{"g":"L","s":"GHA – Ghana","pred":0,"p":0},{"g":"L","s":"ING – Inglaterra","pred":1,"p":10},{"g":"L","s":"PAN – Panamá","pred":0,"p":0}],
+  'MarioM':[{"g":"A","s":"CHE – R. Checa","pred":0,"p":0},{"g":"A","s":"COR – C. del Sur","pred":1,"p":0},{"g":"A","s":"MEX – México","pred":1,"p":10},{"g":"A","s":"SUD – Sudáfrica","pred":0,"p":0},{"g":"B","s":"BOS – Bosnia","pred":0,"p":0},{"g":"B","s":"CAN – Canadá","pred":1,"p":10},{"g":"B","s":"QAT – Qatar","pred":0,"p":0},{"g":"B","s":"SUI – Suiza","pred":1,"p":10},{"g":"C","s":"BRA – Brasil","pred":1,"p":10},{"g":"C","s":"ESC – Escocia","pred":1,"p":0},{"g":"C","s":"HAI – Haití","pred":0,"p":0},{"g":"C","s":"MAR – Marruecos","pred":1,"p":10},{"g":"D","s":"AUS – Australia","pred":1,"p":10},{"g":"D","s":"PAR – Paraguay","pred":1,"p":10},{"g":"D","s":"TUR – Turquía","pred":0,"p":0},{"g":"D","s":"USA – USA","pred":1,"p":10},{"g":"E","s":"ALE – Alemania","pred":1,"p":10},{"g":"E","s":"CIV – C. de Marfil","pred":1,"p":10},{"g":"E","s":"CUR – Curazao","pred":0,"p":0},{"g":"E","s":"ECU – Ecuador","pred":1,"p":10},{"g":"F","s":"JAP – Japón","pred":1,"p":10},{"g":"F","s":"NED – P. Bajos","pred":1,"p":10},{"g":"F","s":"SUE – Suecia","pred":1,"p":10},{"g":"F","s":"TUN – Túnez","pred":0,"p":0},{"g":"G","s":"BEL – Bélgica","pred":1,"p":10},{"g":"G","s":"EGI – Egipto","pred":1,"p":10},{"g":"G","s":"IRN – Irán","pred":0,"p":0},{"g":"G","s":"NZL – N. Zelanda","pred":1,"p":0},{"g":"H","s":"ARA – A. Saudita","pred":1,"p":0},{"g":"H","s":"CAB – Cabo Verde","pred":0,"p":0},{"g":"H","s":"ESP – España","pred":1,"p":10},{"g":"H","s":"URU – Uruguay","pred":1,"p":0},{"g":"I","s":"FRA – Francia","pred":1,"p":10},{"g":"I","s":"IRK – Irak","pred":0,"p":0},{"g":"I","s":"NOR – Noruega","pred":1,"p":10},{"g":"I","s":"SEN – Senegal","pred":1,"p":10},{"g":"J","s":"ALG – Argelia","pred":0,"p":0},{"g":"J","s":"ARG – Argentina","pred":1,"p":10},{"g":"J","s":"AUT – Austria","pred":1,"p":10},{"g":"J","s":"JOR – Jordania","pred":0,"p":0},{"g":"K","s":"COL – Colombia","pred":1,"p":10},{"g":"K","s":"POR – Portugal","pred":1,"p":10},{"g":"K","s":"RDC – R.D. Congo","pred":0,"p":0},{"g":"K","s":"UZB – Uzbekistán","pred":0,"p":0},{"g":"L","s":"CRO – Croacia","pred":1,"p":10},{"g":"L","s":"GHA – Ghana","pred":1,"p":10},{"g":"L","s":"ING – Inglaterra","pred":1,"p":10},{"g":"L","s":"PAN – Panamá","pred":0,"p":0}],
+  'MauricioMoreno':[{"g":"A","s":"CHE – R. Checa","pred":1,"p":0},{"g":"A","s":"COR – C. del Sur","pred":1,"p":0},{"g":"A","s":"MEX – México","pred":1,"p":10},{"g":"A","s":"SUD – Sudáfrica","pred":0,"p":0},{"g":"B","s":"BOS – Bosnia","pred":1,"p":10},{"g":"B","s":"CAN – Canadá","pred":1,"p":10},{"g":"B","s":"QAT – Qatar","pred":0,"p":0},{"g":"B","s":"SUI – Suiza","pred":1,"p":10},{"g":"C","s":"BRA – Brasil","pred":1,"p":10},{"g":"C","s":"ESC – Escocia","pred":1,"p":0},{"g":"C","s":"HAI – Haití","pred":0,"p":0},{"g":"C","s":"MAR – Marruecos","pred":1,"p":10},{"g":"D","s":"AUS – Australia","pred":0,"p":0},{"g":"D","s":"PAR – Paraguay","pred":1,"p":10},{"g":"D","s":"TUR – Turquía","pred":1,"p":0},{"g":"D","s":"USA – USA","pred":1,"p":10},{"g":"E","s":"ALE – Alemania","pred":1,"p":10},{"g":"E","s":"CIV – C. de Marfil","pred":1,"p":10},{"g":"E","s":"CUR – Curazao","pred":0,"p":0},{"g":"E","s":"ECU – Ecuador","pred":1,"p":10},{"g":"F","s":"JAP – Japón","pred":1,"p":10},{"g":"F","s":"NED – P. Bajos","pred":1,"p":10},{"g":"F","s":"SUE – Suecia","pred":1,"p":10},{"g":"F","s":"TUN – Túnez","pred":0,"p":0},{"g":"G","s":"BEL – Bélgica","pred":1,"p":10},{"g":"G","s":"EGI – Egipto","pred":1,"p":10},{"g":"G","s":"IRN – Irán","pred":1,"p":0},{"g":"G","s":"NZL – N. Zelanda","pred":0,"p":0},{"g":"H","s":"ARA – A. Saudita","pred":0,"p":0},{"g":"H","s":"CAB – Cabo Verde","pred":0,"p":0},{"g":"H","s":"ESP – España","pred":1,"p":10},{"g":"H","s":"URU – Uruguay","pred":1,"p":0},{"g":"I","s":"FRA – Francia","pred":1,"p":10},{"g":"I","s":"IRK – Irak","pred":0,"p":0},{"g":"I","s":"NOR – Noruega","pred":1,"p":10},{"g":"I","s":"SEN – Senegal","pred":0,"p":0},{"g":"J","s":"ALG – Argelia","pred":0,"p":0},{"g":"J","s":"ARG – Argentina","pred":1,"p":10},{"g":"J","s":"AUT – Austria","pred":1,"p":10},{"g":"J","s":"JOR – Jordania","pred":0,"p":0},{"g":"K","s":"COL – Colombia","pred":1,"p":10},{"g":"K","s":"POR – Portugal","pred":1,"p":10},{"g":"K","s":"RDC – R.D. Congo","pred":0,"p":0},{"g":"K","s":"UZB – Uzbekistán","pred":0,"p":0},{"g":"L","s":"CRO – Croacia","pred":1,"p":10},{"g":"L","s":"GHA – Ghana","pred":0,"p":0},{"g":"L","s":"ING – Inglaterra","pred":1,"p":10},{"g":"L","s":"PAN – Panamá","pred":1,"p":0}],
+  'MauricioMtz':[{"g":"A","s":"CHE – R. Checa","pred":1,"p":0},{"g":"A","s":"COR – C. del Sur","pred":0,"p":0},{"g":"A","s":"MEX – México","pred":1,"p":10},{"g":"A","s":"SUD – Sudáfrica","pred":0,"p":0},{"g":"B","s":"BOS – Bosnia","pred":1,"p":10},{"g":"B","s":"CAN – Canadá","pred":1,"p":10},{"g":"B","s":"QAT – Qatar","pred":0,"p":0},{"g":"B","s":"SUI – Suiza","pred":1,"p":10},{"g":"C","s":"BRA – Brasil","pred":1,"p":10},{"g":"C","s":"ESC – Escocia","pred":1,"p":0},{"g":"C","s":"HAI – Haití","pred":0,"p":0},{"g":"C","s":"MAR – Marruecos","pred":1,"p":10},{"g":"D","s":"AUS – Australia","pred":0,"p":0},{"g":"D","s":"PAR – Paraguay","pred":1,"p":10},{"g":"D","s":"TUR – Turquía","pred":1,"p":0},{"g":"D","s":"USA – USA","pred":1,"p":10},{"g":"E","s":"ALE – Alemania","pred":1,"p":10},{"g":"E","s":"CIV – C. de Marfil","pred":1,"p":10},{"g":"E","s":"CUR – Curazao","pred":0,"p":0},{"g":"E","s":"ECU – Ecuador","pred":1,"p":10},{"g":"F","s":"JAP – Japón","pred":1,"p":10},{"g":"F","s":"NED – P. Bajos","pred":1,"p":10},{"g":"F","s":"SUE – Suecia","pred":1,"p":10},{"g":"F","s":"TUN – Túnez","pred":0,"p":0},{"g":"G","s":"BEL – Bélgica","pred":1,"p":10},{"g":"G","s":"EGI – Egipto","pred":1,"p":10},{"g":"G","s":"IRN – Irán","pred":1,"p":0},{"g":"G","s":"NZL – N. Zelanda","pred":0,"p":0},{"g":"H","s":"ARA – A. Saudita","pred":0,"p":0},{"g":"H","s":"CAB – Cabo Verde","pred":0,"p":0},{"g":"H","s":"ESP – España","pred":1,"p":10},{"g":"H","s":"URU – Uruguay","pred":1,"p":0},{"g":"I","s":"FRA – Francia","pred":1,"p":10},{"g":"I","s":"IRK – Irak","pred":0,"p":0},{"g":"I","s":"NOR – Noruega","pred":1,"p":10},{"g":"I","s":"SEN – Senegal","pred":1,"p":10},{"g":"J","s":"ALG – Argelia","pred":1,"p":10},{"g":"J","s":"ARG – Argentina","pred":1,"p":10},{"g":"J","s":"AUT – Austria","pred":1,"p":10},{"g":"J","s":"JOR – Jordania","pred":0,"p":0},{"g":"K","s":"COL – Colombia","pred":1,"p":10},{"g":"K","s":"POR – Portugal","pred":1,"p":10},{"g":"K","s":"RDC – R.D. Congo","pred":0,"p":0},{"g":"K","s":"UZB – Uzbekistán","pred":0,"p":0},{"g":"L","s":"CRO – Croacia","pred":1,"p":10},{"g":"L","s":"GHA – Ghana","pred":0,"p":0},{"g":"L","s":"ING – Inglaterra","pred":1,"p":10},{"g":"L","s":"PAN – Panamá","pred":0,"p":0}],
+  'MaxZ':[{"g":"A","s":"CHE – R. Checa","pred":1,"p":0},{"g":"A","s":"COR – C. del Sur","pred":1,"p":0},{"g":"A","s":"MEX – México","pred":1,"p":10},{"g":"A","s":"SUD – Sudáfrica","pred":0,"p":0},{"g":"B","s":"BOS – Bosnia","pred":1,"p":10},{"g":"B","s":"CAN – Canadá","pred":1,"p":10},{"g":"B","s":"QAT – Qatar","pred":0,"p":0},{"g":"B","s":"SUI – Suiza","pred":1,"p":10},{"g":"C","s":"BRA – Brasil","pred":1,"p":10},{"g":"C","s":"ESC – Escocia","pred":1,"p":0},{"g":"C","s":"HAI – Haití","pred":0,"p":0},{"g":"C","s":"MAR – Marruecos","pred":1,"p":10},{"g":"D","s":"AUS – Australia","pred":0,"p":0},{"g":"D","s":"PAR – Paraguay","pred":1,"p":10},{"g":"D","s":"TUR – Turquía","pred":0,"p":0},{"g":"D","s":"USA – USA","pred":1,"p":10},{"g":"E","s":"ALE – Alemania","pred":1,"p":10},{"g":"E","s":"CIV – C. de Marfil","pred":1,"p":10},{"g":"E","s":"CUR – Curazao","pred":0,"p":0},{"g":"E","s":"ECU – Ecuador","pred":1,"p":10},{"g":"F","s":"JAP – Japón","pred":1,"p":10},{"g":"F","s":"NED – P. Bajos","pred":1,"p":10},{"g":"F","s":"SUE – Suecia","pred":1,"p":10},{"g":"F","s":"TUN – Túnez","pred":0,"p":0},{"g":"G","s":"BEL – Bélgica","pred":1,"p":10},{"g":"G","s":"EGI – Egipto","pred":1,"p":10},{"g":"G","s":"IRN – Irán","pred":0,"p":0},{"g":"G","s":"NZL – N. Zelanda","pred":0,"p":0},{"g":"H","s":"ARA – A. Saudita","pred":1,"p":0},{"g":"H","s":"CAB – Cabo Verde","pred":0,"p":0},{"g":"H","s":"ESP – España","pred":1,"p":10},{"g":"H","s":"URU – Uruguay","pred":1,"p":0},{"g":"I","s":"FRA – Francia","pred":1,"p":10},{"g":"I","s":"IRK – Irak","pred":0,"p":0},{"g":"I","s":"NOR – Noruega","pred":1,"p":10},{"g":"I","s":"SEN – Senegal","pred":1,"p":10},{"g":"J","s":"ALG – Argelia","pred":0,"p":0},{"g":"J","s":"ARG – Argentina","pred":1,"p":10},{"g":"J","s":"AUT – Austria","pred":1,"p":10},{"g":"J","s":"JOR – Jordania","pred":0,"p":0},{"g":"K","s":"COL – Colombia","pred":1,"p":10},{"g":"K","s":"POR – Portugal","pred":1,"p":10},{"g":"K","s":"RDC – R.D. Congo","pred":0,"p":0},{"g":"K","s":"UZB – Uzbekistán","pred":0,"p":0},{"g":"L","s":"CRO – Croacia","pred":1,"p":10},{"g":"L","s":"GHA – Ghana","pred":1,"p":10},{"g":"L","s":"ING – Inglaterra","pred":1,"p":10},{"g":"L","s":"PAN – Panamá","pred":0,"p":0}],
+  'Mayito':[{"g":"A","s":"CHE – R. Checa","pred":1,"p":0},{"g":"A","s":"COR – C. del Sur","pred":1,"p":0},{"g":"A","s":"MEX – México","pred":1,"p":10},{"g":"A","s":"SUD – Sudáfrica","pred":0,"p":0},{"g":"B","s":"BOS – Bosnia","pred":1,"p":10},{"g":"B","s":"CAN – Canadá","pred":1,"p":10},{"g":"B","s":"QAT – Qatar","pred":0,"p":0},{"g":"B","s":"SUI – Suiza","pred":1,"p":10},{"g":"C","s":"BRA – Brasil","pred":1,"p":10},{"g":"C","s":"ESC – Escocia","pred":1,"p":0},{"g":"C","s":"HAI – Haití","pred":0,"p":0},{"g":"C","s":"MAR – Marruecos","pred":1,"p":10},{"g":"D","s":"AUS – Australia","pred":0,"p":0},{"g":"D","s":"PAR – Paraguay","pred":1,"p":10},{"g":"D","s":"TUR – Turquía","pred":1,"p":0},{"g":"D","s":"USA – USA","pred":1,"p":10},{"g":"E","s":"ALE – Alemania","pred":1,"p":10},{"g":"E","s":"CIV – C. de Marfil","pred":1,"p":10},{"g":"E","s":"CUR – Curazao","pred":0,"p":0},{"g":"E","s":"ECU – Ecuador","pred":1,"p":10},{"g":"F","s":"JAP – Japón","pred":1,"p":10},{"g":"F","s":"NED – P. Bajos","pred":1,"p":10},{"g":"F","s":"SUE – Suecia","pred":1,"p":10},{"g":"F","s":"TUN – Túnez","pred":0,"p":0},{"g":"G","s":"BEL – Bélgica","pred":1,"p":10},{"g":"G","s":"EGI – Egipto","pred":1,"p":10},{"g":"G","s":"IRN – Irán","pred":0,"p":0},{"g":"G","s":"NZL – N. Zelanda","pred":0,"p":0},{"g":"H","s":"ARA – A. Saudita","pred":1,"p":0},{"g":"H","s":"CAB – Cabo Verde","pred":0,"p":0},{"g":"H","s":"ESP – España","pred":1,"p":10},{"g":"H","s":"URU – Uruguay","pred":1,"p":0},{"g":"I","s":"FRA – Francia","pred":1,"p":10},{"g":"I","s":"IRK – Irak","pred":0,"p":0},{"g":"I","s":"NOR – Noruega","pred":1,"p":10},{"g":"I","s":"SEN – Senegal","pred":0,"p":0},{"g":"J","s":"ALG – Argelia","pred":0,"p":0},{"g":"J","s":"ARG – Argentina","pred":1,"p":10},{"g":"J","s":"AUT – Austria","pred":1,"p":10},{"g":"J","s":"JOR – Jordania","pred":0,"p":0},{"g":"K","s":"COL – Colombia","pred":1,"p":10},{"g":"K","s":"POR – Portugal","pred":1,"p":10},{"g":"K","s":"RDC – R.D. Congo","pred":0,"p":0},{"g":"K","s":"UZB – Uzbekistán","pred":1,"p":0},{"g":"L","s":"CRO – Croacia","pred":1,"p":10},{"g":"L","s":"GHA – Ghana","pred":0,"p":0},{"g":"L","s":"ING – Inglaterra","pred":1,"p":10},{"g":"L","s":"PAN – Panamá","pred":0,"p":0}],
+  'Mich':[{"g":"A","s":"CHE – R. Checa","pred":1,"p":0},{"g":"A","s":"COR – C. del Sur","pred":1,"p":0},{"g":"A","s":"MEX – México","pred":1,"p":10},{"g":"A","s":"SUD – Sudáfrica","pred":0,"p":0},{"g":"B","s":"BOS – Bosnia","pred":0,"p":0},{"g":"B","s":"CAN – Canadá","pred":1,"p":10},{"g":"B","s":"QAT – Qatar","pred":0,"p":0},{"g":"B","s":"SUI – Suiza","pred":1,"p":10},{"g":"C","s":"BRA – Brasil","pred":1,"p":10},{"g":"C","s":"ESC – Escocia","pred":1,"p":0},{"g":"C","s":"HAI – Haití","pred":0,"p":0},{"g":"C","s":"MAR – Marruecos","pred":1,"p":10},{"g":"D","s":"AUS – Australia","pred":0,"p":0},{"g":"D","s":"PAR – Paraguay","pred":1,"p":10},{"g":"D","s":"TUR – Turquía","pred":1,"p":0},{"g":"D","s":"USA – USA","pred":1,"p":10},{"g":"E","s":"ALE – Alemania","pred":1,"p":10},{"g":"E","s":"CIV – C. de Marfil","pred":1,"p":10},{"g":"E","s":"CUR – Curazao","pred":0,"p":0},{"g":"E","s":"ECU – Ecuador","pred":1,"p":10},{"g":"F","s":"JAP – Japón","pred":1,"p":10},{"g":"F","s":"NED – P. Bajos","pred":1,"p":10},{"g":"F","s":"SUE – Suecia","pred":1,"p":10},{"g":"F","s":"TUN – Túnez","pred":0,"p":0},{"g":"G","s":"BEL – Bélgica","pred":1,"p":10},{"g":"G","s":"EGI – Egipto","pred":1,"p":10},{"g":"G","s":"IRN – Irán","pred":0,"p":0},{"g":"G","s":"NZL – N. Zelanda","pred":0,"p":0},{"g":"H","s":"ARA – A. Saudita","pred":0,"p":0},{"g":"H","s":"CAB – Cabo Verde","pred":0,"p":0},{"g":"H","s":"ESP – España","pred":1,"p":10},{"g":"H","s":"URU – Uruguay","pred":1,"p":0},{"g":"I","s":"FRA – Francia","pred":1,"p":10},{"g":"I","s":"IRK – Irak","pred":0,"p":0},{"g":"I","s":"NOR – Noruega","pred":1,"p":10},{"g":"I","s":"SEN – Senegal","pred":1,"p":10},{"g":"J","s":"ALG – Argelia","pred":1,"p":10},{"g":"J","s":"ARG – Argentina","pred":1,"p":10},{"g":"J","s":"AUT – Austria","pred":1,"p":10},{"g":"J","s":"JOR – Jordania","pred":0,"p":0},{"g":"K","s":"COL – Colombia","pred":1,"p":10},{"g":"K","s":"POR – Portugal","pred":1,"p":10},{"g":"K","s":"RDC – R.D. Congo","pred":0,"p":0},{"g":"K","s":"UZB – Uzbekistán","pred":1,"p":0},{"g":"L","s":"CRO – Croacia","pred":0,"p":0},{"g":"L","s":"GHA – Ghana","pred":1,"p":10},{"g":"L","s":"ING – Inglaterra","pred":1,"p":10},{"g":"L","s":"PAN – Panamá","pred":0,"p":0}],
+  'OscarC':[{"g":"A","s":"CHE – R. Checa","pred":1,"p":0},{"g":"A","s":"COR – C. del Sur","pred":1,"p":0},{"g":"A","s":"MEX – México","pred":1,"p":10},{"g":"A","s":"SUD – Sudáfrica","pred":0,"p":0},{"g":"B","s":"BOS – Bosnia","pred":0,"p":0},{"g":"B","s":"CAN – Canadá","pred":0,"p":0},{"g":"B","s":"QAT – Qatar","pred":1,"p":0},{"g":"B","s":"SUI – Suiza","pred":1,"p":10},{"g":"C","s":"BRA – Brasil","pred":1,"p":10},{"g":"C","s":"ESC – Escocia","pred":0,"p":0},{"g":"C","s":"HAI – Haití","pred":0,"p":0},{"g":"C","s":"MAR – Marruecos","pred":1,"p":10},{"g":"D","s":"AUS – Australia","pred":0,"p":0},{"g":"D","s":"PAR – Paraguay","pred":1,"p":10},{"g":"D","s":"TUR – Turquía","pred":1,"p":0},{"g":"D","s":"USA – USA","pred":1,"p":10},{"g":"E","s":"ALE – Alemania","pred":1,"p":10},{"g":"E","s":"CIV – C. de Marfil","pred":1,"p":10},{"g":"E","s":"CUR – Curazao","pred":0,"p":0},{"g":"E","s":"ECU – Ecuador","pred":1,"p":10},{"g":"F","s":"JAP – Japón","pred":1,"p":10},{"g":"F","s":"NED – P. Bajos","pred":1,"p":10},{"g":"F","s":"SUE – Suecia","pred":1,"p":10},{"g":"F","s":"TUN – Túnez","pred":0,"p":0},{"g":"G","s":"BEL – Bélgica","pred":1,"p":10},{"g":"G","s":"EGI – Egipto","pred":1,"p":10},{"g":"G","s":"IRN – Irán","pred":0,"p":0},{"g":"G","s":"NZL – N. Zelanda","pred":0,"p":0},{"g":"H","s":"ARA – A. Saudita","pred":0,"p":0},{"g":"H","s":"CAB – Cabo Verde","pred":0,"p":0},{"g":"H","s":"ESP – España","pred":1,"p":10},{"g":"H","s":"URU – Uruguay","pred":1,"p":0},{"g":"I","s":"FRA – Francia","pred":1,"p":10},{"g":"I","s":"IRK – Irak","pred":0,"p":0},{"g":"I","s":"NOR – Noruega","pred":1,"p":10},{"g":"I","s":"SEN – Senegal","pred":1,"p":10},{"g":"J","s":"ALG – Argelia","pred":1,"p":10},{"g":"J","s":"ARG – Argentina","pred":1,"p":10},{"g":"J","s":"AUT – Austria","pred":1,"p":10},{"g":"J","s":"JOR – Jordania","pred":0,"p":0},{"g":"K","s":"COL – Colombia","pred":1,"p":10},{"g":"K","s":"POR – Portugal","pred":1,"p":10},{"g":"K","s":"RDC – R.D. Congo","pred":1,"p":10},{"g":"K","s":"UZB – Uzbekistán","pred":0,"p":0},{"g":"L","s":"CRO – Croacia","pred":1,"p":10},{"g":"L","s":"GHA – Ghana","pred":0,"p":0},{"g":"L","s":"ING – Inglaterra","pred":1,"p":10},{"g":"L","s":"PAN – Panamá","pred":1,"p":0}],
+  'PabloS':[{"g":"A","s":"CHE – R. Checa","pred":1,"p":0},{"g":"A","s":"COR – C. del Sur","pred":0,"p":0},{"g":"A","s":"MEX – México","pred":1,"p":10},{"g":"A","s":"SUD – Sudáfrica","pred":1,"p":10},{"g":"B","s":"BOS – Bosnia","pred":1,"p":10},{"g":"B","s":"CAN – Canadá","pred":1,"p":10},{"g":"B","s":"QAT – Qatar","pred":0,"p":0},{"g":"B","s":"SUI – Suiza","pred":1,"p":10},{"g":"C","s":"BRA – Brasil","pred":1,"p":10},{"g":"C","s":"ESC – Escocia","pred":1,"p":0},{"g":"C","s":"HAI – Haití","pred":0,"p":0},{"g":"C","s":"MAR – Marruecos","pred":1,"p":10},{"g":"D","s":"AUS – Australia","pred":0,"p":0},{"g":"D","s":"PAR – Paraguay","pred":1,"p":10},{"g":"D","s":"TUR – Turquía","pred":1,"p":0},{"g":"D","s":"USA – USA","pred":1,"p":10},{"g":"E","s":"ALE – Alemania","pred":1,"p":10},{"g":"E","s":"CIV – C. de Marfil","pred":0,"p":0},{"g":"E","s":"CUR – Curazao","pred":0,"p":0},{"g":"E","s":"ECU – Ecuador","pred":1,"p":10},{"g":"F","s":"JAP – Japón","pred":1,"p":10},{"g":"F","s":"NED – P. Bajos","pred":1,"p":10},{"g":"F","s":"SUE – Suecia","pred":1,"p":10},{"g":"F","s":"TUN – Túnez","pred":0,"p":0},{"g":"G","s":"BEL – Bélgica","pred":1,"p":10},{"g":"G","s":"EGI – Egipto","pred":1,"p":10},{"g":"G","s":"IRN – Irán","pred":0,"p":0},{"g":"G","s":"NZL – N. Zelanda","pred":0,"p":0},{"g":"H","s":"ARA – A. Saudita","pred":1,"p":0},{"g":"H","s":"CAB – Cabo Verde","pred":0,"p":0},{"g":"H","s":"ESP – España","pred":1,"p":10},{"g":"H","s":"URU – Uruguay","pred":1,"p":0},{"g":"I","s":"FRA – Francia","pred":1,"p":10},{"g":"I","s":"IRK – Irak","pred":0,"p":0},{"g":"I","s":"NOR – Noruega","pred":1,"p":10},{"g":"I","s":"SEN – Senegal","pred":1,"p":10},{"g":"J","s":"ALG – Argelia","pred":0,"p":0},{"g":"J","s":"ARG – Argentina","pred":1,"p":10},{"g":"J","s":"AUT – Austria","pred":1,"p":10},{"g":"J","s":"JOR – Jordania","pred":0,"p":0},{"g":"K","s":"COL – Colombia","pred":1,"p":10},{"g":"K","s":"POR – Portugal","pred":1,"p":10},{"g":"K","s":"RDC – R.D. Congo","pred":1,"p":10},{"g":"K","s":"UZB – Uzbekistán","pred":0,"p":0},{"g":"L","s":"CRO – Croacia","pred":1,"p":10},{"g":"L","s":"GHA – Ghana","pred":0,"p":0},{"g":"L","s":"ING – Inglaterra","pred":1,"p":10},{"g":"L","s":"PAN – Panamá","pred":0,"p":0}],
+  'RocioIbarra':[{"g":"A","s":"CHE – R. Checa","pred":1,"p":0},{"g":"A","s":"COR – C. del Sur","pred":1,"p":0},{"g":"A","s":"MEX – México","pred":1,"p":10},{"g":"A","s":"SUD – Sudáfrica","pred":0,"p":0},{"g":"B","s":"BOS – Bosnia","pred":0,"p":0},{"g":"B","s":"CAN – Canadá","pred":1,"p":10},{"g":"B","s":"QAT – Qatar","pred":1,"p":0},{"g":"B","s":"SUI – Suiza","pred":1,"p":10},{"g":"C","s":"BRA – Brasil","pred":1,"p":10},{"g":"C","s":"ESC – Escocia","pred":0,"p":0},{"g":"C","s":"HAI – Haití","pred":0,"p":0},{"g":"C","s":"MAR – Marruecos","pred":1,"p":10},{"g":"D","s":"AUS – Australia","pred":0,"p":0},{"g":"D","s":"PAR – Paraguay","pred":1,"p":10},{"g":"D","s":"TUR – Turquía","pred":1,"p":0},{"g":"D","s":"USA – USA","pred":1,"p":10},{"g":"E","s":"ALE – Alemania","pred":1,"p":10},{"g":"E","s":"CIV – C. de Marfil","pred":1,"p":10},{"g":"E","s":"CUR – Curazao","pred":1,"p":0},{"g":"E","s":"ECU – Ecuador","pred":0,"p":0},{"g":"F","s":"JAP – Japón","pred":1,"p":10},{"g":"F","s":"NED – P. Bajos","pred":1,"p":10},{"g":"F","s":"SUE – Suecia","pred":1,"p":10},{"g":"F","s":"TUN – Túnez","pred":0,"p":0},{"g":"G","s":"BEL – Bélgica","pred":1,"p":10},{"g":"G","s":"EGI – Egipto","pred":1,"p":10},{"g":"G","s":"IRN – Irán","pred":0,"p":0},{"g":"G","s":"NZL – N. Zelanda","pred":1,"p":0},{"g":"H","s":"ARA – A. Saudita","pred":1,"p":0},{"g":"H","s":"CAB – Cabo Verde","pred":0,"p":0},{"g":"H","s":"ESP – España","pred":1,"p":10},{"g":"H","s":"URU – Uruguay","pred":1,"p":0},{"g":"I","s":"FRA – Francia","pred":1,"p":10},{"g":"I","s":"IRK – Irak","pred":0,"p":0},{"g":"I","s":"NOR – Noruega","pred":1,"p":10},{"g":"I","s":"SEN – Senegal","pred":0,"p":0},{"g":"J","s":"ALG – Argelia","pred":1,"p":10},{"g":"J","s":"ARG – Argentina","pred":1,"p":10},{"g":"J","s":"AUT – Austria","pred":0,"p":0},{"g":"J","s":"JOR – Jordania","pred":0,"p":0},{"g":"K","s":"COL – Colombia","pred":1,"p":10},{"g":"K","s":"POR – Portugal","pred":1,"p":10},{"g":"K","s":"RDC – R.D. Congo","pred":0,"p":0},{"g":"K","s":"UZB – Uzbekistán","pred":0,"p":0},{"g":"L","s":"CRO – Croacia","pred":1,"p":10},{"g":"L","s":"GHA – Ghana","pred":0,"p":0},{"g":"L","s":"ING – Inglaterra","pred":1,"p":10},{"g":"L","s":"PAN – Panamá","pred":1,"p":0}],
+  'RodolfoC':[{"g":"A","s":"CHE – R. Checa","pred":1,"p":0},{"g":"A","s":"COR – C. del Sur","pred":1,"p":0},{"g":"A","s":"MEX – México","pred":1,"p":10},{"g":"A","s":"SUD – Sudáfrica","pred":0,"p":0},{"g":"B","s":"BOS – Bosnia","pred":1,"p":10},{"g":"B","s":"CAN – Canadá","pred":1,"p":10},{"g":"B","s":"QAT – Qatar","pred":0,"p":0},{"g":"B","s":"SUI – Suiza","pred":1,"p":10},{"g":"C","s":"BRA – Brasil","pred":1,"p":10},{"g":"C","s":"ESC – Escocia","pred":1,"p":0},{"g":"C","s":"HAI – Haití","pred":0,"p":0},{"g":"C","s":"MAR – Marruecos","pred":1,"p":10},{"g":"D","s":"AUS – Australia","pred":0,"p":0},{"g":"D","s":"PAR – Paraguay","pred":1,"p":10},{"g":"D","s":"TUR – Turquía","pred":1,"p":0},{"g":"D","s":"USA – USA","pred":1,"p":10},{"g":"E","s":"ALE – Alemania","pred":1,"p":10},{"g":"E","s":"CIV – C. de Marfil","pred":1,"p":10},{"g":"E","s":"CUR – Curazao","pred":0,"p":0},{"g":"E","s":"ECU – Ecuador","pred":1,"p":10},{"g":"F","s":"JAP – Japón","pred":1,"p":10},{"g":"F","s":"NED – P. Bajos","pred":1,"p":10},{"g":"F","s":"SUE – Suecia","pred":1,"p":10},{"g":"F","s":"TUN – Túnez","pred":0,"p":0},{"g":"G","s":"BEL – Bélgica","pred":1,"p":10},{"g":"G","s":"EGI – Egipto","pred":1,"p":10},{"g":"G","s":"IRN – Irán","pred":0,"p":0},{"g":"G","s":"NZL – N. Zelanda","pred":0,"p":0},{"g":"H","s":"ARA – A. Saudita","pred":0,"p":0},{"g":"H","s":"CAB – Cabo Verde","pred":0,"p":0},{"g":"H","s":"ESP – España","pred":1,"p":10},{"g":"H","s":"URU – Uruguay","pred":1,"p":0},{"g":"I","s":"FRA – Francia","pred":1,"p":10},{"g":"I","s":"IRK – Irak","pred":0,"p":0},{"g":"I","s":"NOR – Noruega","pred":1,"p":10},{"g":"I","s":"SEN – Senegal","pred":1,"p":10},{"g":"J","s":"ALG – Argelia","pred":1,"p":10},{"g":"J","s":"ARG – Argentina","pred":1,"p":10},{"g":"J","s":"AUT – Austria","pred":1,"p":10},{"g":"J","s":"JOR – Jordania","pred":0,"p":0},{"g":"K","s":"COL – Colombia","pred":1,"p":10},{"g":"K","s":"POR – Portugal","pred":1,"p":10},{"g":"K","s":"RDC – R.D. Congo","pred":0,"p":0},{"g":"K","s":"UZB – Uzbekistán","pred":0,"p":0},{"g":"L","s":"CRO – Croacia","pred":1,"p":10},{"g":"L","s":"GHA – Ghana","pred":0,"p":0},{"g":"L","s":"ING – Inglaterra","pred":1,"p":10},{"g":"L","s":"PAN – Panamá","pred":0,"p":0}],
+  'RodrigoGonzalez':[{"g":"A","s":"CHE – R. Checa","pred":0,"p":0},{"g":"A","s":"COR – C. del Sur","pred":1,"p":0},{"g":"A","s":"MEX – México","pred":1,"p":10},{"g":"A","s":"SUD – Sudáfrica","pred":0,"p":0},{"g":"B","s":"BOS – Bosnia","pred":0,"p":0},{"g":"B","s":"CAN – Canadá","pred":1,"p":10},{"g":"B","s":"QAT – Qatar","pred":0,"p":0},{"g":"B","s":"SUI – Suiza","pred":1,"p":10},{"g":"C","s":"BRA – Brasil","pred":1,"p":10},{"g":"C","s":"ESC – Escocia","pred":1,"p":0},{"g":"C","s":"HAI – Haití","pred":0,"p":0},{"g":"C","s":"MAR – Marruecos","pred":1,"p":10},{"g":"D","s":"AUS – Australia","pred":0,"p":0},{"g":"D","s":"PAR – Paraguay","pred":1,"p":10},{"g":"D","s":"TUR – Turquía","pred":1,"p":0},{"g":"D","s":"USA – USA","pred":1,"p":10},{"g":"E","s":"ALE – Alemania","pred":1,"p":10},{"g":"E","s":"CIV – C. de Marfil","pred":1,"p":10},{"g":"E","s":"CUR – Curazao","pred":0,"p":0},{"g":"E","s":"ECU – Ecuador","pred":1,"p":10},{"g":"F","s":"JAP – Japón","pred":0,"p":0},{"g":"F","s":"NED – P. Bajos","pred":1,"p":10},{"g":"F","s":"SUE – Suecia","pred":1,"p":10},{"g":"F","s":"TUN – Túnez","pred":0,"p":0},{"g":"G","s":"BEL – Bélgica","pred":1,"p":10},{"g":"G","s":"EGI – Egipto","pred":1,"p":10},{"g":"G","s":"IRN – Irán","pred":1,"p":0},{"g":"G","s":"NZL – N. Zelanda","pred":0,"p":0},{"g":"H","s":"ARA – A. Saudita","pred":0,"p":0},{"g":"H","s":"CAB – Cabo Verde","pred":0,"p":0},{"g":"H","s":"ESP – España","pred":1,"p":10},{"g":"H","s":"URU – Uruguay","pred":1,"p":0},{"g":"I","s":"FRA – Francia","pred":1,"p":10},{"g":"I","s":"IRK – Irak","pred":0,"p":0},{"g":"I","s":"NOR – Noruega","pred":1,"p":10},{"g":"I","s":"SEN – Senegal","pred":1,"p":10},{"g":"J","s":"ALG – Argelia","pred":1,"p":10},{"g":"J","s":"ARG – Argentina","pred":1,"p":10},{"g":"J","s":"AUT – Austria","pred":1,"p":10},{"g":"J","s":"JOR – Jordania","pred":0,"p":0},{"g":"K","s":"COL – Colombia","pred":1,"p":10},{"g":"K","s":"POR – Portugal","pred":1,"p":10},{"g":"K","s":"RDC – R.D. Congo","pred":0,"p":0},{"g":"K","s":"UZB – Uzbekistán","pred":0,"p":0},{"g":"L","s":"CRO – Croacia","pred":1,"p":10},{"g":"L","s":"GHA – Ghana","pred":0,"p":0},{"g":"L","s":"ING – Inglaterra","pred":1,"p":10},{"g":"L","s":"PAN – Panamá","pred":0,"p":0}],
+  'RodrigoIbarra':[{"g":"A","s":"CHE – R. Checa","pred":1,"p":0},{"g":"A","s":"COR – C. del Sur","pred":1,"p":0},{"g":"A","s":"MEX – México","pred":1,"p":10},{"g":"A","s":"SUD – Sudáfrica","pred":0,"p":0},{"g":"B","s":"BOS – Bosnia","pred":1,"p":10},{"g":"B","s":"CAN – Canadá","pred":1,"p":10},{"g":"B","s":"QAT – Qatar","pred":0,"p":0},{"g":"B","s":"SUI – Suiza","pred":1,"p":10},{"g":"C","s":"BRA – Brasil","pred":1,"p":10},{"g":"C","s":"ESC – Escocia","pred":1,"p":0},{"g":"C","s":"HAI – Haití","pred":0,"p":0},{"g":"C","s":"MAR – Marruecos","pred":1,"p":10},{"g":"D","s":"AUS – Australia","pred":0,"p":0},{"g":"D","s":"PAR – Paraguay","pred":0,"p":0},{"g":"D","s":"TUR – Turquía","pred":1,"p":0},{"g":"D","s":"USA – USA","pred":1,"p":10},{"g":"E","s":"ALE – Alemania","pred":1,"p":10},{"g":"E","s":"CIV – C. de Marfil","pred":1,"p":10},{"g":"E","s":"CUR – Curazao","pred":0,"p":0},{"g":"E","s":"ECU – Ecuador","pred":1,"p":10},{"g":"F","s":"JAP – Japón","pred":1,"p":10},{"g":"F","s":"NED – P. Bajos","pred":1,"p":10},{"g":"F","s":"SUE – Suecia","pred":1,"p":10},{"g":"F","s":"TUN – Túnez","pred":0,"p":0},{"g":"G","s":"BEL – Bélgica","pred":1,"p":10},{"g":"G","s":"EGI – Egipto","pred":1,"p":10},{"g":"G","s":"IRN – Irán","pred":0,"p":0},{"g":"G","s":"NZL – N. Zelanda","pred":0,"p":0},{"g":"H","s":"ARA – A. Saudita","pred":0,"p":0},{"g":"H","s":"CAB – Cabo Verde","pred":0,"p":0},{"g":"H","s":"ESP – España","pred":1,"p":10},{"g":"H","s":"URU – Uruguay","pred":1,"p":0},{"g":"I","s":"FRA – Francia","pred":1,"p":10},{"g":"I","s":"IRK – Irak","pred":0,"p":0},{"g":"I","s":"NOR – Noruega","pred":1,"p":10},{"g":"I","s":"SEN – Senegal","pred":1,"p":10},{"g":"J","s":"ALG – Argelia","pred":1,"p":10},{"g":"J","s":"ARG – Argentina","pred":1,"p":10},{"g":"J","s":"AUT – Austria","pred":1,"p":10},{"g":"J","s":"JOR – Jordania","pred":0,"p":0},{"g":"K","s":"COL – Colombia","pred":1,"p":10},{"g":"K","s":"POR – Portugal","pred":1,"p":10},{"g":"K","s":"RDC – R.D. Congo","pred":0,"p":0},{"g":"K","s":"UZB – Uzbekistán","pred":0,"p":0},{"g":"L","s":"CRO – Croacia","pred":1,"p":10},{"g":"L","s":"GHA – Ghana","pred":1,"p":10},{"g":"L","s":"ING – Inglaterra","pred":1,"p":10},{"g":"L","s":"PAN – Panamá","pred":0,"p":0}],
+  'Sebastian':[{"g":"A","s":"CHE – R. Checa","pred":1,"p":0},{"g":"A","s":"COR – C. del Sur","pred":1,"p":0},{"g":"A","s":"MEX – México","pred":1,"p":10},{"g":"A","s":"SUD – Sudáfrica","pred":0,"p":0},{"g":"B","s":"BOS – Bosnia","pred":0,"p":0},{"g":"B","s":"CAN – Canadá","pred":1,"p":10},{"g":"B","s":"QAT – Qatar","pred":0,"p":0},{"g":"B","s":"SUI – Suiza","pred":1,"p":10},{"g":"C","s":"BRA – Brasil","pred":1,"p":10},{"g":"C","s":"ESC – Escocia","pred":1,"p":0},{"g":"C","s":"HAI – Haití","pred":0,"p":0},{"g":"C","s":"MAR – Marruecos","pred":1,"p":10},{"g":"D","s":"AUS – Australia","pred":1,"p":10},{"g":"D","s":"PAR – Paraguay","pred":0,"p":0},{"g":"D","s":"TUR – Turquía","pred":1,"p":0},{"g":"D","s":"USA – USA","pred":1,"p":10},{"g":"E","s":"ALE – Alemania","pred":1,"p":10},{"g":"E","s":"CIV – C. de Marfil","pred":1,"p":10},{"g":"E","s":"CUR – Curazao","pred":0,"p":0},{"g":"E","s":"ECU – Ecuador","pred":1,"p":10},{"g":"F","s":"JAP – Japón","pred":1,"p":10},{"g":"F","s":"NED – P. Bajos","pred":1,"p":10},{"g":"F","s":"SUE – Suecia","pred":1,"p":10},{"g":"F","s":"TUN – Túnez","pred":0,"p":0},{"g":"G","s":"BEL – Bélgica","pred":1,"p":10},{"g":"G","s":"EGI – Egipto","pred":1,"p":10},{"g":"G","s":"IRN – Irán","pred":0,"p":0},{"g":"G","s":"NZL – N. Zelanda","pred":0,"p":0},{"g":"H","s":"ARA – A. Saudita","pred":0,"p":0},{"g":"H","s":"CAB – Cabo Verde","pred":0,"p":0},{"g":"H","s":"ESP – España","pred":1,"p":10},{"g":"H","s":"URU – Uruguay","pred":1,"p":0},{"g":"I","s":"FRA – Francia","pred":1,"p":10},{"g":"I","s":"IRK – Irak","pred":0,"p":0},{"g":"I","s":"NOR – Noruega","pred":1,"p":10},{"g":"I","s":"SEN – Senegal","pred":1,"p":10},{"g":"J","s":"ALG – Argelia","pred":0,"p":0},{"g":"J","s":"ARG – Argentina","pred":1,"p":10},{"g":"J","s":"AUT – Austria","pred":1,"p":10},{"g":"J","s":"JOR – Jordania","pred":1,"p":0},{"g":"K","s":"COL – Colombia","pred":1,"p":10},{"g":"K","s":"POR – Portugal","pred":1,"p":10},{"g":"K","s":"RDC – R.D. Congo","pred":0,"p":0},{"g":"K","s":"UZB – Uzbekistán","pred":0,"p":0},{"g":"L","s":"CRO – Croacia","pred":1,"p":10},{"g":"L","s":"GHA – Ghana","pred":1,"p":10},{"g":"L","s":"ING – Inglaterra","pred":1,"p":10},{"g":"L","s":"PAN – Panamá","pred":0,"p":0}],
+  'Toño':[{"g":"A","s":"CHE – R. Checa","pred":1,"p":0},{"g":"A","s":"COR – C. del Sur","pred":1,"p":0},{"g":"A","s":"MEX – México","pred":1,"p":10},{"g":"A","s":"SUD – Sudáfrica","pred":0,"p":0},{"g":"B","s":"BOS – Bosnia","pred":1,"p":10},{"g":"B","s":"CAN – Canadá","pred":1,"p":10},{"g":"B","s":"QAT – Qatar","pred":0,"p":0},{"g":"B","s":"SUI – Suiza","pred":1,"p":10},{"g":"C","s":"BRA – Brasil","pred":1,"p":10},{"g":"C","s":"ESC – Escocia","pred":1,"p":0},{"g":"C","s":"HAI – Haití","pred":0,"p":0},{"g":"C","s":"MAR – Marruecos","pred":1,"p":10},{"g":"D","s":"AUS – Australia","pred":0,"p":0},{"g":"D","s":"PAR – Paraguay","pred":1,"p":10},{"g":"D","s":"TUR – Turquía","pred":1,"p":0},{"g":"D","s":"USA – USA","pred":1,"p":10},{"g":"E","s":"ALE – Alemania","pred":1,"p":10},{"g":"E","s":"CIV – C. de Marfil","pred":1,"p":10},{"g":"E","s":"CUR – Curazao","pred":0,"p":0},{"g":"E","s":"ECU – Ecuador","pred":1,"p":10},{"g":"F","s":"JAP – Japón","pred":1,"p":10},{"g":"F","s":"NED – P. Bajos","pred":1,"p":10},{"g":"F","s":"SUE – Suecia","pred":0,"p":0},{"g":"F","s":"TUN – Túnez","pred":0,"p":0},{"g":"G","s":"BEL – Bélgica","pred":1,"p":10},{"g":"G","s":"EGI – Egipto","pred":1,"p":10},{"g":"G","s":"IRN – Irán","pred":1,"p":0},{"g":"G","s":"NZL – N. Zelanda","pred":0,"p":0},{"g":"H","s":"ARA – A. Saudita","pred":0,"p":0},{"g":"H","s":"CAB – Cabo Verde","pred":0,"p":0},{"g":"H","s":"ESP – España","pred":1,"p":10},{"g":"H","s":"URU – Uruguay","pred":1,"p":0},{"g":"I","s":"FRA – Francia","pred":1,"p":10},{"g":"I","s":"IRK – Irak","pred":0,"p":0},{"g":"I","s":"NOR – Noruega","pred":1,"p":10},{"g":"I","s":"SEN – Senegal","pred":1,"p":10},{"g":"J","s":"ALG – Argelia","pred":1,"p":10},{"g":"J","s":"ARG – Argentina","pred":1,"p":10},{"g":"J","s":"AUT – Austria","pred":1,"p":10},{"g":"J","s":"JOR – Jordania","pred":0,"p":0},{"g":"K","s":"COL – Colombia","pred":1,"p":10},{"g":"K","s":"POR – Portugal","pred":1,"p":10},{"g":"K","s":"RDC – R.D. Congo","pred":0,"p":0},{"g":"K","s":"UZB – Uzbekistán","pred":0,"p":0},{"g":"L","s":"CRO – Croacia","pred":1,"p":10},{"g":"L","s":"GHA – Ghana","pred":0,"p":0},{"g":"L","s":"ING – Inglaterra","pred":1,"p":10},{"g":"L","s":"PAN – Panamá","pred":0,"p":0}],
+  'JuanPablo':[{"g":"A","s":"CHE – R. Checa","pred":1,"p":0},{"g":"A","s":"COR – C. del Sur","pred":1,"p":0},{"g":"A","s":"MEX – México","pred":1,"p":10},{"g":"A","s":"SUD – Sudáfrica","pred":0,"p":0},{"g":"B","s":"BOS – Bosnia","pred":1,"p":10},{"g":"B","s":"CAN – Canadá","pred":1,"p":10},{"g":"B","s":"QAT – Qatar","pred":0,"p":0},{"g":"B","s":"SUI – Suiza","pred":1,"p":10},{"g":"C","s":"BRA – Brasil","pred":1,"p":10},{"g":"C","s":"ESC – Escocia","pred":1,"p":0},{"g":"C","s":"HAI – Haití","pred":0,"p":0},{"g":"C","s":"MAR – Marruecos","pred":1,"p":10},{"g":"D","s":"AUS – Australia","pred":0,"p":0},{"g":"D","s":"PAR – Paraguay","pred":1,"p":10},{"g":"D","s":"TUR – Turquía","pred":1,"p":0},{"g":"D","s":"USA – USA","pred":1,"p":10},{"g":"E","s":"ALE – Alemania","pred":1,"p":10},{"g":"E","s":"CIV – C. de Marfil","pred":1,"p":10},{"g":"E","s":"CUR – Curazao","pred":0,"p":0},{"g":"E","s":"ECU – Ecuador","pred":1,"p":10},{"g":"F","s":"JAP – Japón","pred":1,"p":10},{"g":"F","s":"NED – P. Bajos","pred":1,"p":10},{"g":"F","s":"SUE – Suecia","pred":1,"p":10},{"g":"F","s":"TUN – Túnez","pred":0,"p":0},{"g":"G","s":"BEL – Bélgica","pred":1,"p":10},{"g":"G","s":"EGI – Egipto","pred":1,"p":10},{"g":"G","s":"IRN – Irán","pred":0,"p":0},{"g":"G","s":"NZL – N. Zelanda","pred":0,"p":0},{"g":"H","s":"ARA – A. Saudita","pred":0,"p":0},{"g":"H","s":"CAB – Cabo Verde","pred":0,"p":0},{"g":"H","s":"ESP – España","pred":1,"p":10},{"g":"H","s":"URU – Uruguay","pred":1,"p":0},{"g":"I","s":"FRA – Francia","pred":1,"p":10},{"g":"I","s":"IRK – Irak","pred":0,"p":0},{"g":"I","s":"NOR – Noruega","pred":1,"p":10},{"g":"I","s":"SEN – Senegal","pred":1,"p":10},{"g":"J","s":"ALG – Argelia","pred":1,"p":10},{"g":"J","s":"ARG – Argentina","pred":1,"p":10},{"g":"J","s":"AUT – Austria","pred":1,"p":10},{"g":"J","s":"JOR – Jordania","pred":0,"p":0},{"g":"K","s":"COL – Colombia","pred":1,"p":10},{"g":"K","s":"POR – Portugal","pred":1,"p":10},{"g":"K","s":"RDC – R.D. Congo","pred":0,"p":0},{"g":"K","s":"UZB – Uzbekistán","pred":0,"p":0},{"g":"L","s":"CRO – Croacia","pred":1,"p":10},{"g":"L","s":"GHA – Ghana","pred":0,"p":0},{"g":"L","s":"ING – Inglaterra","pred":1,"p":10},{"g":"L","s":"PAN – Panamá","pred":0,"p":0}]
+};
+
 const QD_KO = {
   'Toño':            {'L3':{g1:0,g2:2}},
   'FernandaMocte':     {'L3':{g1:1,g2:2}},
@@ -796,7 +941,7 @@ const QD_KO = {
   'FernandaG':         {'L3':{g1:1,g2:0}},
   'KarinaIbarra1':     {'L3':{g1:0,g2:2}},
   'KarinaIbarra2':     {'L3':{g1:0,g2:1}},
-  'César':        {'L3':{g1:0,g2:2}},
+  'Cesar':         {'L3':{g1:0,g2:2}},
   'AxelIbarra':        {'L3':{g1:1,g2:2}},
   'RocioIbarra':       {'L3':{g1:1,g2:2}},
   'Berenice':          {'L3':{g1:0,g2:2}},
@@ -900,10 +1045,10 @@ function showBkPred(matchId, t1, t2, dateStr){
 
   function calcPtsKO(pg1,pg2,rg1,rg2){
     if(pg1===null||pg1===undefined) return null;
-    if(pg1===rg1&&pg2===rg2) return 8;
+    if(pg1===rg1&&pg2===rg2) return 11;
     const pr=pg1>pg2?'w1':pg1<pg2?'w2':'e';
     const rr=rg1>rg2?'w1':rg1<rg2?'w2':'e';
-    return pr===rr?3:0;
+    return pr===rr?4:0;
   }
 
   const rows = Object.entries(QD_KO).map(([name, preds])=>{
@@ -938,6 +1083,222 @@ function showBkPred(matchId, t1, t2, dateStr){
 
 function closeBkPred(){
   document.getElementById('bk-pred-panel').classList.remove('open');
+}
+
+
+function calcKOPts(name){
+  const preds = QD_KO[name] || {};
+  let pts = 0;
+  for(const [mid, pred] of Object.entries(preds)){
+    if(!pred || pred.g1===undefined) continue;
+    // Find match in bracket
+    const m = BRACKET_R32.find(x=>x.id===mid);
+    const real = BRACKET_RES[mid];
+    if(!real || !real.w) continue;
+    if(pred.g1===real.g1 && pred.g2===real.g2) pts+=11;
+    else {
+      const pr=pred.g1>pred.g2?'w1':pred.g1<pred.g2?'w2':'e';
+      const rr=real.g1>real.g2?'w1':real.g1<real.g2?'w2':'e';
+      if(pr===rr) pts+=4;
+    }
+  }
+  return pts;
+}
+
+
+function showDetail(name){
+  const matches = QD[name];
+  if(!matches) return;
+  document.getElementById('det-name').textContent = name;
+
+  let totalGrupos=0, totalClas=0, totalKO=0;
+
+  // ── A. FASE DE GRUPOS ──────────────────────────────────────
+  const played = SCHED.filter(m=>RESULTS[m.key]).sort((a,b)=>{
+    const da=parseInt(a.fecha), db=parseInt(b.fecha);
+    return da!==db?da-db:a.hora.localeCompare(b.hora);
+  });
+  let gruposHtml='', lastDate='';
+  for(const m of played){
+    const pred=matches.find(x=>x.equipo1===m.equipo1&&x.equipo2===m.equipo2&&x.fecha===m.fecha);
+    const real=RESULTS[m.key];
+    const isPend=!pred||pred.g1===null||pred.g2===null;
+    const pts=isPend?null:calcPts(pred,real);
+    if(pts) totalGrupos+=pts;
+    if(m.fecha!==lastDate){
+      gruposHtml+=`<div style="font-size:9px;font-weight:700;letter-spacing:2px;color:var(--muted);padding:8px 20px 3px;background:rgba(0,0,0,.2);border-bottom:1px solid var(--border-s)">${m.fecha}</div>`;
+      lastDate=m.fecha;
+    }
+    let rc='',chip='';
+    if(isPend){chip='<span class="chip nd">—</span>';}
+    else if(pts===8){rc='hit-exact';chip='<span class="chip exact">🎯 8</span>';}
+    else if(pts===3){rc='hit-result';chip='<span class="chip result">✅ 3</span>';}
+    else{rc='miss';chip='<span class="chip miss">❌ 0</span>';}
+    const ps=isPend?'—':`${pred.g1}–${pred.g2}`;
+    const rs=`${real.g1}–${real.g2}`;
+    gruposHtml+=`<div class="det-row g3 ${rc}">
+      <div><div class="det-match">${flag(m.equipo1)} ${tname(m.equipo1)} vs ${tname(m.equipo2)} ${flag(m.equipo2)}</div>
+           <div class="det-sub">Grupo ${m.grupo} · ${m.sede}</div></div>
+      <div class="det-sc">${ps}</div>
+      <div class="det-sc">${rs}</div>
+      <div class="det-pts-cell">${chip}</div>
+    </div>`;
+  }
+
+  // ── B. EQUIPOS CLASIFICADOS ────────────────────────────────
+  totalClas = PTS_CLASIFICADOS[name] || 0;
+  const teams = CLASIFICADOS_DETAIL[name] || [];
+  let clasHtml = '';
+  if(teams.length){
+    // Agrupar por grupo
+    const grupos = {};
+    for(const t of teams){
+      if(!grupos[t.g]) grupos[t.g] = [];
+      grupos[t.g].push(t);
+    }
+    let rows = '';
+    for(const [g, gteams] of Object.entries(grupos)){
+      for(const t of gteams){
+        const hit = t.p === 10;
+        const realC = REAL_CLASSIFIED.has(t.s);
+        const predC = t.pred === 1;
+        const rc2 = predC && realC ? 'hit-result' : predC && !realC ? 'miss' : '';
+        rows += `<div class="det-row" style="grid-template-columns:1fr 100px 100px 56px;display:grid;padding:8px 20px;border-bottom:1px solid var(--border-s);align-items:center;" class="${rc2}">
+          <div class="det-match">${flag(t.s)||''} ${t.s.split('–')[1]?.trim()||t.s}
+            <span style="font-size:9px;color:var(--muted);margin-left:6px">Grupo ${g}</span>
+          </div>
+          <div style="text-align:center;font-size:10px;color:${predC?'var(--gold)':'var(--muted)'}">${predC?'✅ Clasificó':'— No clasificó'}</div>
+          <div style="text-align:center;font-size:10px;color:${realC?'#00c46a':'var(--muted)'}">${realC?'✅ Clasificó':'❌ No clasificó'}</div>
+          <div class="det-pts-cell">${t.p===10?'<span class="chip result">10</span>':'<span class="chip miss">0</span>'}</div>
+        </div>`;
+      }
+    }
+    clasHtml = `
+      <div class="det-thead" style="display:grid;grid-template-columns:1fr 100px 100px 56px;padding:6px 20px;border-bottom:1px solid var(--border-s);font-size:9px;font-weight:700;letter-spacing:1.5px;color:var(--muted);text-transform:uppercase;background:var(--card)"><span>Selección</span><span style="text-align:center">Pronóstico</span><span style="text-align:center">Real</span><span style="text-align:right">Pts</span></div>
+      ${rows}
+      <div style="padding:8px 20px;text-align:right;font-size:11px;font-weight:700;color:#00c46a;border-top:1px solid var(--border-s)">
+        Total: ${totalClas} pts (${Math.round(totalClas/10)}/48 clasificados)
+      </div>`;
+  } else {
+    clasHtml = `<div style="padding:12px 20px;font-size:12px;color:var(--muted)">${totalClas} pts — ${Math.round(totalClas/10)} equipos × 10 pts</div>`;
+  }
+
+  // ── C. FASE ELIMINATORIA ────────────────────────────────────
+  const koPreds = QD_KO[name] || {};
+  let koHtml='';
+  for(const [mid, pred] of Object.entries(koPreds)){
+    if(!pred||pred.g1===undefined) continue;
+    const bm = BRACKET_R32.find(x=>x.id===mid);
+    if(!bm) continue;
+    const real=BRACKET_RES[mid];
+    const hasReal=real&&real.w;
+    let pts=null;
+    if(hasReal){
+      if(pred.g1===real.g1&&pred.g2===real.g2) pts=11;
+      else{
+        const pr=pred.g1>pred.g2?'w1':pred.g1<pred.g2?'w2':'e';
+        const rr=real.g1>real.g2?'w1':real.g1<real.g2?'w2':'e';
+        pts=pr===rr?4:0;
+      }
+      totalKO+=pts;
+    }
+    let rc='',chip='';
+    if(!hasReal){chip='<span class="chip nd">—</span>';}
+    else if(pts===11){rc='hit-exact';chip='<span class="chip exact">🎯 11</span>';}
+    else if(pts===4){rc='hit-result';chip='<span class="chip result">✅ 4</span>';}
+    else{rc='miss';chip='<span class="chip miss">❌ 0</span>';}
+    const a=bTeam(bm.t1),b=bTeam(bm.t2);
+    const ps=`${pred.g1}–${pred.g2}${pred.adv?' ('+pred.adv+')':''}`;
+    const rs=hasReal?`${real.g1}–${real.g2}`:'—';
+    koHtml+=`<div class="det-row g3 ${rc}">
+      <div><div class="det-match">${flagImg(bm.t1)} ${a.name} vs ${b.name} ${flagImg(bm.t2)}</div>
+           <div class="det-sub">${bm.date||''}</div></div>
+      <div class="det-sc">${ps}</div>
+      <div class="det-sc">${rs}</div>
+      <div class="det-pts-cell">${chip}</div>
+    </div>`;
+  }
+  if(!koHtml) koHtml=`<div class="empty-p" style="padding:16px 20px;color:var(--muted);font-size:12px">Sin pronósticos de eliminatoria aún</div>`;
+
+  const total=totalGrupos+totalClas+totalKO;
+  document.getElementById('det-total').innerHTML=
+    `<span style="color:var(--gold);font-size:15px;font-weight:700">${total} pts totales</span>&nbsp;&nbsp;`+
+    `<span style="color:#7AB8FF">${totalGrupos} grupos</span> + `+
+    `<span style="color:#00c46a">${totalClas} clasificados</span> + `+
+    `<span style="color:var(--gold)">${totalKO} eliminatoria</span>`;
+
+  document.getElementById('det-body').innerHTML=`
+    <div class="det-section">
+      <div class="det-sec-hdr">
+        <span class="det-sec-title">⚽ Fase de Grupos</span>
+        <span class="det-sec-pts" style="color:#7AB8FF">${totalGrupos} pts</span>
+      </div>
+      <div class="det-thead g3"><span>Partido</span><span style="text-align:center">Pronóstico</span><span style="text-align:center">Resultado</span><span style="text-align:right">Pts</span></div>
+      ${gruposHtml}
+    </div>
+    <div class="det-section">
+      <div class="det-sec-hdr">
+        <span class="det-sec-title">⭐ Equipos Clasificados a 16vos</span>
+        <span class="det-sec-pts" style="color:#00c46a">${totalClas} pts</span>
+      </div>
+      ${clasHtml}
+    </div>
+    <div class="det-section">
+      <div class="det-sec-hdr">
+        <span class="det-sec-title">🏆 Fase Eliminatoria</span>
+        <span class="det-sec-pts" style="color:var(--gold)">${totalKO} pts</span>
+      </div>
+      <div class="det-thead g3"><span>Partido</span><span style="text-align:center">Pronóstico</span><span style="text-align:center">Resultado</span><span style="text-align:right">Pts</span></div>
+      ${koHtml}
+    </div>`;
+
+  document.getElementById('detail-panel').classList.add('open');
+}
+
+function closeDetail(){ document.getElementById('detail-panel').classList.remove('open'); }
+
+function renderResultados(){
+  // Build leaderboard with all columns
+  const rows = buildLeaderboard().map(e=>{
+    const ptsClas = PTS_CLASIFICADOS[e.n] || 0;
+    const ptsKO   = calcKOPts(e.n);
+    const total   = e.pts + ptsClas + ptsKO;
+    return {...e, ptsClas, ptsKO, total};
+  });
+
+  // Sort by total descending
+  rows.sort((a,b)=>b.total-a.total || a.n.localeCompare(b.n));
+
+  const posEmoji = ['🥇','🥈','🥉'];
+
+  const tbody = rows.map((e,i)=>{
+    const posClass = i===0?'gold':i===1?'silver':i===2?'bronze':'';
+    const posLabel = i<3 ? posEmoji[i] : (i+1);
+    const trClass  = i<3 ? 'top-3' : '';
+    return `<tr class="${trClass}" ondblclick="showDetail('${e.n}')" style="cursor:pointer" title="Doble click para ver desglose">
+      <td><span class="res-pos ${posClass}">${posLabel}</span></td>
+      <td><div class="res-name">${flag(e.n)||''} ${e.n}</div></td>
+      <td><span class="res-tag grupos">${e.pts} pts</span></td>
+      <td><span class="res-tag clas">${e.ptsClas} pts</span></td>
+      <td><span class="res-tag ko">${e.ptsKO} pts</span></td>
+      <td><span class="res-tag total">${e.total}</span></td>
+    </tr>`;
+  }).join('');
+
+  document.getElementById('res-table-wrap').innerHTML = `
+    <table class="res-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th style="text-align:left">Participante</th>
+          <th><div class="col-header-wrap">Fase de Grupos<div class="col-header-sub">3 resultado · 8 exacto</div></div></th>
+          <th><div class="col-header-wrap">Equipos Clasificados<div class="col-header-sub">10 pts × equipo 16vos</div></div></th>
+          <th><div class="col-header-wrap">16vos de Final<div class="col-header-sub">4 resultado · 11 exacto</div></div></th>
+          <th><div class="col-header-wrap">Total<div class="col-header-sub">acumulado</div></div></th>
+        </tr>
+      </thead>
+      <tbody>${tbody}</tbody>
+    </table>`;
 }
 
 function renderBracket(){
@@ -1026,11 +1387,16 @@ function renderBracket(){
 
 function switchView(view){
   document.getElementById('tab-quiniela').classList.toggle('active', view==='quiniela');
+  document.getElementById('tab-resultados').classList.toggle('active', view==='resultados');
   document.getElementById('tab-bracket').classList.toggle('active', view==='bracket');
   document.querySelector('.date-strip').style.display = view==='quiniela'?'':'none';
   document.querySelector('.page').style.display = view==='quiniela'?'':'none';
+  const lb = document.querySelector('.lb-section');
+  if(lb) lb.style.display = view==='quiniela'?'none':'';
+  document.getElementById('resultados-section').style.display = view==='resultados'?'block':'none';
   document.getElementById('bracket-section').style.display = view==='bracket'?'block':'none';
   if(view==='bracket') renderBracket();
+  if(view==='resultados') renderResultados();
 }
 
 // ═══════════════════════════════════════════════
@@ -1216,7 +1582,7 @@ async function init(){
   },300);
 }
 
-init();
+init().then(()=>switchView('resultados'));
 </script>
 </body>
 </html>
