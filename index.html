@@ -668,7 +668,12 @@ let RESULTS={
   "COL – Colombia|POR – Portugal|27 Jun":{g1:0,g2:0,status:'manual',clock:''},
   "RDC – R.D. Congo|UZB – Uzbekistán|27 Jun":{g1:3,g2:1,status:'manual',clock:''},
   "JOR – Jordania|ARG – Argentina|27 Jun":{g1:1,g2:3,status:'manual',clock:''},
-  "ALG – Argelia|AUT – Austria|27 Jun":{g1:3,g2:3,status:'manual',clock:''}
+  "ALG – Argelia|AUT – Austria|27 Jun":{g1:3,g2:3,status:'manual',clock:''},
+  "SUD – Sudáfrica|CAN – Canadá|28 Jun":{g1:0,g2:1,status:'manual',clock:''},
+  "BRA – Brasil|JAP – Japón|29 Jun":{g1:2,g2:1,status:'manual',clock:''},
+  "ALE – Alemania|PAR – Paraguay|29 Jun":{g1:1,g2:1,status:'manual',clock:''},
+  "NED – P. Bajos|MAR – Marruecos|29 Jun":{g1:1,g2:1,status:'manual',clock:''},
+  "CIV – C. de Marfil|NOR – Noruega|30 Jun":{g1:1,g2:2,status:'manual',clock:''}
 };
 async function loadSaved(){
   try{
@@ -918,37 +923,36 @@ const CLASIFICADOS_DETAIL = {
 };
 
 const QD_KO = {
-  'AxelC':{'L1':{g1:2,g2:0}, 'L2':{g1:3,g2:1}, 'L3':{g1:0,g2:2}, 'L4':{g1:1,g2:0}, 'L5':{g1:2,g2:0}, 'L6':{g1:2,g2:1}, 'L7':{g1:3,g2:1}, 'L8':{g1:1,g2:2}, 'R1':{g1:2,g2:1}, 'R2':{g1:1,g2:0}, 'R3':{g1:2,g2:0}, 'R4':{g1:2,g2:0}, 'R5':{g1:1,g2:0}, 'R6':{g1:3,g2:0}, 'R7':{g1:1,g2:0}, 'R8':{g1:2,g2:0}},
-  'Berenice':{'L1':{g1:3,g2:1}, 'L2':{g1:3,g2:1}, 'L3':{g1:0,g2:2}, 'L4':{g1:1,g2:1}, 'L5':{g1:2,g2:1}, 'L6':{g1:2,g2:1}, 'L7':{g1:1,g2:1}, 'L8':{g1:1,g2:2}, 'R1':{g1:2,g2:1}, 'R2':{g1:1,g2:3}, 'R3':{g1:1,g2:0}, 'R4':{g1:2,g2:1}, 'R5':{g1:1,g2:2}, 'R6':{g1:2,g2:0}, 'R7':{g1:2,g2:1}, 'R8':{g1:2,g2:1}},
-  'Betty':{'L1':{g1:2,g2:1}, 'L2':{g1:2,g2:1}, 'L3':{g1:1,g2:2}, 'L4':{g1:2,g2:1}, 'L5':{g1:2,g2:1}, 'L6':{g1:1,g2:1}, 'L7':{g1:2,g2:1}, 'L8':{g1:1,g2:2}, 'R1':{g1:2,g2:1}, 'R2':{g1:1,g2:2}, 'R3':{g1:2,g2:0}, 'R4':{g1:2,g2:0}, 'R5':{g1:0,g2:1}, 'R6':{g1:3,g2:0}, 'R7':{g1:2,g2:1}, 'R8':{g1:2,g2:1}},
-  'DiegoMartinez':{'L1':{g1:2,g2:0}, 'L2':{g1:3,g2:1}, 'L3':{g1:1,g2:2}, 'L4':{g1:2,g2:1}, 'L5':{g1:2,g2:1}, 'L6':{g1:1,g2:1}, 'L7':{g1:2,g2:1}, 'L8':{g1:1,g2:1}, 'R1':{g1:2,g2:1}, 'R2':{g1:1,g2:1}, 'R3':{g1:1,g2:0}, 'R4':{g1:2,g2:1}, 'R5':{g1:1,g2:1}, 'R6':{g1:3,g2:0}, 'R7':{g1:2,g2:1}, 'R8':{g1:1,g2:0}},
-  'DiegoRamirezCastro':{'L1':{g1:4,g2:0}, 'L2':{g1:3,g2:1}, 'L3':{g1:1,g2:1}, 'L4':{g1:2,g2:2}, 'L5':{g1:2,g2:0}, 'L6':{g1:2,g2:1}, 'L7':{g1:2,g2:0}, 'L8':{g1:0,g2:1}, 'R1':{g1:2,g2:1}, 'R2':{g1:1,g2:3}, 'R3':{g1:2,g2:0}, 'R4':{g1:3,g2:1}, 'R5':{g1:1,g2:0}, 'R6':{g1:2,g2:0}, 'R7':{g1:1,g2:1}, 'R8':{g1:3,g2:1}},
-  'Emiliano':{'L1':{g1:1,g2:0}, 'L2':{g1:2,g2:0}, 'L3':{g1:2,g2:1}, 'L4':{g1:1,g2:0}, 'L5':{g1:2,g2:0}, 'L6':{g1:1,g2:0}, 'L7':{g1:1,g2:0}, 'L8':{g1:1,g2:0}, 'R1':{g1:1,g2:0}, 'R2':{g1:0,g2:1}, 'R3':{g1:1,g2:0}, 'R4':{g1:1,g2:0}, 'R5':{g1:0,g2:1}, 'R6':{g1:1,g2:0}, 'R7':{g1:1,g2:0}, 'R8':{g1:1,g2:0}},
-  'FernandaG':{'L1':{g1:1,g2:0}, 'L2':{g1:2,g2:0}, 'L3':{g1:1,g2:0}, 'L4':{g1:1,g2:1}, 'L5':{g1:2,g2:0}, 'L6':{g1:1,g2:1}, 'L7':{g1:2,g2:0}, 'L8':{g1:1,g2:2}, 'R1':{g1:2,g2:1}, 'R2':{g1:1,g2:3}, 'R3':{g1:1,g2:0}, 'R4':{g1:1,g2:0}, 'R5':{g1:1,g2:0}, 'R6':{g1:2,g2:0}, 'R7':{g1:1,g2:2}, 'R8':{g1:2,g2:0}},
-  'FranciscoI':{'L1':{g1:2,g2:1}, 'L2':{g1:2,g2:0}, 'L3':{g1:1,g2:2}, 'L4':{g1:2,g2:1}, 'L5':{g1:2,g2:1}, 'L6':{g1:1,g2:1}, 'L7':{g1:2,g2:0}, 'L8':{g1:1,g2:0}, 'R1':{g1:2,g2:0}, 'R2':{g1:0,g2:2}, 'R3':{g1:2,g2:1}, 'R4':{g1:2,g2:0}, 'R5':{g1:1,g2:0}, 'R6':{g1:3,g2:0}, 'R7':{g1:2,g2:0}, 'R8':{g1:2,g2:0}},
-  'IanL':{'L1':{g1:2,g2:0}, 'L2':{g1:3,g2:1}, 'L3':{g1:1,g2:3}, 'L4':{g1:1,g2:0}, 'L5':{g1:3,g2:1}, 'L6':{g1:1,g2:1}, 'L7':{g1:2,g2:1}, 'L8':{g1:1,g2:1}, 'R1':{g1:2,g2:1}, 'R2':{g1:1,g2:4}, 'R3':{g1:2,g2:1}, 'R4':{g1:1,g2:1}, 'R5':{g1:1,g2:2}, 'R6':{g1:3,g2:0}, 'R7':{g1:1,g2:0}, 'R8':{g1:3,g2:0}},
-  'JuanPablo':{'L1':{g1:2,g2:0}, 'L2':{g1:4,g2:1}, 'L3':{g1:1,g2:3}, 'L4':{g1:3,g2:2}, 'L5':{g1:3,g2:1}, 'L6':{g1:2,g2:2}, 'L7':{g1:1,g2:2}, 'L8':{g1:1,g2:3}, 'R1':{g1:1,g2:2}, 'R2':{g1:1,g2:2}, 'R3':{g1:1,g2:1}, 'R4':{g1:2,g2:0}, 'R5':{g1:0,g2:0}, 'R6':{g1:3,g2:1}, 'R7':{g1:2,g2:1}, 'R8':{g1:2,g2:1}},
-  'MarioM':{'L1':{g1:3,g2:1}, 'L2':{g1:2,g2:0}, 'L3':{g1:1,g2:2}, 'L4':{g1:1,g2:2}, 'L5':{g1:2,g2:0}, 'L6':{g1:1,g2:1}, 'L7':{g1:2,g2:1}, 'L8':{g1:1,g2:2}, 'R1':{g1:2,g2:0}, 'R2':{g1:1,g2:2}, 'R3':{g1:1,g2:1}, 'R4':{g1:3,g2:0}, 'R5':{g1:0,g2:1}, 'R6':{g1:3,g2:0}, 'R7':{g1:1,g2:0}, 'R8':{g1:2,g2:1}},
-  'MauricioMtz':{'L1':{g1:2,g2:0}, 'L2':{g1:4,g2:1}, 'L3':{g1:0,g2:1}, 'L4':{g1:2,g2:1}, 'L5':{g1:2,g2:1}, 'L6':{g1:1,g2:2}, 'L7':{g1:2,g2:0}, 'L8':{g1:2,g2:2}, 'R1':{g1:2,g2:1}, 'R2':{g1:1,g2:3}, 'R3':{g1:2,g2:0}, 'R4':{g1:2,g2:0}, 'R5':{g1:0,g2:1}, 'R6':{g1:3,g2:0}, 'R7':{g1:2,g2:0}, 'R8':{g1:2,g2:1}},
-  'MaxZ':{'L1':{g1:3,g2:1}, 'L2':{g1:4,g2:2}, 'L3':{g1:1,g2:2}, 'L4':{g1:3,g2:2}, 'L5':{g1:3,g2:1}, 'L6':{g1:2,g2:1}, 'L7':{g1:2,g2:1}, 'L8':{g1:3,g2:1}, 'R1':{g1:3,g2:2}, 'R2':{g1:1,g2:3}, 'R3':{g1:2,g2:1}, 'R4':{g1:4,g2:0}, 'R5':{g1:1,g2:3}, 'R6':{g1:4,g2:1}, 'R7':{g1:2,g2:0}, 'R8':{g1:2,g2:0}},
-  'OscarC':{'L1':{g1:3,g2:0}, 'L2':{g1:3,g2:1}, 'L3':{g1:0,g2:1}, 'L4':{g1:2,g2:2}, 'L5':{g1:2,g2:1}, 'L6':{g1:2,g2:1}, 'L7':{g1:2,g2:2}, 'L8':{g1:1,g2:2}, 'R1':{g1:2,g2:2}, 'R2':{g1:1,g2:2}, 'R3':{g1:2,g2:0}, 'R4':{g1:3,g2:0}, 'R5':{g1:0,g2:2}, 'R6':{g1:2,g2:0}, 'R7':{g1:1,g2:1}, 'R8':{g1:3,g2:2}},
-  'RocioIbarra':{'L1':{g1:2,g2:0}, 'L2':{g1:2,g2:1}, 'L3':{g1:1,g2:2}, 'L4':{g1:1,g2:1}, 'L5':{g1:1,g2:0}, 'L6':{g1:1,g2:1}, 'L7':{g1:2,g2:0}, 'L8':{g1:1,g2:0}, 'R1':{g1:1,g2:0}, 'R2':{g1:0,g2:2}, 'R3':{g1:2,g2:0}, 'R4':{g1:2,g2:1}, 'R5':{g1:1,g2:0}, 'R6':{g1:2,g2:0}, 'R7':{g1:2,g2:0}, 'R8':{g1:2,g2:0}},
-  'RodolfoC':{'L1':{g1:4,g2:1}, 'L2':{g1:3,g2:1}, 'L3':{g1:0,g2:2}, 'L4':{g1:2,g2:2}, 'L5':{g1:3,g2:1}, 'L6':{g1:1,g2:1}, 'L7':{g1:3,g2:1}, 'L8':{g1:1,g2:3}, 'R1':{g1:3,g2:2}, 'R2':{g1:1,g2:3}, 'R3':{g1:2,g2:1}, 'R4':{g1:2,g2:0}, 'R5':{g1:2,g2:1}, 'R6':{g1:3,g2:0}, 'R7':{g1:2,g2:1}, 'R8':{g1:3,g2:1}},
-  'RodrigoGonzalez':{'L1':{g1:4,g2:1}, 'L2':{g1:4,g2:1}, 'L3':{g1:1,g2:2}, 'L4':{g1:2,g2:1}, 'L5':{g1:3,g2:1}, 'L6':{g1:1,g2:1}, 'L7':{g1:3,g2:1}, 'L8':{g1:1,g2:2}, 'R1':{g1:2,g2:1}, 'R2':{g1:1,g2:2}, 'R3':{g1:2,g2:1}, 'R4':{g1:3,g2:0}, 'R5':{g1:2,g2:1}, 'R6':{g1:3,g2:0}, 'R7':{g1:1,g2:1}, 'R8':{g1:2,g2:1}},
-  'RodrigoIbarra':{'L1':{g1:3,g2:1}, 'L2':{g1:3,g2:1}, 'L3':{g1:1,g2:3}, 'L4':{g1:2,g2:2}, 'L5':{g1:2,g2:0}, 'L6':{g1:2,g2:1}, 'L7':{g1:2,g2:1}, 'L8':{g1:2,g2:2}, 'R1':{g1:3,g2:1}, 'R2':{g1:1,g2:2}, 'R3':{g1:1,g2:0}, 'R4':{g1:2,g2:0}, 'R5':{g1:1,g2:2}, 'R6':{g1:2,g2:0}, 'R7':{g1:2,g2:1}, 'R8':{g1:2,g2:1}},
-  'Toño':{'L1':{g1:3,g2:0}, 'L2':{g1:3,g2:1}, 'L3':{g1:0,g2:2}, 'L4':{g1:2,g2:2}, 'L5':{g1:2,g2:0}, 'L6':{g1:1,g2:1}, 'L7':{g1:3,g2:0}, 'L8':{g1:2,g2:1}, 'R1':{g1:2,g2:1}, 'R2':{g1:1,g2:1}, 'R3':{g1:1,g2:0}, 'R4':{g1:2,g2:0}, 'R5':{g1:1,g2:0}, 'R6':{g1:3,g2:0}, 'R7':{g1:2,g2:1}, 'R8':{g1:2,g2:1}}
-,
-  'AxelIbarra':{'L3':{g1:1,g2:2}},
-  'Cesar':{'L3':{g1:0,g2:2}},
-  'DiegoArmando':{'L3':{g1:0,g2:2}},
-  'FernandaMocte':{'L3':{g1:1,g2:2}},
-  'KarinaIbarra1':{'L3':{g1:0,g2:2}},
-  'KarinaIbarra2':{'L3':{g1:0,g2:1}},
-  'MauricioMoreno':{'L3':{g1:1,g2:2}},
-  'Mayito':{'L3':{g1:0,g2:1}},
-  'Mich':{'L3':{g1:2,g2:1}},
-  'PabloS':{'L3':{g1:1,g2:2}},
-  'Sebastian':{'L3':{g1:0,g2:2}},
+  'AxelC':{'L1':{g1:2,g2:0,adv:'ALE'},'L2':{g1:3,g2:1,adv:'FRA'},'L3':{g1:0,g2:2,adv:'CAN'},'L4':{g1:1,g2:0,adv:'NED'},'L5':{g1:2,g2:0,adv:'ESP'},'L6':{g1:2,g2:1,adv:'POR'},'L7':{g1:3,g2:1,adv:'USA'},'L8':{g1:1,g2:2,adv:'SEN'},'R1':{g1:2,g2:1,adv:'BRA'},'R2':{g1:1,g2:0,adv:'CIV'},'R3':{g1:2,g2:0,adv:'MEX'},'R4':{g1:2,g2:0,adv:'ING'},'R5':{g1:1,g2:0,adv:'AUS'},'R6':{g1:3,g2:0,adv:'ARG'},'R7':{g1:1,g2:0,adv:'SUI'},'R8':{g1:2,g2:0,adv:'COL'}},
+  'AxelIbarra':{'L1':{g1:2,g2:0,adv:'ALE'},'L2':{g1:2,g2:1,adv:'FRA'},'L3':{g1:1,g2:2,adv:'CAN'},'L4':{g1:2,g2:1,adv:'NED'},'L5':{g1:1,g2:0,adv:'ESP'},'L6':{g1:2,g2:1,adv:'POR'},'L7':{g1:2,g2:0,adv:'USA'},'L8':{g1:1,g2:1,adv:'BEL'},'R1':{g1:3,g2:1,adv:'BRA'},'R2':{g1:0,g2:3,adv:'NOR'},'R3':{g1:2,g2:0,adv:'MEX'},'R4':{g1:2,g2:0,adv:'ING'},'R5':{g1:1,g2:0,adv:'AUS'},'R6':{g1:2,g2:0,adv:'ARG'},'R7':{g1:1,g2:1,adv:'SUI'},'R8':{g1:2,g2:1,adv:'COL'}},
+  'Berenice':{'L1':{g1:3,g2:1,adv:'ALE'},'L2':{g1:3,g2:1,adv:'FRA'},'L3':{g1:0,g2:2,adv:'CAN'},'L4':{g1:1,g2:1,adv:'NED'},'L5':{g1:2,g2:1,adv:'ESP'},'L6':{g1:2,g2:1,adv:'POR'},'L7':{g1:1,g2:1,adv:'USA'},'L8':{g1:1,g2:2,adv:'SEN'},'R1':{g1:2,g2:1,adv:'BRA'},'R2':{g1:1,g2:3,adv:'NOR'},'R3':{g1:1,g2:0,adv:'MEX'},'R4':{g1:2,g2:1,adv:'ING'},'R5':{g1:1,g2:2,adv:'EGI'},'R6':{g1:2,g2:0,adv:'ARG'},'R7':{g1:2,g2:1,adv:'SUI'},'R8':{g1:2,g2:1,adv:'COL'}},
+  'Betty':{'L1':{g1:2,g2:1,adv:'ALE'},'L2':{g1:2,g2:1,adv:'FRA'},'L3':{g1:1,g2:2,adv:'CAN'},'L4':{g1:2,g2:1,adv:'NED'},'L5':{g1:2,g2:1,adv:'ESP'},'L6':{g1:1,g2:1,adv:'POR'},'L7':{g1:2,g2:1,adv:'USA'},'L8':{g1:1,g2:2,adv:'SEN'},'R1':{g1:2,g2:1,adv:'BRA'},'R2':{g1:1,g2:2,adv:'NOR'},'R3':{g1:2,g2:0,adv:'MEX'},'R4':{g1:2,g2:0,adv:'ING'},'R5':{g1:0,g2:1,adv:'EGI'},'R6':{g1:3,g2:0,adv:'ARG'},'R7':{g1:2,g2:1,adv:'SUI'},'R8':{g1:2,g2:1,adv:'COL'}},
+  'Cesar':{'L1':{g1:2,g2:1,adv:'ALE'},'L2':{g1:2,g2:0,adv:'FRA'},'L3':{g1:0,g2:2,adv:'CAN'},'L4':{g1:1,g2:1,adv:'NED'},'L5':{g1:3,g2:1,adv:'ESP'},'L6':{g1:2,g2:2,adv:'POR'},'L7':{g1:2,g2:0,adv:'USA'},'L8':{g1:3,g2:1,adv:'BEL'},'R1':{g1:3,g2:1,adv:'BRA'},'R2':{g1:0,g2:2,adv:'NOR'},'R3':{g1:2,g2:1,adv:'MEX'},'R4':{g1:1,g2:0,adv:'ING'},'R5':{g1:0,g2:2,adv:'EGI'},'R6':{g1:3,g2:1,adv:'ARG'},'R7':{g1:0,g2:1,adv:'ALG'},'R8':{g1:2,g2:0,adv:'COL'}},
+  'DiegoArmando':{'L1':{g1:2,g2:0,adv:'ALE'},'L2':{g1:2,g2:0,adv:'FRA'},'L3':{g1:0,g2:2,adv:'CAN'},'L4':{g1:2,g2:1,adv:'NED'},'L5':{g1:3,g2:0,adv:'ESP'},'L6':{g1:1,g2:0,adv:'POR'},'L7':{g1:2,g2:1,adv:'USA'},'L8':{g1:2,g2:1,adv:'BEL'},'R1':{g1:2,g2:0,adv:'BRA'},'R2':{g1:1,g2:2,adv:'NOR'},'R3':{g1:1,g2:0,adv:'MEX'},'R4':{g1:3,g2:0,adv:'ING'},'R5':{g1:1,g2:1,adv:'AUS'},'R6':{g1:3,g2:1,adv:'ARG'},'R7':{g1:1,g2:0,adv:'SUI'},'R8':{g1:2,g2:1,adv:'COL'}},
+  'DiegoMartinez':{'L1':{g1:2,g2:0,adv:'ALE'},'L2':{g1:3,g2:1,adv:'FRA'},'L3':{g1:1,g2:2,adv:'CAN'},'L4':{g1:2,g2:1,adv:'NED'},'L5':{g1:2,g2:1,adv:'ESP'},'L6':{g1:1,g2:1,adv:'POR'},'L7':{g1:2,g2:1,adv:'USA'},'L8':{g1:1,g2:1,adv:'BEL'},'R1':{g1:2,g2:1,adv:'BRA'},'R2':{g1:1,g2:1,adv:'NOR'},'R3':{g1:1,g2:0,adv:'MEX'},'R4':{g1:2,g2:1,adv:'ING'},'R5':{g1:1,g2:1,adv:'AUS'},'R6':{g1:3,g2:0,adv:'ARG'},'R7':{g1:2,g2:1,adv:'SUI'},'R8':{g1:1,g2:0,adv:'COL'}},
+  'DiegoRamirezCastro':{'L1':{g1:4,g2:0,adv:'ALE'},'L2':{g1:3,g2:1,adv:'FRA'},'L3':{g1:1,g2:1,adv:'CAN'},'L4':{g1:2,g2:2,adv:'NED'},'L5':{g1:2,g2:0,adv:'ESP'},'L6':{g1:2,g2:1,adv:'POR'},'L7':{g1:2,g2:0,adv:'USA'},'L8':{g1:0,g2:1,adv:'SEN'},'R1':{g1:2,g2:1,adv:'BRA'},'R2':{g1:1,g2:3,adv:'NOR'},'R3':{g1:2,g2:0,adv:'MEX'},'R4':{g1:3,g2:1,adv:'ING'},'R5':{g1:1,g2:0,adv:'AUS'},'R6':{g1:2,g2:0,adv:'ARG'},'R7':{g1:1,g2:1,adv:'ALG'},'R8':{g1:3,g2:1,adv:'COL'}},
+  'Emiliano':{'L1':{g1:1,g2:0,adv:'ALE'},'L2':{g1:2,g2:0,adv:'FRA'},'L3':{g1:2,g2:1,adv:'SUD'},'L4':{g1:1,g2:0,adv:'NED'},'L5':{g1:2,g2:0,adv:'ESP'},'L6':{g1:1,g2:0,adv:'POR'},'L7':{g1:1,g2:0,adv:'USA'},'L8':{g1:1,g2:0,adv:'BEL'},'R1':{g1:1,g2:0,adv:'BRA'},'R2':{g1:0,g2:1,adv:'NOR'},'R3':{g1:1,g2:0,adv:'MEX'},'R4':{g1:1,g2:0,adv:'ING'},'R5':{g1:0,g2:1,adv:'EGI'},'R6':{g1:1,g2:0,adv:'ARG'},'R7':{g1:1,g2:0,adv:'SUI'},'R8':{g1:1,g2:0,adv:'COL'}},
+  'FernandaG':{'L1':{g1:1,g2:0,adv:'ALE'},'L2':{g1:2,g2:0,adv:'FRA'},'L3':{g1:1,g2:0,adv:'SUD'},'L4':{g1:1,g2:1,adv:'NED'},'L5':{g1:2,g2:0,adv:'ESP'},'L6':{g1:1,g2:1,adv:'POR'},'L7':{g1:2,g2:0,adv:'USA'},'L8':{g1:1,g2:2,adv:'SEN'},'R1':{g1:2,g2:1,adv:'BRA'},'R2':{g1:1,g2:3,adv:'NOR'},'R3':{g1:1,g2:0,adv:'MEX'},'R4':{g1:1,g2:0,adv:'ING'},'R5':{g1:1,g2:0,adv:'AUS'},'R6':{g1:2,g2:0,adv:'ARG'},'R7':{g1:1,g2:2,adv:'ALG'},'R8':{g1:2,g2:0,adv:'COL'}},
+  'FernandaMocte':{'L1':{g1:2,g2:0,adv:'ALE'},'L2':{g1:3,g2:1,adv:'FRA'},'L3':{g1:1,g2:2,adv:'CAN'},'L4':{g1:1,g2:1,adv:'NED'},'L5':{g1:2,g2:1,adv:'ESP'},'L6':{g1:1,g2:1,adv:'POR'},'L7':{g1:2,g2:1,adv:'USA'},'L8':{g1:2,g2:1,adv:'BEL'},'R1':{g1:1,g2:0,adv:'BRA'},'R2':{g1:1,g2:2,adv:'NOR'},'R3':{g1:1,g2:0,adv:'MEX'},'R4':{g1:3,g2:0,adv:'ING'},'R5':{g1:1,g2:1,adv:'EGI'},'R6':{g1:3,g2:0,adv:'ARG'},'R7':{g1:1,g2:0,adv:'SUI'},'R8':{g1:2,g2:1,adv:'COL'}},
+  'FranciscoI':{'L1':{g1:2,g2:1,adv:'ALE'},'L2':{g1:2,g2:0,adv:'FRA'},'L3':{g1:1,g2:2,adv:'CAN'},'L4':{g1:2,g2:1,adv:'NED'},'L5':{g1:2,g2:1,adv:'ESP'},'L6':{g1:1,g2:1,adv:'POR'},'L7':{g1:2,g2:0,adv:'USA'},'L8':{g1:1,g2:0,adv:'BEL'},'R1':{g1:2,g2:0,adv:'BRA'},'R2':{g1:0,g2:2,adv:'NOR'},'R3':{g1:2,g2:1,adv:'MEX'},'R4':{g1:2,g2:0,adv:'ING'},'R5':{g1:1,g2:0,adv:'AUS'},'R6':{g1:3,g2:0,adv:'ARG'},'R7':{g1:2,g2:0,adv:'SUI'},'R8':{g1:2,g2:0,adv:'COL'}},
+  'IanL':{'L1':{g1:2,g2:0,adv:'ALE'},'L2':{g1:3,g2:1,adv:'FRA'},'L3':{g1:1,g2:3,adv:'CAN'},'L4':{g1:1,g2:0,adv:'NED'},'L5':{g1:3,g2:1,adv:'ESP'},'L6':{g1:1,g2:1,adv:'POR'},'L7':{g1:2,g2:1,adv:'USA'},'L8':{g1:1,g2:1,adv:'SEN'},'R1':{g1:2,g2:1,adv:'BRA'},'R2':{g1:1,g2:4,adv:'NOR'},'R3':{g1:2,g2:1,adv:'MEX'},'R4':{g1:1,g2:1,adv:'ING'},'R5':{g1:1,g2:2,adv:'EGI'},'R6':{g1:3,g2:0,adv:'ARG'},'R7':{g1:1,g2:0,adv:'SUI'},'R8':{g1:3,g2:0,adv:'COL'}},
+  'JuanPablo':{'L1':{g1:2,g2:0,adv:'ALE'},'L2':{g1:4,g2:1,adv:'FRA'},'L3':{g1:1,g2:3,adv:'CAN'},'L4':{g1:3,g2:2,adv:'NED'},'L5':{g1:3,g2:1,adv:'ESP'},'L6':{g1:2,g2:2,adv:'POR'},'L7':{g1:1,g2:2,adv:'BOS'},'L8':{g1:1,g2:3,adv:'SEN'},'R1':{g1:1,g2:2,adv:'JAP'},'R2':{g1:1,g2:2,adv:'NOR'},'R3':{g1:1,g2:1,adv:'MEX'},'R4':{g1:2,g2:0,adv:'ING'},'R5':{g1:0,g2:0,adv:'EGI'},'R6':{g1:3,g2:1,adv:'ARG'},'R7':{g1:2,g2:1,adv:'SUI'},'R8':{g1:2,g2:1,adv:'COL'}},
+  'KarinaIbarra1':{'L3':{g1:0,g2:2,adv:'CAN'}},
+  'KarinaIbarra2':{'L3':{g1:0,g2:1,adv:'CAN'}},
+  'MarioM':{'L1':{g1:3,g2:1,adv:'ALE'},'L2':{g1:2,g2:0,adv:'FRA'},'L3':{g1:1,g2:2,adv:'CAN'},'L4':{g1:1,g2:2,adv:'MAR'},'L5':{g1:2,g2:0,adv:'ESP'},'L6':{g1:1,g2:1,adv:'CRO'},'L7':{g1:2,g2:1,adv:'USA'},'L8':{g1:1,g2:2,adv:'SEN'},'R1':{g1:2,g2:0,adv:'BRA'},'R2':{g1:1,g2:2,adv:'NOR'},'R3':{g1:1,g2:1,adv:'MEX'},'R4':{g1:3,g2:0,adv:'ING'},'R5':{g1:0,g2:1,adv:'EGI'},'R6':{g1:3,g2:0,adv:'ARG'},'R7':{g1:1,g2:0,adv:'SUI'},'R8':{g1:2,g2:1,adv:'COL'}},
+  'MauricioMoreno':{'L1':{g1:2,g2:0,adv:'ALE'},'L2':{g1:2,g2:1,adv:'FRA'},'L3':{g1:1,g2:2,adv:'CAN'},'L4':{g1:2,g2:2,adv:'MAR'},'L5':{g1:2,g2:1,adv:'ESP'},'L6':{g1:1,g2:1,adv:'POR'},'L7':{g1:2,g2:0,adv:'USA'},'L8':{g1:1,g2:2,adv:'SEN'},'R1':{g1:2,g2:3,adv:'JAP'},'R2':{g1:1,g2:3,adv:'NOR'},'R3':{g1:2,g2:1,adv:'MEX'},'R4':{g1:3,g2:0,adv:'ING'},'R5':{g1:2,g2:1,adv:'AUS'},'R6':{g1:3,g2:1,adv:'ARG'},'R7':{g1:2,g2:1,adv:'SUI'},'R8':{g1:2,g2:1,adv:'COL'}},
+  'MauricioMtz':{'L1':{g1:2,g2:0,adv:'ALE'},'L2':{g1:4,g2:1,adv:'FRA'},'L3':{g1:0,g2:1,adv:'CAN'},'L4':{g1:2,g2:1,adv:'NED'},'L5':{g1:2,g2:1,adv:'ESP'},'L6':{g1:1,g2:2,adv:'CRO'},'L7':{g1:2,g2:0,adv:'USA'},'L8':{g1:2,g2:2,adv:'BEL'},'R1':{g1:2,g2:1,adv:'BRA'},'R2':{g1:1,g2:3,adv:'NOR'},'R3':{g1:2,g2:0,adv:'MEX'},'R4':{g1:2,g2:0,adv:'ING'},'R5':{g1:0,g2:1,adv:'EGI'},'R6':{g1:3,g2:0,adv:'ARG'},'R7':{g1:2,g2:0,adv:'SUI'},'R8':{g1:2,g2:1,adv:'COL'}},
+  'MaxZ':{'L1':{g1:3,g2:1,adv:'ALE'},'L2':{g1:4,g2:2,adv:'FRA'},'L3':{g1:1,g2:2,adv:'CAN'},'L4':{g1:3,g2:2,adv:'NED'},'L5':{g1:3,g2:1,adv:'ESP'},'L6':{g1:2,g2:1,adv:'POR'},'L7':{g1:2,g2:1,adv:'USA'},'L8':{g1:3,g2:1,adv:'BEL'},'R1':{g1:3,g2:2,adv:'BRA'},'R2':{g1:1,g2:3,adv:'NOR'},'R3':{g1:2,g2:1,adv:'MEX'},'R4':{g1:4,g2:0,adv:'ING'},'R5':{g1:1,g2:3,adv:'EGI'},'R6':{g1:4,g2:1,adv:'ARG'},'R7':{g1:2,g2:0,adv:'SUI'},'R8':{g1:2,g2:0,adv:'COL'}},
+  'Mayito':{'L1':{g1:4,g2:0,adv:'ALE'},'L2':{g1:3,g2:0,adv:'FRA'},'L3':{g1:1,g2:0,adv:'SUD'},'L4':{g1:1,g2:1,adv:'MAR'},'L5':{g1:2,g2:0,adv:'ESP'},'L6':{g1:2,g2:1,adv:'POR'},'L7':{g1:1,g2:0,adv:'USA'},'L8':{g1:1,g2:1,adv:'BEL'},'R1':{g1:2,g2:0,adv:'BRA'},'R2':{g1:1,g2:3,adv:'NOR'},'R3':{g1:2,g2:0,adv:'MEX'},'R4':{g1:2,g2:1,adv:'ING'},'R5':{g1:1,g2:2,adv:'EGI'},'R6':{g1:3,g2:0,adv:'ARG'},'R7':{g1:1,g2:0,adv:'SUI'},'R8':{g1:2,g2:0,adv:'COL'}},
+  'Mich':{'L1':{g1:2,g2:0,adv:'ALE'},'L2':{g1:3,g2:1,adv:'FRA'},'L3':{g1:2,g2:1,adv:'SUD'},'L4':{g1:2,g2:1,adv:'NED'},'L5':{g1:2,g2:1,adv:'ESP'},'L6':{g1:1,g2:1,adv:'POR'},'L7':{g1:2,g2:1,adv:'USA'},'L8':{g1:1,g2:1,adv:'SEN'},'R1':{g1:2,g2:1,adv:'BRA'},'R2':{g1:1,g2:1,adv:'NOR'},'R3':{g1:2,g2:0,adv:'MEX'},'R4':{g1:2,g2:1,adv:'ING'},'R5':{g1:1,g2:2,adv:'EGI'},'R6':{g1:1,g2:1,adv:'CAB'},'R7':{g1:1,g2:1,adv:'ALG'},'R8':{g1:2,g2:1,adv:'COL'}},
+  'OscarC':{'L1':{g1:3,g2:0,adv:'ALE'},'L2':{g1:3,g2:1,adv:'FRA'},'L3':{g1:0,g2:1,adv:'CAN'},'L4':{g1:2,g2:2,adv:'NED'},'L5':{g1:2,g2:1,adv:'ESP'},'L6':{g1:2,g2:1,adv:'POR'},'L7':{g1:2,g2:2,adv:'USA'},'L8':{g1:1,g2:2,adv:'SEN'},'R1':{g1:2,g2:2,adv:'BRA'},'R2':{g1:1,g2:2,adv:'NOR'},'R3':{g1:2,g2:0,adv:'MEX'},'R4':{g1:3,g2:0,adv:'ING'},'R5':{g1:0,g2:2,adv:'EGI'},'R6':{g1:2,g2:0,adv:'ARG'},'R7':{g1:1,g2:1,adv:'SUI'},'R8':{g1:3,g2:2,adv:'COL'}},
+  'PabloS':{'L1':{g1:3,g2:0,adv:'ALE'},'L2':{g1:4,g2:1,adv:'FRA'},'L3':{g1:1,g2:2,adv:'CAN'},'L4':{g1:2,g2:1,adv:'NED'},'L5':{g1:2,g2:0,adv:'ESP'},'L6':{g1:1,g2:1,adv:'POR'},'L7':{g1:2,g2:1,adv:'USA'},'L8':{g1:2,g2:2,adv:'BEL'},'R1':{g1:1,g2:1,adv:'JAP'},'R2':{g1:1,g2:2,adv:'NOR'},'R3':{g1:2,g2:0,adv:'MEX'},'R4':{g1:2,g2:0,adv:'ING'},'R5':{g1:1,g2:2,adv:'EGI'},'R6':{g1:1,g2:1,adv:'CAB'},'R7':{g1:2,g2:1,adv:'SUI'},'R8':{g1:3,g2:1,adv:'COL'}},
+  'RocioIbarra':{'L1':{g1:2,g2:0,adv:'ALE'},'L2':{g1:2,g2:1,adv:'FRA'},'L3':{g1:1,g2:2,adv:'CAN'},'L4':{g1:1,g2:1,adv:'NED'},'L5':{g1:1,g2:0,adv:'ESP'},'L6':{g1:1,g2:1,adv:'POR'},'L7':{g1:2,g2:0,adv:'USA'},'L8':{g1:1,g2:0,adv:'BEL'},'R1':{g1:1,g2:0,adv:'BRA'},'R2':{g1:0,g2:2,adv:'NOR'},'R3':{g1:2,g2:0,adv:'MEX'},'R4':{g1:2,g2:1,adv:'ING'},'R5':{g1:1,g2:0,adv:'AUS'},'R6':{g1:2,g2:0,adv:'ARG'},'R7':{g1:2,g2:0,adv:'SUI'},'R8':{g1:2,g2:0,adv:'COL'}},
+  'RodolfoC':{'L1':{g1:4,g2:1,adv:'ALE'},'L2':{g1:3,g2:1,adv:'FRA'},'L3':{g1:0,g2:2,adv:'CAN'},'L4':{g1:2,g2:2,adv:'NED'},'L5':{g1:3,g2:1,adv:'ESP'},'L6':{g1:1,g2:1,adv:'POR'},'L7':{g1:3,g2:1,adv:'USA'},'L8':{g1:1,g2:3,adv:'SEN'},'R1':{g1:3,g2:2,adv:'BRA'},'R2':{g1:1,g2:3,adv:'NOR'},'R3':{g1:2,g2:1,adv:'MEX'},'R4':{g1:2,g2:0,adv:'ING'},'R5':{g1:2,g2:1,adv:'AUS'},'R6':{g1:3,g2:0,adv:'ARG'},'R7':{g1:2,g2:1,adv:'SUI'},'R8':{g1:3,g2:1,adv:'COL'}},
+  'RodrigoGonzalez':{'L1':{g1:4,g2:1,adv:'ALE'},'L2':{g1:4,g2:1,adv:'FRA'},'L3':{g1:1,g2:2,adv:'CAN'},'L4':{g1:2,g2:1,adv:'NED'},'L5':{g1:3,g2:1,adv:'ESP'},'L6':{g1:1,g2:1,adv:'POR'},'L7':{g1:3,g2:1,adv:'USA'},'L8':{g1:1,g2:2,adv:'SEN'},'R1':{g1:2,g2:1,adv:'BRA'},'R2':{g1:1,g2:2,adv:'NOR'},'R3':{g1:2,g2:1,adv:'MEX'},'R4':{g1:3,g2:0,adv:'ING'},'R5':{g1:2,g2:1,adv:'AUS'},'R6':{g1:3,g2:0,adv:'ARG'},'R7':{g1:1,g2:1,adv:'SUI'},'R8':{g1:2,g2:1,adv:'COL'}},
+  'RodrigoIbarra':{'L1':{g1:3,g2:1,adv:'ALE'},'L2':{g1:3,g2:1,adv:'FRA'},'L3':{g1:1,g2:3,adv:'CAN'},'L4':{g1:2,g2:2,adv:'NED'},'L5':{g1:2,g2:0,adv:'ESP'},'L6':{g1:2,g2:1,adv:'POR'},'L7':{g1:2,g2:1,adv:'USA'},'L8':{g1:2,g2:2,adv:'SEN'},'R1':{g1:3,g2:1,adv:'BRA'},'R2':{g1:1,g2:2,adv:'NOR'},'R3':{g1:1,g2:0,adv:'MEX'},'R4':{g1:2,g2:0,adv:'ING'},'R5':{g1:1,g2:2,adv:'EGI'},'R6':{g1:2,g2:0,adv:'ARG'},'R7':{g1:2,g2:1,adv:'SUI'},'R8':{g1:2,g2:1,adv:'COL'}},
+  'Sebastian':{'L1':{g1:1,g2:0,adv:'ALE'},'L2':{g1:1,g2:1,adv:'FRA'},'L3':{g1:0,g2:2,adv:'CAN'},'L4':{g1:2,g2:1,adv:'NED'},'R1':{g1:1,g2:1,adv:'BRA'},'R2':{g1:1,g2:0,adv:'CIV'},'R3':{g1:3,g2:0,adv:'MEX'},'R4':{g1:0,g2:2,adv:'RDC'}},
+  'Toño':{'L1':{g1:3,g2:0,adv:'ALE'},'L2':{g1:3,g2:1,adv:'FRA'},'L3':{g1:0,g2:2,adv:'CAN'},'L4':{g1:2,g2:2,adv:'NED'},'L5':{g1:2,g2:0,adv:'ESP'},'L6':{g1:1,g2:1,adv:'POR'},'L7':{g1:3,g2:0,adv:'USA'},'L8':{g1:2,g2:1,adv:'BEL'},'R1':{g1:2,g2:1,adv:'BRA'},'R2':{g1:1,g2:1,adv:'NOR'},'R3':{g1:1,g2:0,adv:'MEX'},'R4':{g1:2,g2:0,adv:'ING'},'R5':{g1:1,g2:0,adv:'AUS'},'R6':{g1:3,g2:0,adv:'ARG'},'R7':{g1:2,g2:1,adv:'SUI'},'R8':{g1:2,g2:1,adv:'COL'}}
 };
 
 // ═══════════════════════════════════════════════
@@ -976,7 +980,7 @@ const BRACKET_R32 = [
 ];
 
 // Storage for bracket results: {matchId: {w: 'team_key', s1: 0, s2: 0}}
-let BRACKET_RES = {};
+let BRACKET_RES = {'L3':{w:'CAN',g1:0,g2:1},'R1':{w:'BRA',g1:2,g2:1},'L1':{w:'PAR',g1:1,g2:1},'L4':{w:'MAR',g1:1,g2:1},'R2':{w:'NOR',g1:1,g2:2}};
 
 
 const ISO={
@@ -1055,7 +1059,7 @@ function showBkPred(matchId, t1, t2, dateStr){
   const rows = Object.entries(QD_KO).map(([name, preds])=>{
     const pred = preds[matchId];
     const isPend = !pred || pred.g1===undefined || pred.g1===null;
-    const pts = (isPend||!hasReal) ? null : calcPtsKO(pred.g1,pred.g2,real.g1,real.g2);
+    const pts = (isPend||!hasReal) ? null : calcPtsKO(pred, real);
     const advNote = pred && pred.adv ? ' <span style="font-size:9px;color:var(--muted)">('+pred.adv+')</span>' : '';
 
     let rc='', chip='';
@@ -1092,16 +1096,17 @@ function calcKOPts(name){
   let pts = 0;
   for(const [mid, pred] of Object.entries(preds)){
     if(!pred || pred.g1===undefined) continue;
-    // Find match in bracket
-    const m = BRACKET_R32.find(x=>x.id===mid);
     const real = BRACKET_RES[mid];
     if(!real || !real.w) continue;
+    // Exacto
     if(pred.g1===real.g1 && pred.g2===real.g2) pts+=11;
     else {
       const pr=pred.g1>pred.g2?'w1':pred.g1<pred.g2?'w2':'e';
       const rr=real.g1>real.g2?'w1':real.g1<real.g2?'w2':'e';
       if(pr===rr) pts+=4;
     }
+    // Equipo clasificado (+10)
+    if(pred.adv && real.w && pred.adv===real.w) pts+=10;
   }
   return pts;
 }
@@ -1201,12 +1206,14 @@ function showDetail(name){
         const rr=real.g1>real.g2?'w1':real.g1<real.g2?'w2':'e';
         pts=pr===rr?4:0;
       }
+      if(pred.adv&&real.w&&pred.adv===real.w) pts+=10;
       totalKO+=pts;
     }
     let rc='',chip='';
     if(!hasReal){chip='<span class="chip nd">—</span>';}
-    else if(pts===11){rc='hit-exact';chip='<span class="chip exact">🎯 11</span>';}
-    else if(pts===4){rc='hit-result';chip='<span class="chip result">✅ 4</span>';}
+    else if(pts===null){chip='<span class="chip nd">—</span>';}
+    else if(pts>=11){rc='hit-exact';chip='<span class="chip exact">🎯 '+pts+'</span>';}
+    else if(pts>0){rc='hit-result';chip='<span class="chip result">✅ '+pts+'</span>';}
     else{rc='miss';chip='<span class="chip miss">❌ 0</span>';}
     const a=bTeam(bm.t1),b=bTeam(bm.t2);
     const ps=`${pred.g1}–${pred.g2}${pred.adv?' ('+pred.adv+')':''}`;
@@ -1294,7 +1301,7 @@ function renderResultados(){
           <th style="text-align:left">Participante</th>
           <th><div class="col-header-wrap">Fase de Grupos<div class="col-header-sub">3 resultado · 8 exacto</div></div></th>
           <th><div class="col-header-wrap">Equipos Clasificados<div class="col-header-sub">10 pts × equipo 16vos</div></div></th>
-          <th><div class="col-header-wrap">16vos de Final<div class="col-header-sub">4 resultado · 11 exacto</div></div></th>
+          <th><div class="col-header-wrap">16vos de Final<div class="col-header-sub">4 resultado · 11 exacto · 10 clasifica</div></div></th>
           <th><div class="col-header-wrap">Total<div class="col-header-sub">acumulado</div></div></th>
         </tr>
       </thead>
