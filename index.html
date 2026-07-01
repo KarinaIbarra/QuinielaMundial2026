@@ -673,7 +673,9 @@ let RESULTS={
   "BRA – Brasil|JAP – Japón|29 Jun":{g1:2,g2:1,status:'manual',clock:''},
   "ALE – Alemania|PAR – Paraguay|29 Jun":{g1:1,g2:1,status:'manual',clock:''},
   "NED – P. Bajos|MAR – Marruecos|29 Jun":{g1:1,g2:1,status:'manual',clock:''},
-  "CIV – C. de Marfil|NOR – Noruega|30 Jun":{g1:1,g2:2,status:'manual',clock:''}
+  "CIV – C. de Marfil|NOR – Noruega|30 Jun":{g1:1,g2:2,status:'manual',clock:''},
+  "MEX – México|ECU – Ecuador|30 Jun":{g1:2,g2:0,status:'manual',clock:''},
+  "ING – Inglaterra|RDC – R.D. Congo|1 Jul":{g1:2,g2:1,status:'manual',clock:''}
 };
 async function loadSaved(){
   try{
@@ -980,7 +982,7 @@ const BRACKET_R32 = [
 ];
 
 // Storage for bracket results: {matchId: {w: 'team_key', s1: 0, s2: 0}}
-let BRACKET_RES = {'L3':{w:'CAN',g1:0,g2:1},'R1':{w:'BRA',g1:2,g2:1},'L1':{w:'PAR',g1:1,g2:1},'L4':{w:'MAR',g1:1,g2:1},'R2':{w:'NOR',g1:1,g2:2}};
+let BRACKET_RES = {'L3':{w:'CAN',g1:0,g2:1},'R1':{w:'BRA',g1:2,g2:1},'L1':{w:'PAR',g1:1,g2:1},'L4':{w:'MAR',g1:1,g2:1},'R2':{w:'NOR',g1:1,g2:2},'R3':{w:'MEX',g1:2,g2:0},'R4':{w:'ING',g1:2,g2:1}};
 
 
 const ISO={
@@ -1105,8 +1107,8 @@ function calcKOPts(name){
       const rr=real.g1>real.g2?'w1':real.g1<real.g2?'w2':'e';
       if(pr===rr) pts+=4;
     }
-    // Equipo clasificado (+10)
-    if(pred.adv && real.w && pred.adv===real.w) pts+=10;
+    // Equipo clasificado (+15)
+    if(pred.adv && real.w && pred.adv===real.w) pts+=15;
   }
   return pts;
 }
@@ -1206,7 +1208,7 @@ function showDetail(name){
         const rr=real.g1>real.g2?'w1':real.g1<real.g2?'w2':'e';
         pts=pr===rr?4:0;
       }
-      if(pred.adv&&real.w&&pred.adv===real.w) pts+=10;
+      if(pred.adv&&real.w&&pred.adv===real.w) pts+=15;
       totalKO+=pts;
     }
     let rc='',chip='';
@@ -1301,7 +1303,7 @@ function renderResultados(){
           <th style="text-align:left">Participante</th>
           <th><div class="col-header-wrap">Fase de Grupos<div class="col-header-sub">3 resultado · 8 exacto</div></div></th>
           <th><div class="col-header-wrap">Equipos Clasificados<div class="col-header-sub">10 pts × equipo 16vos</div></div></th>
-          <th><div class="col-header-wrap">16vos de Final<div class="col-header-sub">4 resultado · 11 exacto · 10 clasifica</div></div></th>
+          <th><div class="col-header-wrap">16vos de Final<div class="col-header-sub">4 resultado · 11 exacto · 15 clasifica</div></div></th>
           <th><div class="col-header-wrap">Total<div class="col-header-sub">acumulado</div></div></th>
         </tr>
       </thead>
