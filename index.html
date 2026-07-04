@@ -1060,12 +1060,18 @@ function showBkPred(matchId, t1, t2, dateStr){
     flagImg(t1) + ' ' + a.name + ' vs ' + b.name + ' ' + flagImg(t2);
   document.getElementById('bkp-sub').textContent = dateStr || '';
 
-  function calcPtsKO(pg1,pg2,rg1,rg2){
-    if(pg1===null||pg1===undefined) return null;
-    if(pg1===rg1&&pg2===rg2) return 11;
-    const pr=pg1>pg2?'w1':pg1<pg2?'w2':'e';
-    const rr=rg1>rg2?'w1':rg1<rg2?'w2':'e';
-    return pr===rr?4:0;
+  function calcPtsKO(pred, real){
+    if(!pred||pred.g1===undefined||pred.g1===null) return null;
+    if(!real||!real.w) return null;
+    let pts=0;
+    if(pred.g1===real.g1&&pred.g2===real.g2) pts+=11;
+    else{
+      const pr=pred.g1>pred.g2?'w1':pred.g1<pred.g2?'w2':'e';
+      const rr=real.g1>real.g2?'w1':real.g1<real.g2?'w2':'e';
+      if(pr===rr) pts+=4;
+    }
+    if(pred.adv&&real.w&&pred.adv===real.w) pts+=15;
+    return pts;
   }
 
   const rows = Object.entries(QD_KO).map(([name, preds])=>{
