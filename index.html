@@ -1076,10 +1076,11 @@ function showBkPred(matchId, t1, t2, dateStr){
 
     let rc='', chip='';
     if(isPend){ chip='<span class="chip nd">—</span>'; }
-    else if(pts===8){ rc='hit-exact'; chip='<span class="chip exact">🎯 8</span>'; }
-    else if(pts===3){ rc='hit-result'; chip='<span class="chip result">✅ 3</span>'; }
-    else if(pts===0){ rc='miss'; chip='<span class="chip miss">❌ 0</span>'; }
-    else { chip='<span class="chip nd">—</span>'; }
+    else if(!hasReal){ chip='<span class="chip nd">—</span>'; }
+    else if(pts===null){ chip='<span class="chip nd">—</span>'; }
+    else if(pts>=11){ rc='hit-exact'; chip='<span class="chip exact">🎯 '+pts+'</span>'; }
+    else if(pts>0){ rc='hit-result'; chip='<span class="chip result">✅ '+pts+'</span>'; }
+    else { rc='miss'; chip='<span class="chip miss">❌ 0</span>'; }
 
     const predScore = isPend
       ? '<span style="color:var(--muted);font-size:11px">—</span>'
