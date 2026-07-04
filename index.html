@@ -501,9 +501,10 @@ header{background:linear-gradient(180deg,#040E20,#071830);border-bottom:1px soli
       </div>
       <button class="btn-cancel" onclick="closeBkPred()">✕ Cerrar</button>
     </div>
-    <div class="bkp-thead">
+    <div class="bkp-thead" style="grid-template-columns:1fr 70px 60px 80px 56px">
       <span>Participante</span>
       <span style="text-align:center">Pronóstico</span>
+      <span style="text-align:center">Clasifica</span>
       <span style="text-align:center">Resultado</span>
       <span style="text-align:right">Pts</span>
     </div>
@@ -681,7 +682,10 @@ let RESULTS={
   "BEL – Bélgica|SEN – Senegal|1 Jul":{g1:2,g2:2,status:'manual',clock:''},
   "ESP – España|AUT – Austria|2 Jul":{g1:3,g2:0,status:'manual',clock:''},
   "POR – Portugal|CRO – Croacia|2 Jul":{g1:2,g2:1,status:'manual',clock:''},
-  "SUI – Suiza|ALG – Argelia|3 Jul":{g1:2,g2:0,status:'manual',clock:''}
+  "SUI – Suiza|ALG – Argelia|3 Jul":{g1:2,g2:0,status:'manual',clock:''},
+  "AUS – Australia|EGI – Egipto|3 Jul":{g1:1,g2:1,status:'manual',clock:''},
+  "ARG – Argentina|CAB – Cabo Verde|3 Jul":{g1:1,g2:1,status:'manual',clock:''},
+  "COL – Colombia|GHA – Ghana|3 Jul":{g1:1,g2:0,status:'manual',clock:''}
 };
 async function loadSaved(){
   try{
@@ -988,7 +992,7 @@ const BRACKET_R32 = [
 ];
 
 // Storage for bracket results: {matchId: {w: 'team_key', s1: 0, s2: 0}}
-let BRACKET_RES = {'L3':{w:'CAN',g1:0,g2:1},'R1':{w:'BRA',g1:2,g2:1},'L1':{w:'PAR',g1:1,g2:1},'L4':{w:'MAR',g1:1,g2:1},'R2':{w:'NOR',g1:1,g2:2},'R3':{w:'MEX',g1:2,g2:0},'R4':{w:'ING',g1:2,g2:1},'L2':{w:'FRA',g1:3,g2:0},'L7':{w:'USA',g1:2,g2:0},'L8':{w:'BEL',g1:2,g2:2},'L5':{w:'ESP',g1:3,g2:0},'L6':{w:'POR',g1:2,g2:1},'R7':{w:'SUI',g1:2,g2:0}};
+let BRACKET_RES = {'L3':{w:'CAN',g1:0,g2:1},'R1':{w:'BRA',g1:2,g2:1},'L1':{w:'PAR',g1:1,g2:1},'L4':{w:'MAR',g1:1,g2:1},'R2':{w:'NOR',g1:1,g2:2},'R3':{w:'MEX',g1:2,g2:0},'R4':{w:'ING',g1:2,g2:1},'L2':{w:'FRA',g1:3,g2:0},'L7':{w:'USA',g1:2,g2:0},'L8':{w:'BEL',g1:2,g2:2},'L5':{w:'ESP',g1:3,g2:0},'L6':{w:'POR',g1:2,g2:1},'R7':{w:'SUI',g1:2,g2:0},'R5':{w:'EGI',g1:1,g2:1},'R6':{w:'ARG',g1:1,g2:1},'R8':{w:'COL',g1:1,g2:0}};
 
 
 const ISO={
@@ -1079,13 +1083,18 @@ function showBkPred(matchId, t1, t2, dateStr){
 
     const predScore = isPend
       ? '<span style="color:var(--muted);font-size:11px">—</span>'
-      : pred.g1+' – '+pred.g2+advNote;
+      : pred.g1+' – '+pred.g2;
+    const advLabel = (!isPend&&pred.adv)
+      ? `<span style="font-size:10px;color:var(--gold);font-weight:700">${pred.adv}</span>`
+      : '<span style="color:var(--muted);font-size:10px">—</span>';
     const realScore = hasReal ? real.g1+' – '+real.g2 : '<span style="color:var(--muted);font-size:11px">—</span>';
+    const advHit = hasReal&&pred.adv&&real.w&&pred.adv===real.w;
 
-    return `<div class="bkp-row ${rc}">
+    return `<div class="bkp-row ${rc}" style="grid-template-columns:1fr 70px 60px 80px 56px">
       <div class="bkp-name">${name}</div>
-      <div class="bkp-score" style="font-size:14px">${predScore}</div>
-      <div class="bkp-score" style="font-size:14px">${realScore}</div>
+      <div class="bkp-score" style="font-size:13px">${predScore}</div>
+      <div style="text-align:center">${advHit?'<span style="color:#00c46a;font-size:11px;font-weight:700">✅ '+pred.adv+'</span>':'<span style="color:var(--muted);font-size:10px">'+(pred.adv||'—')+'</span>'}</div>
+      <div class="bkp-score" style="font-size:13px">${realScore}</div>
       <div class="bkp-pts">${chip}</div>
     </div>`;
   });
@@ -1319,66 +1328,93 @@ function renderResultados(){
 
 function renderBracket(){
   const grid=document.getElementById('bracket-grid');
-  const SLOT=88; // px por slot R32
+  const SLOT=88;
+
+  // Obtener equipo ganador de un partido R32
+  function winnerTeam(mid){
+    const res=BRACKET_RES[mid];
+    if(!res||!res.w) return null;
+    const m=BRACKET_R32.find(x=>x.id===mid);
+    if(!m) return null;
+    const t=res.w===bTeam(m.t1).code?m.t1:m.t2;
+    return {id:'R16_'+mid, t1:t, t2:null, date:'', isWinner:true};
+  }
+
+  // Construir match de R16 a partir de dos matches R32
+  function r16match(id, mid1, mid2, date){
+    const r1=BRACKET_RES[mid1], r2=BRACKET_RES[mid2];
+    if(!r1||!r2) return {id, t1:'❓ Por definir', t2:'❓ Por definir', date};
+    const m1=BRACKET_R32.find(x=>x.id===mid1), m2=BRACKET_R32.find(x=>x.id===mid2);
+    const t1=r1.w===bTeam(m1.t1).code?m1.t1:m1.t2;
+    const t2=r2.w===bTeam(m2.t1).code?m2.t1:m2.t2;
+    return {id, t1, t2, date};
+  }
 
   function tbdCard(){
     return `<div class="bk-match tbd">
-      <div class="bk-team"><span class="bk-flag" style="font-size:13px;opacity:.4">❓</span><span class="bk-name">Por definir</span><span class="bk-score tbd-score">–</span></div>
-      <div class="bk-team"><span class="bk-flag" style="font-size:13px;opacity:.4">❓</span><span class="bk-name">Por definir</span><span class="bk-score tbd-score">–</span></div>
+      <div class="bk-team"><span class="bk-flag"><span style="font-size:13px;opacity:.4">❓</span></span><span class="bk-name">Por definir</span><span class="bk-score tbd-score">–</span></div>
+      <div class="bk-team"><span class="bk-flag"><span style="font-size:13px;opacity:.4">❓</span></span><span class="bk-name">Por definir</span><span class="bk-score tbd-score">–</span></div>
     </div>`;
   }
 
   function matchCard(m){
     if(!m) return tbdCard();
     const res=BRACKET_RES[m.id]||null, has=res&&res.w;
-    const a=bTeam(m.t1), b=bTeam(m.t2);
+    const a=bTeam(m.t1), b=bTeam(m.t2||'❓ Por definir');
     const w1=has&&res.w===a.code, w2=has&&res.w===b.code;
     const cls=(m.id==='FINAL'?'final-match ':m.id==='BRONZE'?'bronze-match ':'');
-    const hasPreds = QD_KO && Object.values(QD_KO).some(p=>p[m.id]);
-    const clickable = hasPreds ? `onclick="showBkPred('${m.id}','${m.t1}','${m.t2}','${m.date||''}')" style="cursor:pointer" title="Ver pronósticos"` : '';
+    const hasPreds=QD_KO&&Object.values(QD_KO).some(p=>p[m.id]);
+    const clickable=hasPreds?`onclick="showBkPred('${m.id}','${m.t1}','${m.t2||''}','${m.date||''}')" style="cursor:pointer" title="Ver pronósticos"`:'';
+    const predLabel=hasPreds?'<div class="bk-date" style="color:rgba(201,162,39,.6);font-size:9px">👆 Ver pronósticos</div>':'';
     return `<div class="bk-match ${cls}" ${clickable}>
       <div class="bk-team${w1?' winner':has?' loser':''}">
         <span class="bk-flag">${a.flag}</span><span class="bk-name">${a.name}</span>
-        <span class="bk-score${!has?' tbd-score':''}">${has?res.s1:'–'}</span>
+        <span class="bk-score${!has?' tbd-score':''}">${has?res.g1:'–'}</span>
       </div>
       <div class="bk-team${w2?' winner':has?' loser':''}">
         <span class="bk-flag">${b.flag}</span><span class="bk-name">${b.name}</span>
-        <span class="bk-score${!has?' tbd-score':''}">${has?res.s2:'–'}</span>
+        <span class="bk-score${!has?' tbd-score':''}">${has?res.g2:'–'}</span>
       </div>
-      ${hasPreds?'<div class="bk-date" style="color:rgba(201,162,39,.6);font-size:9px">👆 Ver pronósticos</div>':''}
+      ${predLabel}
     </div>${m.date&&!hasPreds?`<div class="bk-date">${m.date}</div>`:''}`;
   }
 
-  // Build a column with slot-based alignment
-  // items: array of match objects (or null for TBD)
-  // slotsEach: how many R32-slots tall each item is
-  // connType: 'r'=right connectors, 'l'=left connectors, ''=none
   function buildCol(label, items, slotsEach, connType='', isRight=false){
     const align=isRight?'style="text-align:right"':'';
-    const slots = items.map((m, i)=>{
+    const slots=items.map((m,i)=>{
       let cls='bk-slot';
-      // Add connector classes for pairs
-      if(connType){
-        cls += ' conn-'+connType;
-        cls += (i%2===0) ? ' conn-'+connType+'-top' : ' conn-'+connType+'-bot';
-      }
+      if(connType){cls+=' conn-'+connType;cls+=(i%2===0)?' conn-'+connType+'-top':' conn-'+connType+'-bot';}
       return `<div class="${cls}" style="height:${slotsEach*SLOT}px">${matchCard(m)}</div>`;
     }).join('');
     return `<div class="bk-col"><div class="bk-col-label" ${align}>${label}</div>${slots}</div>`;
   }
 
   const L=BRACKET_R32.slice(0,8), R=BRACKET_R32.slice(8,16);
+
+  // R16 izquierdo: pares (L1/L2),(L3/L4),(L5/L6),(L7/L8)
+  const lR16=[
+    r16match('RL1','L1','L2','5 Jul · Philadelphia'),
+    r16match('RL2','L3','L4','5 Jul · Houston'),
+    r16match('RL3','L5','L6','6 Jul · Dallas'),
+    r16match('RL4','L7','L8','6 Jul · Seattle'),
+  ];
+  // R16 derecho: pares (R1/R2),(R3/R4),(R5/R6),(R7/R8)
+  const rR16=[
+    r16match('RR1','R1','R2','5 Jul · MetLife'),
+    r16match('RR2','R3','R4','5 Jul · CDMX'),
+    r16match('RR3','R5','R6','6 Jul · Vancouver'),
+    r16match('RR4','R7','R8','6 Jul · Atlanta'),
+  ];
+
   const N=null;
 
-  // Left half: R32→R16→QF→SF (connectors point right →)
   const leftHalf=`<div class="bk-half">
-    ${buildCol('Ronda de 32',[L[0],L[1],L[2],L[3],L[4],L[5],L[6],L[7]], 1, 'r')}
-    ${buildCol('R. de 16',   [N,N,N,N],                                   2, 'r')}
-    ${buildCol('Cuartos',    [N,N],                                        4, 'r')}
-    ${buildCol('Semis',      [N],                                          8, '')}
+    ${buildCol('Ronda de 32',[L[0],L[1],L[2],L[3],L[4],L[5],L[6],L[7]],1,'r')}
+    ${buildCol('R. de 16',lR16,2,'r')}
+    ${buildCol('Cuartos',[N,N],4,'r')}
+    ${buildCol('Semis',[N],8,'')}
   </div>`;
 
-  // Final column (centered)
   const finalCol=`<div class="bk-final-col" style="min-width:160px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:0 8px;">
     <div style="width:100%">
       <div class="bk-final-badge">⚽ Final</div>
@@ -1390,12 +1426,11 @@ function renderBracket(){
     </div>
   </div>`;
 
-  // Right half: SF→QF→R16→R32 (connectors point left ←)
   const rightHalf=`<div class="bk-half bk-half-r">
-    ${buildCol('Ronda de 32',[R[0],R[1],R[2],R[3],R[4],R[5],R[6],R[7]], 1, 'l', true)}
-    ${buildCol('R. de 16',   [N,N,N,N],                                   2, 'l', true)}
-    ${buildCol('Cuartos',    [N,N],                                        4, 'l', true)}
-    ${buildCol('Semis',      [N],                                          8, '',  true)}
+    ${buildCol('Ronda de 32',[R[0],R[1],R[2],R[3],R[4],R[5],R[6],R[7]],1,'l',true)}
+    ${buildCol('R. de 16',rR16,2,'l',true)}
+    ${buildCol('Cuartos',[N,N],4,'l',true)}
+    ${buildCol('Semis',[N],8,'',true)}
   </div>`;
 
   grid.innerHTML=leftHalf+finalCol+rightHalf;
