@@ -340,6 +340,7 @@ header{background:linear-gradient(180deg,#040E20,#071830);border-bottom:1px soli
 .res-tag.grupos{background:rgba(0,150,255,.15);color:#7AB8FF;border:1px solid rgba(0,150,255,.25);}
 .res-tag.clas{background:rgba(0,196,106,.12);color:#00c46a;border:1px solid rgba(0,196,106,.2);}
 .res-tag.ko{background:rgba(201,162,39,.12);color:var(--gold);border:1px solid rgba(201,162,39,.2);}
+.res-tag.oct{background:rgba(240,165,0,.14);color:#F0A500;border:1px solid rgba(240,165,0,.28);}
 .res-tag.total{background:var(--gold);color:#060E1C;font-size:10px;}
 .col-header-wrap{display:flex;flex-direction:column;align-items:center;gap:2px;}
 .col-header-sub{font-size:8px;opacity:.6;font-weight:400;letter-spacing:.5px;text-transform:none;font-family:'Inter',sans-serif;}
@@ -994,7 +995,7 @@ const BRACKET_R32 = [
 ];
 
 // Storage for bracket results: {matchId: {w: 'team_key', s1: 0, s2: 0}}
-let BRACKET_RES = {'RL2':{w:'MAR',g1:0,g2:3},'RL1':{w:'FRA',g1:0,g2:1},'L3':{w:'CAN',g1:0,g2:1},'R1':{w:'BRA',g1:2,g2:1},'L1':{w:'PAR',g1:1,g2:1},'L4':{w:'MAR',g1:1,g2:1},'R2':{w:'NOR',g1:1,g2:2},'R3':{w:'MEX',g1:2,g2:0},'R4':{w:'ING',g1:2,g2:1},'L2':{w:'FRA',g1:3,g2:0},'L7':{w:'USA',g1:2,g2:0},'L8':{w:'BEL',g1:2,g2:2},'L5':{w:'ESP',g1:3,g2:0},'L6':{w:'POR',g1:2,g2:1},'R7':{w:'SUI',g1:2,g2:0},'R5':{w:'EGI',g1:1,g2:1},'R6':{w:'ARG',g1:1,g2:1},'R8':{w:'COL',g1:1,g2:0}};
+let BRACKET_RES = {'RR1':{w:'NOR',g1:1,g2:2},'RL2':{w:'MAR',g1:0,g2:3},'RL1':{w:'FRA',g1:0,g2:1},'L3':{w:'CAN',g1:0,g2:1},'R1':{w:'BRA',g1:2,g2:1},'L1':{w:'PAR',g1:1,g2:1},'L4':{w:'MAR',g1:1,g2:1},'R2':{w:'NOR',g1:1,g2:2},'R3':{w:'MEX',g1:2,g2:0},'R4':{w:'ING',g1:2,g2:1},'L2':{w:'FRA',g1:3,g2:0},'L7':{w:'USA',g1:2,g2:0},'L8':{w:'BEL',g1:2,g2:2},'L5':{w:'ESP',g1:3,g2:0},'L6':{w:'POR',g1:2,g2:1},'R7':{w:'SUI',g1:2,g2:0},'R5':{w:'EGI',g1:1,g2:1},'R6':{w:'ARG',g1:1,g2:1},'R8':{w:'COL',g1:1,g2:0}};
 
 
 const ISO={
@@ -1097,12 +1098,12 @@ function showBkPred(matchId, t1, t2, dateStr){
       ? `<span style="font-size:10px;color:var(--gold);font-weight:700">${pred.adv}</span>`
       : '<span style="color:var(--muted);font-size:10px">—</span>';
     const realScore = hasReal ? real.g1+' – '+real.g2 : '<span style="color:var(--muted);font-size:11px">—</span>';
-    const advHit = hasReal&&pred.adv&&real.w&&pred.adv===real.w;
+    const advHit = !isPend && hasReal && pred && pred.adv && real.w && pred.adv===real.w;
 
     return `<div class="bkp-row ${rc}" style="grid-template-columns:1fr 70px 60px 80px 56px">
       <div class="bkp-name">${name}</div>
       <div class="bkp-score" style="font-size:13px">${predScore}</div>
-      <div style="text-align:center">${advHit?'<span style="color:#00c46a;font-size:11px;font-weight:700">✅ '+pred.adv+'</span>':'<span style="color:var(--muted);font-size:10px">'+(pred.adv||'—')+'</span>'}</div>
+      <div style="text-align:center">${advHit?'<span style="color:#00c46a;font-size:11px;font-weight:700">✅ '+pred.adv+'</span>':'<span style="color:var(--muted);font-size:10px">'+((pred&&pred.adv)||'—')+'</span>'}</div>
       <div class="bkp-score" style="font-size:13px">${realScore}</div>
       <div class="bkp-pts">${chip}</div>
     </div>`;
@@ -1173,13 +1174,36 @@ function calcR16Pts(name){
   return pts;
 }
 
+// Resuelve equipos/fecha de un partido de eliminatoria (16vos o octavos)
+const KO_R16_MAP = {
+  'RL1':['L1','L2'],'RL2':['L3','L4'],'RL3':['L5','L6'],'RL4':['L7','L8'],
+  'RR1':['R1','R2'],'RR2':['R3','R4'],'RR3':['R5','R6'],'RR4':['R7','R8']
+};
+const KO_R16_DATES = {
+  'RL1':'5 Jul · Philadelphia','RL2':'5 Jul · Houston',
+  'RL3':'6 Jul · Dallas','RL4':'6 Jul · Seattle',
+  'RR1':'5 Jul · MetLife','RR2':'5 Jul · CDMX',
+  'RR3':'6 Jul · Vancouver','RR4':'6 Jul · Atlanta'
+};
+function koMatchInfo(mid){
+  const bm = BRACKET_R32.find(x=>x.id===mid);
+  if(bm) return {t1:bm.t1, t2:bm.t2, date:bm.date||''};
+  const pair = KO_R16_MAP[mid];
+  if(!pair) return null;
+  const r1=BRACKET_RES[pair[0]], r2=BRACKET_RES[pair[1]];
+  const m1=BRACKET_R32.find(x=>x.id===pair[0]), m2=BRACKET_R32.find(x=>x.id===pair[1]);
+  const t1 = r1 ? (r1.w===bTeam(m1.t1).code?m1.t1:m1.t2) : '❓ – Por definir';
+  const t2 = r2 ? (r2.w===bTeam(m2.t1).code?m2.t1:m2.t2) : '❓ – Por definir';
+  return {t1, t2, date:KO_R16_DATES[mid]||''};
+}
+
 
 function showDetail(name){
   const matches = QD[name];
   if(!matches) return;
   document.getElementById('det-name').textContent = name;
 
-  let totalGrupos=0, totalClas=0, totalKO=0;
+  let totalGrupos=0, totalClas=0, totalR32=0, totalR16=0;
 
   // ── A. FASE DE GRUPOS ──────────────────────────────────────
   const played = SCHED.filter(m=>RESULTS[m.key]).sort((a,b)=>{
@@ -1256,7 +1280,7 @@ function showDetail(name){
   let koR32Html='', koR16Html='';
   for(const [mid, pred] of Object.entries(koPreds)){
     if(!pred||pred.g1===undefined) continue;
-    const bm = BRACKET_R32.find(x=>x.id===mid);
+    const bm = koMatchInfo(mid);
     if(!bm) continue;
     const real=BRACKET_RES[mid];
     const hasReal=real&&real.w;
@@ -1292,6 +1316,7 @@ function showDetail(name){
     if(_r16sec) koR16Html+=_rowHtml; else koR32Html+=_rowHtml;
   }
   if(!koR32Html) koR32Html=`<div class="empty-p" style="padding:16px 20px;color:var(--muted);font-size:12px">Sin pronósticos de eliminatoria aún</div>`;
+  if(!koR16Html) koR16Html=`<div class="empty-p" style="padding:16px 20px;color:var(--muted);font-size:12px">Sin pronósticos de octavos aún</div>`;
 
   const totalKO=totalR32+totalR16;
   const total=totalGrupos+totalClas+totalKO;
@@ -1344,9 +1369,10 @@ function renderResultados(){
   // Build leaderboard with all columns
   const rows = buildLeaderboard().map(e=>{
     const ptsClas = PTS_CLASIFICADOS[e.n] || 0;
-    const ptsKO   = calcKOPts(e.n);
-    const total   = e.pts + ptsClas + ptsKO;
-    return {...e, ptsClas, ptsKO, total};
+    const ptsR32  = calcR32Pts(e.n);
+    const ptsR16  = calcR16Pts(e.n);
+    const total   = e.pts + ptsClas + ptsR32 + ptsR16;
+    return {...e, ptsClas, ptsR32, ptsR16, total};
   });
 
   // Sort by total descending
@@ -1358,12 +1384,13 @@ function renderResultados(){
     const posClass = i===0?'gold':i===1?'silver':i===2?'bronze':'';
     const posLabel = i<3 ? posEmoji[i] : (i+1);
     const trClass  = i<3 ? 'top-3' : '';
-    return `<tr class="${trClass}" ondblclick="showDetail('${e.n}')" style="cursor:pointer" title="Doble click para ver desglose">
+    return `<tr class="${trClass}" onclick="showDetail('${e.n}')" style="cursor:pointer" title="Click para ver el desglose de pronósticos">
       <td><span class="res-pos ${posClass}">${posLabel}</span></td>
       <td><div class="res-name">${flag(e.n)||''} ${e.n}</div></td>
       <td><span class="res-tag grupos">${e.pts} pts</span></td>
       <td><span class="res-tag clas">${e.ptsClas} pts</span></td>
-      <td><span class="res-tag ko">${e.ptsKO} pts</span></td>
+      <td><span class="res-tag ko">${e.ptsR32} pts</span></td>
+      <td><span class="res-tag oct">${e.ptsR16} pts</span></td>
       <td><span class="res-tag total">${e.total}</span></td>
     </tr>`;
   }).join('');
@@ -1376,7 +1403,8 @@ function renderResultados(){
           <th style="text-align:left">Participante</th>
           <th><div class="col-header-wrap">Fase de Grupos<div class="col-header-sub">3 resultado · 8 exacto</div></div></th>
           <th><div class="col-header-wrap">Equipos Clasificados<div class="col-header-sub">10 pts × equipo 16vos</div></div></th>
-          <th><div class="col-header-wrap">16vos de Final<div class="col-header-sub">4 resultado · 11 exacto · 20 clasifica</div></div></th>
+          <th><div class="col-header-wrap">16vos de Final<div class="col-header-sub">4 resultado · 11 exacto · 15 clasifica</div></div></th>
+          <th><div class="col-header-wrap">Octavos de Final<div class="col-header-sub">4 resultado · 11 exacto · 20 clasifica</div></div></th>
           <th><div class="col-header-wrap">Total<div class="col-header-sub">acumulado</div></div></th>
         </tr>
       </thead>
