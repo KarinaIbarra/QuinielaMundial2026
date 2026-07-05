@@ -685,7 +685,9 @@ let RESULTS={
   "SUI – Suiza|ALG – Argelia|3 Jul":{g1:2,g2:0,status:'manual',clock:''},
   "AUS – Australia|EGI – Egipto|3 Jul":{g1:1,g2:1,status:'manual',clock:''},
   "ARG – Argentina|CAB – Cabo Verde|3 Jul":{g1:1,g2:1,status:'manual',clock:''},
-  "COL – Colombia|GHA – Ghana|3 Jul":{g1:1,g2:0,status:'manual',clock:''}
+  "COL – Colombia|GHA – Ghana|3 Jul":{g1:1,g2:0,status:'manual',clock:''},
+  "CAN – Canadá|MAR – Marruecos|4 Jul":{g1:0,g2:3,status:'manual',clock:''},
+  "PAR – Paraguay|FRA – Francia|4 Jul":{g1:0,g2:1,status:'manual',clock:''}
 };
 async function loadSaved(){
   try{
@@ -992,7 +994,7 @@ const BRACKET_R32 = [
 ];
 
 // Storage for bracket results: {matchId: {w: 'team_key', s1: 0, s2: 0}}
-let BRACKET_RES = {'L3':{w:'CAN',g1:0,g2:1},'R1':{w:'BRA',g1:2,g2:1},'L1':{w:'PAR',g1:1,g2:1},'L4':{w:'MAR',g1:1,g2:1},'R2':{w:'NOR',g1:1,g2:2},'R3':{w:'MEX',g1:2,g2:0},'R4':{w:'ING',g1:2,g2:1},'L2':{w:'FRA',g1:3,g2:0},'L7':{w:'USA',g1:2,g2:0},'L8':{w:'BEL',g1:2,g2:2},'L5':{w:'ESP',g1:3,g2:0},'L6':{w:'POR',g1:2,g2:1},'R7':{w:'SUI',g1:2,g2:0},'R5':{w:'EGI',g1:1,g2:1},'R6':{w:'ARG',g1:1,g2:1},'R8':{w:'COL',g1:1,g2:0}};
+let BRACKET_RES = {'RL2':{w:'MAR',g1:0,g2:3},'RL1':{w:'FRA',g1:0,g2:1},'L3':{w:'CAN',g1:0,g2:1},'R1':{w:'BRA',g1:2,g2:1},'L1':{w:'PAR',g1:1,g2:1},'L4':{w:'MAR',g1:1,g2:1},'R2':{w:'NOR',g1:1,g2:2},'R3':{w:'MEX',g1:2,g2:0},'R4':{w:'ING',g1:2,g2:1},'L2':{w:'FRA',g1:3,g2:0},'L7':{w:'USA',g1:2,g2:0},'L8':{w:'BEL',g1:2,g2:2},'L5':{w:'ESP',g1:3,g2:0},'L6':{w:'POR',g1:2,g2:1},'R7':{w:'SUI',g1:2,g2:0},'R5':{w:'EGI',g1:1,g2:1},'R6':{w:'ARG',g1:1,g2:1},'R8':{w:'COL',g1:1,g2:0}};
 
 
 const ISO={
@@ -1070,7 +1072,7 @@ function showBkPred(matchId, t1, t2, dateStr){
       const rr=real.g1>real.g2?'w1':real.g1<real.g2?'w2':'e';
       if(pr===rr) pts+=4;
     }
-    if(pred.adv&&real.w&&pred.adv===real.w) pts+=15;
+    if(pred.adv&&real.w&&pred.adv===real.w) pts+=20;
     return pts;
   }
 
@@ -1114,16 +1116,31 @@ function closeBkPred(){
   document.getElementById('bk-pred-panel').classList.remove('open');
 }
 
-// Event listener global para matches del bracket (evita conflictos de caracteres en onclick)
-document.addEventListener('click', function(e){
-  const card = e.target.closest('[data-mid]');
-  if(!card) return;
-  const mid  = card.dataset.mid;
-  const t1   = card.dataset.t1;
-  const t2   = card.dataset.t2;
-  const date = card.dataset.date;
-  if(mid) showBkPred(mid, t1, t2, date);
-});
+// showBkPredById: resuelve equipos por ID sin depender de atributos HTML
+function showBkPredById(matchId){
+  // R32 match → buscar en BRACKET_R32
+  const bm = BRACKET_R32.find(x=>x.id===matchId);
+  if(bm){ showBkPred(matchId, bm.t1, bm.t2, bm.date||''); return; }
+  // R16 match → derivar ganadores de R32
+  const R16_MAP = {
+    'RL1':['L1','L2'],'RL2':['L3','L4'],'RL3':['L5','L6'],'RL4':['L7','L8'],
+    'RR1':['R1','R2'],'RR2':['R3','R4'],'RR3':['R5','R6'],'RR4':['R7','R8']
+  };
+  const R16_DATES = {
+    'RL1':'5 Jul · Philadelphia','RL2':'5 Jul · Houston',
+    'RL3':'6 Jul · Dallas','RL4':'6 Jul · Seattle',
+    'RR1':'5 Jul · MetLife','RR2':'5 Jul · CDMX',
+    'RR3':'6 Jul · Vancouver','RR4':'6 Jul · Atlanta'
+  };
+  const pair = R16_MAP[matchId];
+  if(!pair){ return; }
+  const r1=BRACKET_RES[pair[0]], r2=BRACKET_RES[pair[1]];
+  if(!r1||!r2){ alert('Faltan resultados de 16vos para calcular este partido'); return; }
+  const m1=BRACKET_R32.find(x=>x.id===pair[0]), m2=BRACKET_R32.find(x=>x.id===pair[1]);
+  const t1=r1.w===bTeam(m1.t1).code?m1.t1:m1.t2;
+  const t2=r2.w===bTeam(m2.t1).code?m2.t1:m2.t2;
+  showBkPred(matchId, t1, t2, R16_DATES[matchId]||'');
+}
 
 
 function calcKOPts(name){
@@ -1140,8 +1157,8 @@ function calcKOPts(name){
       const rr=real.g1>real.g2?'w1':real.g1<real.g2?'w2':'e';
       if(pr===rr) pts+=4;
     }
-    // Equipo clasificado (+15)
-    if(pred.adv && real.w && pred.adv===real.w) pts+=15;
+    // Equipo clasificado (+20)
+    if(pred.adv && real.w && pred.adv===real.w) pts+=20;
   }
   return pts;
 }
@@ -1336,7 +1353,7 @@ function renderResultados(){
           <th style="text-align:left">Participante</th>
           <th><div class="col-header-wrap">Fase de Grupos<div class="col-header-sub">3 resultado · 8 exacto</div></div></th>
           <th><div class="col-header-wrap">Equipos Clasificados<div class="col-header-sub">10 pts × equipo 16vos</div></div></th>
-          <th><div class="col-header-wrap">16vos de Final<div class="col-header-sub">4 resultado · 11 exacto · 15 clasifica</div></div></th>
+          <th><div class="col-header-wrap">16vos de Final<div class="col-header-sub">4 resultado · 11 exacto · 20 clasifica</div></div></th>
           <th><div class="col-header-wrap">Total<div class="col-header-sub">acumulado</div></div></th>
         </tr>
       </thead>
@@ -1382,9 +1399,9 @@ function renderBracket(){
     const w1=has&&res.w===a.code, w2=has&&res.w===b.code;
     const cls=(m.id==='FINAL'?'final-match ':m.id==='BRONZE'?'bronze-match ':'');
     const hasPreds=QD_KO&&Object.values(QD_KO).some(p=>p[m.id]);
-    const dataAttrs=hasPreds?`data-mid="${m.id}" data-t1="${(m.t1||'').replace(/"/g,'&quot;')}" data-t2="${(m.t2||'').replace(/"/g,'&quot;')}" data-date="${(m.date||'').replace(/"/g,'&quot;')}" style="cursor:pointer" title="Ver pronósticos"`:'';
+    const clickAttr=hasPreds?`onclick="showBkPredById('${m.id}')" style="cursor:pointer" title="Ver pronósticos"`:'';
     const predLabel=hasPreds?'<div class="bk-date" style="color:rgba(201,162,39,.6);font-size:9px">👆 Ver pronósticos</div>':'';
-    return `<div class="bk-match ${cls}" ${dataAttrs}>
+    return `<div class="bk-match ${cls}" ${clickAttr}>
       <div class="bk-team${w1?' winner':has?' loser':''}">
         <span class="bk-flag">${a.flag}</span><span class="bk-name">${a.name}</span>
         <span class="bk-score${!has?' tbd-score':''}">${has?res.g1:'–'}</span>
