@@ -1054,7 +1054,7 @@ function bDateLabel(m){
 
 
 function showBkPred(matchId, t1, t2, dateStr){
-  const real = BRACKET_RES[matchId] || null;
+  const real = BRACKET_RES[matchId] ? {...BRACKET_RES[matchId], _mid: matchId} : null;
   const hasReal = real && real.w;
   const a = bTeam(t1), b = bTeam(t2);
 
@@ -1144,21 +1144,31 @@ function showBkPredById(matchId){
 
 
 function calcKOPts(name){
+  return calcR32Pts(name) + calcR16Pts(name);
+}
+function calcR32Pts(name){
   const preds = QD_KO[name] || {};
+  const R32IDS = ['L1','L2','L3','L4','L5','L6','L7','L8','R1','R2','R3','R4','R5','R6','R7','R8'];
   let pts = 0;
-  for(const [mid, pred] of Object.entries(preds)){
-    if(!pred || pred.g1===undefined) continue;
-    const real = BRACKET_RES[mid];
-    if(!real || !real.w) continue;
-    // Exacto
-    if(pred.g1===real.g1 && pred.g2===real.g2) pts+=11;
-    else {
-      const pr=pred.g1>pred.g2?'w1':pred.g1<pred.g2?'w2':'e';
-      const rr=real.g1>real.g2?'w1':real.g1<real.g2?'w2':'e';
-      if(pr===rr) pts+=4;
-    }
-    // Equipo clasificado (+20)
-    if(pred.adv && real.w && pred.adv===real.w) pts+=20;
+  for(const mid of R32IDS){
+    const pred=preds[mid]; if(!pred||pred.g1===undefined) continue;
+    const real=BRACKET_RES[mid]; if(!real||!real.w) continue;
+    if(pred.g1===real.g1&&pred.g2===real.g2) pts+=11;
+    else{ const pr=pred.g1>pred.g2?'w1':pred.g1<pred.g2?'w2':'e';const rr=real.g1>real.g2?'w1':real.g1<real.g2?'w2':'e';if(pr===rr)pts+=4; }
+    if(pred.adv&&real.w&&pred.adv===real.w) pts+=15;
+  }
+  return pts;
+}
+function calcR16Pts(name){
+  const preds = QD_KO[name] || {};
+  const R16IDS = ['RL1','RL2','RL3','RL4','RR1','RR2','RR3','RR4'];
+  let pts = 0;
+  for(const mid of R16IDS){
+    const pred=preds[mid]; if(!pred||pred.g1===undefined) continue;
+    const real=BRACKET_RES[mid]; if(!real||!real.w) continue;
+    if(pred.g1===real.g1&&pred.g2===real.g2) pts+=11;
+    else{ const pr=pred.g1>pred.g2?'w1':pred.g1<pred.g2?'w2':'e';const rr=real.g1>real.g2?'w1':real.g1<real.g2?'w2':'e';if(pr===rr)pts+=4; }
+    if(pred.adv&&real.w&&pred.adv===real.w) pts+=20;
   }
   return pts;
 }
@@ -1243,7 +1253,7 @@ function showDetail(name){
 
   // ── C. FASE ELIMINATORIA ────────────────────────────────────
   const koPreds = QD_KO[name] || {};
-  let koHtml='';
+  let koR32Html='', koR16Html='';
   for(const [mid, pred] of Object.entries(koPreds)){
     if(!pred||pred.g1===undefined) continue;
     const bm = BRACKET_R32.find(x=>x.id===mid);
@@ -1258,8 +1268,9 @@ function showDetail(name){
         const rr=real.g1>real.g2?'w1':real.g1<real.g2?'w2':'e';
         pts=pr===rr?4:0;
       }
-      if(pred.adv&&real.w&&pred.adv===real.w) pts+=15;
-      totalKO+=pts;
+      const _isR16=['RL1','RL2','RL3','RL4','RR1','RR2','RR3','RR4'].includes(mid);
+      if(pred.adv&&real.w&&pred.adv===real.w) pts+=_isR16?20:15;
+      if(_isR16) totalR16+=pts; else totalR32+=pts;
     }
     let rc='',chip='';
     if(!hasReal){chip='<span class="chip nd">—</span>';}
@@ -1270,22 +1281,26 @@ function showDetail(name){
     const a=bTeam(bm.t1),b=bTeam(bm.t2);
     const ps=`${pred.g1}–${pred.g2}${pred.adv?' ('+pred.adv+')':''}`;
     const rs=hasReal?`${real.g1}–${real.g2}`:'—';
-    koHtml+=`<div class="det-row g3 ${rc}">
+    const _r16sec=['RL1','RL2','RL3','RL4','RR1','RR2','RR3','RR4'].includes(mid);
+    const _rowHtml=`<div class="det-row g3 ${rc}">
       <div><div class="det-match">${flagImg(bm.t1)} ${a.name} vs ${b.name} ${flagImg(bm.t2)}</div>
            <div class="det-sub">${bm.date||''}</div></div>
       <div class="det-sc">${ps}</div>
       <div class="det-sc">${rs}</div>
       <div class="det-pts-cell">${chip}</div>
     </div>`;
+    if(_r16sec) koR16Html+=_rowHtml; else koR32Html+=_rowHtml;
   }
-  if(!koHtml) koHtml=`<div class="empty-p" style="padding:16px 20px;color:var(--muted);font-size:12px">Sin pronósticos de eliminatoria aún</div>`;
+  if(!koR32Html) koR32Html=`<div class="empty-p" style="padding:16px 20px;color:var(--muted);font-size:12px">Sin pronósticos de eliminatoria aún</div>`;
 
+  const totalKO=totalR32+totalR16;
   const total=totalGrupos+totalClas+totalKO;
   document.getElementById('det-total').innerHTML=
     `<span style="color:var(--gold);font-size:15px;font-weight:700">${total} pts totales</span>&nbsp;&nbsp;`+
     `<span style="color:#7AB8FF">${totalGrupos} grupos</span> + `+
     `<span style="color:#00c46a">${totalClas} clasificados</span> + `+
-    `<span style="color:var(--gold)">${totalKO} eliminatoria</span>`;
+    `<span style="color:var(--gold)">${totalR32} R32</span> + `+
+    `<span style="color:#F0A500">${totalR16} R16</span>`;
 
   document.getElementById('det-body').innerHTML=`
     <div class="det-section">
@@ -1305,11 +1320,19 @@ function showDetail(name){
     </div>
     <div class="det-section">
       <div class="det-sec-hdr">
-        <span class="det-sec-title">🏆 Fase Eliminatoria</span>
-        <span class="det-sec-pts" style="color:var(--gold)">${totalKO} pts</span>
+        <span class="det-sec-title">🏆 Ronda de 32 (+15 clasif)</span>
+        <span class="det-sec-pts" style="color:var(--gold)">${totalR32} pts</span>
       </div>
       <div class="det-thead g3"><span>Partido</span><span style="text-align:center">Pronóstico</span><span style="text-align:center">Resultado</span><span style="text-align:right">Pts</span></div>
-      ${koHtml}
+      ${koR32Html}
+    </div>
+    <div class="det-section">
+      <div class="det-sec-hdr">
+        <span class="det-sec-title">⚽ Octavos de Final (+20 clasif)</span>
+        <span class="det-sec-pts" style="color:#F0A500">${totalR16} pts</span>
+      </div>
+      <div class="det-thead g3"><span>Partido</span><span style="text-align:center">Pronóstico</span><span style="text-align:center">Resultado</span><span style="text-align:right">Pts</span></div>
+      ${koR16Html}
     </div>`;
 
   document.getElementById('detail-panel').classList.add('open');
@@ -1399,9 +1422,9 @@ function renderBracket(){
     const w1=has&&res.w===a.code, w2=has&&res.w===b.code;
     const cls=(m.id==='FINAL'?'final-match ':m.id==='BRONZE'?'bronze-match ':'');
     const hasPreds=QD_KO&&Object.values(QD_KO).some(p=>p[m.id]);
-    const clickAttr=hasPreds?`onclick="showBkPredById('${m.id}')" style="cursor:pointer" title="Ver pronósticos"`:'';
+    const matchAttr=hasPreds?'data-matchid="'+m.id+'" style="cursor:pointer" title="Ver pronósticos"':'';
     const predLabel=hasPreds?'<div class="bk-date" style="color:rgba(201,162,39,.6);font-size:9px">👆 Ver pronósticos</div>':'';
-    return `<div class="bk-match ${cls}" ${clickAttr}>
+    return `<div class="bk-match ${cls}" ${matchAttr}>
       <div class="bk-team${w1?' winner':has?' loser':''}">
         <span class="bk-flag">${a.flag}</span><span class="bk-name">${a.name}</span>
         <span class="bk-score${!has?' tbd-score':''}">${has?res.g1:'–'}</span>
@@ -1469,6 +1492,10 @@ function renderBracket(){
   </div>`;
 
   grid.innerHTML=leftHalf+finalCol+rightHalf;
+  // Attach click handlers sin caracteres especiales en HTML
+  grid.querySelectorAll('[data-matchid]').forEach(function(el){
+    el.addEventListener('click', function(){ showBkPredById(this.getAttribute('data-matchid')); });
+  });
 }
 
 function switchView(view){
