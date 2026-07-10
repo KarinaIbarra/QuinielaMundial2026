@@ -996,7 +996,7 @@ const BRACKET_R32 = [
 ];
 
 // Storage for bracket results: {matchId: {w: 'team_key', s1: 0, s2: 0}}
-let BRACKET_RES = {'RR3':{w:'ARG',g1:2,g2:3},'RR4':{w:'SUI',g1:0,g2:0},'RL3':{w:'ESP',g1:1,g2:0},'RL4':{w:'BEL',g1:1,g2:4},'RR2':{w:'ING',g1:2,g2:3},'RR1':{w:'NOR',g1:1,g2:2},'RL2':{w:'MAR',g1:0,g2:3},'RL1':{w:'FRA',g1:0,g2:1},'L3':{w:'CAN',g1:0,g2:1},'R1':{w:'BRA',g1:2,g2:1},'L1':{w:'PAR',g1:1,g2:1},'L4':{w:'MAR',g1:1,g2:1},'R2':{w:'NOR',g1:1,g2:2},'R3':{w:'MEX',g1:2,g2:0},'R4':{w:'ING',g1:2,g2:1},'L2':{w:'FRA',g1:3,g2:0},'L7':{w:'USA',g1:2,g2:0},'L8':{w:'BEL',g1:2,g2:2},'L5':{w:'ESP',g1:3,g2:0},'L6':{w:'POR',g1:2,g2:1},'R7':{w:'SUI',g1:2,g2:0},'R5':{w:'EGI',g1:1,g2:1},'R6':{w:'ARG',g1:1,g2:1},'R8':{w:'COL',g1:1,g2:0}};
+let BRACKET_RES = {'QL1':{w:'FRA',g1:2,g2:0},'RR3':{w:'ARG',g1:2,g2:3},'RR4':{w:'SUI',g1:0,g2:0},'RL3':{w:'ESP',g1:1,g2:0},'RL4':{w:'BEL',g1:1,g2:4},'RR2':{w:'ING',g1:2,g2:3},'RR1':{w:'NOR',g1:1,g2:2},'RL2':{w:'MAR',g1:0,g2:3},'RL1':{w:'FRA',g1:0,g2:1},'L3':{w:'CAN',g1:0,g2:1},'R1':{w:'BRA',g1:2,g2:1},'L1':{w:'PAR',g1:1,g2:1},'L4':{w:'MAR',g1:1,g2:1},'R2':{w:'NOR',g1:1,g2:2},'R3':{w:'MEX',g1:2,g2:0},'R4':{w:'ING',g1:2,g2:1},'L2':{w:'FRA',g1:3,g2:0},'L7':{w:'USA',g1:2,g2:0},'L8':{w:'BEL',g1:2,g2:2},'L5':{w:'ESP',g1:3,g2:0},'L6':{w:'POR',g1:2,g2:1},'R7':{w:'SUI',g1:2,g2:0},'R5':{w:'EGI',g1:1,g2:1},'R6':{w:'ARG',g1:1,g2:1},'R8':{w:'COL',g1:1,g2:0}};
 
 
 const ISO={
@@ -1539,11 +1539,19 @@ function renderBracket(){
     quarter('QR2', rR16[2], rR16[3], '11 Jul · Miami'),
   ];
 
+  // Semifinales a partir de los ganadores de cuartos
+  function semi(id, qA, qB, date){
+    const w1=koWinnerTeam(qA), w2=koWinnerTeam(qB);
+    return {id, t1:w1||'❓ – Por definir', t2:w2||'❓ – Por definir', date};
+  }
+  const lS=[ semi('SL', lQ[0], lQ[1], '14 Jul · Dallas') ];
+  const rS=[ semi('SR', rQ[0], rQ[1], '15 Jul · Atlanta') ];
+
   const leftHalf=`<div class="bk-half">
     ${buildCol('Ronda de 32',[L[0],L[1],L[2],L[3],L[4],L[5],L[6],L[7]],1,'r')}
     ${buildCol('R. de 16',lR16,2,'r')}
     ${buildCol('Cuartos',lQ,4,'r')}
-    ${buildCol('Semis',[N],8,'')}
+    ${buildCol('Semis',lS,8,'')}
   </div>`;
 
   const finalCol=`<div class="bk-final-col" style="min-width:160px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:0 8px;">
@@ -1561,7 +1569,7 @@ function renderBracket(){
     ${buildCol('Ronda de 32',[R[0],R[1],R[2],R[3],R[4],R[5],R[6],R[7]],1,'l',true)}
     ${buildCol('R. de 16',rR16,2,'l',true)}
     ${buildCol('Cuartos',rQ,4,'l',true)}
-    ${buildCol('Semis',[N],8,'',true)}
+    ${buildCol('Semis',rS,8,'',true)}
   </div>`;
 
   grid.innerHTML=leftHalf+finalCol+rightHalf;
